@@ -15,4 +15,46 @@
 @tailwind utilities;
 /* Stop purging. */
 
-/* Your own custom utilities */
+/* My own custom classses */
+
+.bg-img-with-opacity {
+  background: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(rgba(0, 32, 63, 0.9)),
+      to(rgba(0, 32, 63, 0.9))
+    ),
+    url(../public/images/background-1.jpg);
+  background: -o-linear-gradient(rgba(0, 32, 63, 0.9)),
+    rgba(rgba(0, 32, 63, 0.9)), url(../public/images/background-1.jpg);
+  background: linear-gradient(rgba(0, 32, 63, 0.9), rgba(0, 32, 63, 0.9)),
+    url(../public/images/background-1.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  /* height: 85vh; */
+  position: relative;
+}
+
+.bg-img-with-opacity2 {
+  background: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      from(rgba(0, 32, 63, 0.9)),
+      to(rgba(0, 32, 63, 0.9))
+    ),
+    url(../public/images/background-2.jpg);
+  background: -o-linear-gradient(rgba(0, 32, 63, 0.9)),
+    rgba(rgba(0, 32, 63, 0.9)), url(../public/images/background-2.jpg);
+  background: linear-gradient(rgba(0, 32, 63, 0.9), rgba(0, 32, 63, 0.9)),
+    url(../public/images/background-2.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  /* height: 85vh; */
+  position: relative;
+}

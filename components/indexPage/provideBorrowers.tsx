@@ -1,0 +1,70 @@
+interface provideBorrowersProps {}
+
+const ProvideBorrowers: React.FC<provideBorrowersProps> = ({}) => {
+  return (
+    <section className="bg-img-with-opacity pt-10 pb-5">
+      <div className="container text-gray-400">
+        <div className="flex justify-center items-center">
+          <h2 className="text-4xl font-bold">Our Borrowers Can</h2>
+        </div>
+
+        <div className="grid grid-cols-4 gap-5">
+          {borrowers &&
+            borrowers.map((borrower) => {
+              return (
+                <div className="p-5 mt-5 text-center" key={borrower.title}>
+                  <div className="flex justify-center items-center mb-4">
+                    <svg
+                      className="w-12 h-12 inline-block text-teal-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d={borrower.d}
+                      ></path>
+                    </svg>
+                  </div>
+                  <h4 className="font-semibold text-2xl">{borrower.title}</h4>
+                  <p className="font-normal text-lg mt-5">{borrower.content}</p>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const borrowers = [
+  {
+    title: "Get a Low Rate",
+    content:
+      "Get a loan with a low, fixed rate that never goes up. Check your rate online instantly.",
+    d: "M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z",
+  },
+  {
+    title: "Pay at Your Own Pace",
+    content:
+      "Pay off your loan with fixed 3 or 5-year* terms, and a budget-friendly, single monthly payment.",
+    d: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z",
+  },
+  {
+    title: "Diversified Investment",
+    content: "Save money with no pre-payment penalties.",
+    d:
+      "M11 11V9a2 2 0 00-2-2m2 4v4a2 2 0 104 0v-1m-4-3H9m2 0h4m6 1a9 9 0 11-18 0 9 9 0 0118 0z",
+  },
+  {
+    title: "Diversified Investment 2",
+    content: "Save money with no pre-payment penalties.",
+    d:
+      "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
+  },
+];
+
+export default ProvideBorrowers;
