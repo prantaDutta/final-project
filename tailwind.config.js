@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: (theme) => ({
-        "header-img": "url('/images/background-1.jpg')",
+        "header-img": "url('/background-1.jpg')",
       }),
       height: {
         "1vh": "10vh",

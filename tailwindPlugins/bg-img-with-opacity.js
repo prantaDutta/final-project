@@ -8,7 +8,7 @@ module.exports = plugin.withOptions(() => {
           rgba(43, 108, 176, 0.9),
           rgba(43, 108, 176, 0.9)
         ),
-        url(../public/images/background-1.jpg)`,
+        url(/background-1.jpg)`,
       },
     });
   };

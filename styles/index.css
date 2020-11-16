@@ -25,11 +25,11 @@
       from(rgba(0, 32, 63, 0.9)),
       to(rgba(0, 32, 63, 0.9))
     ),
-    url(../public/images/background-1.jpg);
+    url(/background-1.jpg);
   background: -o-linear-gradient(rgba(0, 32, 63, 0.9)),
-    rgba(rgba(0, 32, 63, 0.9)), url(../public/images/background-1.jpg);
+    rgba(rgba(0, 32, 63, 0.9)), url(/background-1.jpg);
   background: linear-gradient(rgba(0, 32, 63, 0.9), rgba(0, 32, 63, 0.9)),
-    url(../public/images/background-1.jpg);
+    url(/background-1.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
@@ -46,15 +46,40 @@
       from(rgba(0, 32, 63, 0.9)),
       to(rgba(0, 32, 63, 0.9))
     ),
-    url(../public/images/background-2.jpg);
+    url(/background-2.jpg);
   background: -o-linear-gradient(rgba(0, 32, 63, 0.9)),
-    rgba(rgba(0, 32, 63, 0.9)), url(../public/images/background-2.jpg);
+    rgba(rgba(0, 32, 63, 0.9)), url(/background-2.jpg);
   background: linear-gradient(rgba(0, 32, 63, 0.9), rgba(0, 32, 63, 0.9)),
-    url(../public/images/background-2.jpg);
+    url(/background-2.jpg);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
   /* height: 85vh; */
   position: relative;
+}
+
+// loader
+.loader {
+  border-top-color: #3498db;
+  -webkit-animation: spinner 1.5s linear infinite;
+  animation: spinner 1.5s linear infinite;
+}
+
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

@@ -39,19 +39,19 @@ const MobileApp: React.FC<mobileAppProps> = ({}) => {
             <div className="flex items center justify-center p-2 py-2 my-3">
               <img
                 className="p-2 rounded-full"
-                src="/images/google-play-badge.png"
+                src="/google-play-badge.png"
                 alt="Google Play Badge"
               />
               <img
                 className="p-2 rounded-full"
-                src="/images/app-store-badge.png"
+                src="/app-store-badge.png"
                 alt="App Store Badge"
               />
             </div>
           </div>
           <div className="col-span-1 text-left pl-16 pt-10">
             <img
-              src="/images/android-screen.png"
+              src="/android-screen.png"
               className="h-full w-full object-fit"
             />
           </div>

@@ -1,4 +1,5 @@
-import React, { ReactChildren } from "react";
+import React from "react";
+import Footer from "./footer";
 import Nav from "./nav";
 
 interface LayoutProps {}
@@ -8,6 +9,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <div>
       <Nav />
       {children}
+      <Footer />
     </div>
   );
 };

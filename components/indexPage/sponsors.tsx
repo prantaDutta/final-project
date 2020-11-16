@@ -20,8 +20,9 @@ const Sponsors: React.FC<sponsorsProps> = ({}) => {
                     {/* <Image
                       src={img.img}
                       alt="Picture of the author"
-                      width={500}
-                      height={500}
+                      width="200"
+                      height="200"
+                      className="bg-mint text-mint fill-current"
                     ></Image> */}
                     {/* This works */}
                     <img
@@ -41,16 +42,16 @@ const Sponsors: React.FC<sponsorsProps> = ({}) => {
 
 const images = [
   {
-    img: "/images/bkash.png",
+    img: "/bkash.png",
   },
   {
-    img: "/images/nogod.png",
+    img: "/nogod.png",
   },
   {
-    img: "/images/rocket.png",
+    img: "/rocket.png",
   },
   {
-    img: "/images/sure_cash_logo.png",
+    img: "/sure_cash_logo.png",
   },
 ];
 

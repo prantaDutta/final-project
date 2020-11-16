@@ -12,15 +12,20 @@
   "dependencies": {
     "@adoxyz/tailwindcss-named-colors": "^0.1.0",
     "@prisma/client": "^2.11.0",
-    "async_hooks": "^1.0.0",
+    "argon2": "^0.27.0",
+    "axios": "^0.21.0",
+    "formik": "^2.2.5",
     "next": "10.0.1",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@prisma/cli": "^2.11.0",
+    "@types/axios": "^0.14.0",
     "@types/node": "^14.14.6",
     "@types/react": "^16.9.56",
+    "@types/yup": "^0.29.9",
     "postcss-flexbugs-fixes": "4.2.1",
     "postcss-preset-env": "^6.7.0",
     "tailwindcss": "1.9.6",

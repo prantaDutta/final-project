@@ -4,7 +4,6 @@ import ProvideBorrowers from "../components/indexPage/provideBorrowers";
 import Sponsors from "../components/indexPage/sponsors";
 import MobileApp from "./../components/indexPage/mobileApp";
 import UpperFooter from "../components/indexPage/upperFooter";
-import Footer from "../components/indexPage/footer";
 import Layout from "../components/Layout";
 
 export default function IndexPage() {
@@ -17,7 +16,6 @@ export default function IndexPage() {
       <MobileApp />
       <UpperFooter />
       <hr className="border-gray-700 border-t" />
-      <Footer />
     </Layout>
   );
 }
