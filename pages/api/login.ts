@@ -1,40 +1,36 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import argon2 from "argon2";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
+const KEY = "kdjkskASDFSFKDLLDFDKDFDSKDL";
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email } = req.body;
-  const user = await prisma.user.findOne({
-    where: {
-      email,
-    },
-  });
-  if (!user) {
-    res.json({
-      errors: {
-        email: "Email doesn't exist",
+  // console.log(req.body);
+  const { email } = req.body.values;
+  // console.log(email);
+  if (!email) {
+    res.send("Server Error");
+  } else {
+    const user = await prisma.user.findOne({
+      where: {
+        email,
       },
     });
-  } else {
-    try {
-      if (await argon2.verify(user.password, req.body.password)) {
-        // password match
-        res.json({
-          user,
-        });
-      } else {
-        // password did not match
-        res.json({
-          errors: {
-            password: "Password doesn't match",
+    if (!user) {
+      res.send("error");
+    } else {
+      res.json({
+        user,
+        token: jwt.sign(
+          {
+            id: user.id,
+            email: user.email,
           },
-        });
-      }
-    } catch (err) {
-      // internal failure
-      console.log(err);
+          KEY
+        ),
+      });
     }
   }
 };

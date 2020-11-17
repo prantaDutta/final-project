@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
-import { Formik, Field, Form, FormikHelpers, ErrorMessage } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import FormikTextField from "./../components/FormikTextField";
 
-interface loginProps {}
+interface registerProps {}
 
 interface Values {
   name: string;
@@ -15,19 +15,20 @@ interface Values {
   confirmPassword: string;
 }
 
-const register: React.FC<loginProps> = ({}) => {
+const register: React.FC<registerProps> = ({}) => {
   const router = useRouter();
+
+  // creating validation schema with YUP
 
   const validation = Yup.object({
     name: Yup.string().required("Required"),
     role: Yup.mixed()
       .oneOf(["Lender", "Borrower"], "Role should be Lender or Borrower")
       .required("Required"),
-    // email: Yup.string().email("Invalid Email").required("Required"),
     email: Yup.string()
       .email("Invalid email")
       .test("Unique Email", "Email already been taken", function (value) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, _) => {
           axios.post("/api/unique-email", { email: value }).then((res) => {
             if (res.data.msg === "Email already been taken") {
               resolve(false);
@@ -45,9 +46,31 @@ const register: React.FC<loginProps> = ({}) => {
       .required("Required"),
   });
 
-  // const handleSubmit = (values: Values, setSubmitting : FormikHelpers<Values>) => {
+  // Handling onSubmit property of formik with handleSubmit funtction
+  const handleSubmit = async (
+    values: Values,
+    { setSubmitting }: FormikHelpers<Values>
+  ) => {
+    // creating loader button
+    setSubmitting(true);
 
-  // }
+    try {
+      const response = await fetch("api/register", {
+        method: "POST",
+        headers: {
+          "content-type": "Application/JSON",
+        },
+        body: JSON.stringify(values),
+      });
+      const result = await response.json();
+      console.log(result);
+
+      router.push("/");
+    } catch (e) {
+      console.log(e);
+    }
+    setSubmitting(false);
+  };
 
   return (
     <div className="h-10vh">
@@ -68,32 +91,10 @@ const register: React.FC<loginProps> = ({}) => {
                   role: "",
                   confirmPassword: "",
                 }}
-                onSubmit={async (
-                  values: Values,
-                  { setSubmitting }: FormikHelpers<Values>
-                ) => {
-                  setSubmitting(true);
-
-                  try {
-                    const response = await fetch("api/register", {
-                      method: "POST",
-                      headers: {
-                        "content-type": "Application/JSON",
-                      },
-                      body: JSON.stringify(values),
-                    });
-                    const result = await response.json();
-                    console.log(result);
-
-                    router.push("/");
-                  } catch (e) {
-                    console.log(e);
-                  }
-                  setSubmitting(false);
-                }}
+                onSubmit={handleSubmit}
                 validationSchema={validation}
               >
-                {({ errors, touched, isSubmitting }) => (
+                {({ isSubmitting }) => (
                   <Form
                     autoComplete="off"
                     className="flex flex-col"
@@ -130,132 +131,8 @@ const register: React.FC<loginProps> = ({}) => {
                     <FormikTextField
                       label="Confirm Your Password *"
                       name="confirmPassword"
-                      type="confirmPassword"
+                      type="password"
                     />
-
-                    {/* <div className="mb-6 pt-3 rounded bg-gray-200">
-                      <label
-                        className="block text-gray-700 text-sm font-bold mb-2 ml-3"
-                        htmlFor="name"
-                      >
-                        Your Full Name *
-                      </label>
-                      <Field
-                        type="text"
-                        id="name"
-                        name="name"
-                        className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
-                      />
-                      {touched.name && (
-                        <ErrorMessage name="name">
-                          {() => (
-                            <div className="text-md text-red italic">
-                              {errors.name}
-                            </div>
-                          )}
-                        </ErrorMessage>
-                      )}
-                    </div> */}
-
-                    {/* <div className="mb-6 pt-3 rounded bg-gray-200">
-                      <label
-                        className="block text-gray-700 text-sm font-bold mb-2 ml-3"
-                        htmlFor="email"
-                      >
-                        Email *
-                      </label>
-                      <Field
-                        type="text"
-                        name="email"
-                        id="email"
-                        className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
-                      />
-                      {touched.email && (
-                        <ErrorMessage name="email">
-                          {() => (
-                            <div className="text-md text-red italic">
-                              {errors.email}
-                            </div>
-                          )}
-                        </ErrorMessage>
-                      )}
-                    </div> */}
-
-                    {/* <div className="mb-6 pt-3 rounded bg-gray-200">
-                      <label
-                        className="block text-gray-700 text-sm font-bold mb-2 ml-3"
-                        htmlFor="role"
-                      >
-                        You are a *
-                      </label>
-                      <Field
-                        component="select"
-                        name="role"
-                        className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
-                      >
-                        <option value="Default">Choose One...</option>
-                        <option value="Lender">Lender</option>
-                        <option value="Borrower">Borrower</option>
-                      </Field>
-                      {touched.role && (
-                        <ErrorMessage name="role">
-                          {() => (
-                            <div className="text-md text-red italic">
-                              {errors.role}
-                            </div>
-                          )}
-                        </ErrorMessage>
-                      )}
-                    </div> */}
-
-                    {/* <div className="mb-6 pt-3 rounded bg-gray-200">
-                      <label
-                        className="block text-gray-700 text-sm font-bold mb-2 ml-3"
-                        htmlFor="password"
-                      >
-                        Password *
-                      </label>
-                      <Field
-                        type="password"
-                        name="password"
-                        id="password"
-                        className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
-                      />
-                      {touched.password && (
-                        <ErrorMessage name="password">
-                          {() => (
-                            <div className="text-md text-red italic">
-                              {errors.password}
-                            </div>
-                          )}
-                        </ErrorMessage>
-                      )}
-                    </div> */}
-
-                    {/* <div className="mb-6 pt-3 rounded bg-gray-200">
-                      <label
-                        className="block text-gray-700 text-sm font-bold mb-2 ml-3"
-                        htmlFor="confirmPassword"
-                      >
-                        Confirm Password *
-                      </label>
-                      <Field
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        className="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3"
-                      />
-
-                      {touched.confirmPassword && (
-                        <ErrorMessage name="confirmPassword">
-                          {() => (
-                            <div className="text-md text-red italic">
-                              {errors.confirmPassword}
-                            </div>
-                          )}
-                        </ErrorMessage>
-                      )}
-                    </div> */}
 
                     <div className="flex justify-end">
                       <a
@@ -266,24 +143,12 @@ const register: React.FC<loginProps> = ({}) => {
                       </a>
                     </div>
 
-                    {isSubmitting ? (
-                      <button
-                        disabled
-                        className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
-                      >
-                        <svg
-                          className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-6 w-8"
-                          viewBox="0 0 24 24"
-                        ></svg>
-                      </button>
-                    ) : (
-                      <button
-                        className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
-                        type="submit"
-                      >
-                        Sign Up
-                      </button>
-                    )}
+                    <button
+                      className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
+                      type="submit"
+                    >
+                      Sign Up
+                    </button>
                   </Form>
                 )}
               </Formik>
@@ -292,9 +157,9 @@ const register: React.FC<loginProps> = ({}) => {
 
           <div className="max-w-lg mx-auto text-center mt-12 mb-6">
             <p className="text-white">
-              Don't have an account?{" "}
+              Already have an account?{" "}
               <a href="#" className="font-bold hover:underline">
-                Sign up
+                Sign in
               </a>
               .
             </p>

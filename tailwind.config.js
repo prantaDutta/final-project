@@ -29,7 +29,9 @@ module.exports = {
       },
     },
   },
-  variants: {},
+  variants: {
+    animation: ["responsive", "motion-safe", "motion-reduce"],
+  },
   plugins: [
     require("@adoxyz/tailwindcss-named-colors"),
     require("./tailwindPlugins/bg-img-with-opacity"),

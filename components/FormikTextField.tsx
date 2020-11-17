@@ -4,6 +4,7 @@ import { InputHTMLAttributes } from "react";
 type FormikTextFieldProps = InputHTMLAttributes<HTMLElement> & {
   label: string;
   name: string;
+  component?: string;
 };
 
 const FormikTextField: React.FC<FormikTextFieldProps> = ({
@@ -13,7 +14,7 @@ const FormikTextField: React.FC<FormikTextFieldProps> = ({
 }) => {
   // const [field, { touched, errors }] = useField(props);
   const [field, { error, touched }] = useField<FieldProps>(props);
-  console.log(touched, error);
+  // console.log(touched, error);
 
   return (
     <div className="mb-6 pt-3 rounded bg-gray-200">
@@ -31,7 +32,7 @@ const FormikTextField: React.FC<FormikTextFieldProps> = ({
       />
       {touched && (
         <ErrorMessage name={field.name}>
-          {() => <div className="text-md text-red italic">{error}</div>}
+          {() => <div className="text-md text-red-600 italic">{error}</div>}
         </ErrorMessage>
       )}
     </div>
