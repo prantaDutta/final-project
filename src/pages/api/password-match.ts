@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import argon2 from "argon2";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
@@ -14,7 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    if (user && (await argon2.verify(user.password, password))) {
+    if (user && (await bcrypt.compare(user.password, password))) {
       // password match
       res.json({ msg: "Password Matching" });
     } else {

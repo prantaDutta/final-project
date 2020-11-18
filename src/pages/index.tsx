@@ -8,14 +8,16 @@ import Layout from "../components/Layout";
 
 export default function IndexPage() {
   return (
-    <Layout>
-      <Introduction />
-      <ProvideInvestors />
-      <ProvideBorrowers />
-      <Sponsors />
-      <MobileApp />
-      <UpperFooter />
-      <hr className="border-gray-700 border-t" />
-    </Layout>
+    <div className="h-10vh">
+      <Layout>
+        <Introduction />
+        <ProvideInvestors />
+        <ProvideBorrowers />
+        <Sponsors />
+        <MobileApp />
+        <UpperFooter />
+        <hr className="border-gray-700 border-t" />
+      </Layout>
+    </div>
   );
 }

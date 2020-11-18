@@ -4,6 +4,7 @@ import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import FormikTextField from "../components/FormikTextField";
+import { verifyJWTToken } from "../utils/functions";
 
 interface loginProps {}
 
@@ -19,7 +20,7 @@ const login2: React.FC<loginProps> = ({}) => {
   const validation = Yup.object({
     email: Yup.string()
       .email("Invalid email")
-      .test("Unique Email", "Email doesn't exist", function (value) {
+      .test("Unique Email", "Wrong Email", function (value) {
         return new Promise((resolve, _) => {
           axios.post("/api/unique-email", { email: value }).then((res) => {
             if (res.data.msg === "Email already been taken") {
@@ -61,15 +62,25 @@ const login2: React.FC<loginProps> = ({}) => {
     try {
       const response = await axios.post("api/login", { values });
       // const result = await response.json();
-      console.log(response);
+      // console.log(response);
 
-      const { token } = response.data;
-      if (token) {
-        localStorage.setItem("authToken", JSON.stringify(token));
+      const { accessToken } = response.data;
+      if (accessToken) {
+        localStorage.setItem("authToken", JSON.stringify(accessToken));
+        // if (verifyJWTToken(accessToken)) {
+
+        console.log("verify: ", verifyJWTToken(accessToken));
+
+        // }
       } else {
         console.log("Please Log In again");
       }
-      //   router.push("/");
+
+      // const authHeader = req.headers["authorization"];
+      // const token = authHeader && authHeader.split(" ")[1];
+      // if (token == null) return res.sendStatus(401);
+
+      router.push("/");
     } catch (e) {
       console.log(e);
     }
