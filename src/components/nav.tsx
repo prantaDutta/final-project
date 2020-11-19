@@ -91,81 +91,9 @@ export default function Nav() {
           isDrawerOpen ? "block" : "hidden"
         } px-2 pt-2 pb-4 uppercase md:flex md:p-0 lg:mr-8 md:ml-5`}
       >
-        {/* <a
-          href="#"
-          className="block font-semibold text-lg rounded px-2 py-1 hover:bg-indigo-600"
-        >
-          Home
-        </a>
-        <a
-          href="#"
-          className="mt-1 block font-semibold text-lg rounded px-2 py-1 hover:bg-indigo-600 md:mt-0 md:ml-2"
-        >
-          About
-        </a> */}
-
+        {/* Rendering every nav items from links array */}
         <NavItems links={links} />
-
-        {/* <a
-          href="#"
-          className="mt-1 block font-semibold text-lg rounded px-2 py-1 hover:bg-indigo-600 md:mt-0 md:ml-2"
-        >
-          Contact
-        </a>
-        <a
-          href="#"
-          className="mt-1 block font-semibold text-lg rounded px-2 py-1 hover:bg-indigo-600 md:mt-0 md:ml-2"
-        >
-          Log In
-        </a>
-        <a
-          href="#"
-          className="mt-1 block font-semibold text-lg rounded px-2 py-1 hover:bg-indigo-600 md:mt-0 md:ml-2"
-        >
-          Register
-        </a> */}
       </div>
     </div>
   );
-}
-
-{
-  /*<div className="flex justify-between items-center p-5 body-bg text-white">
-      <div className="ml-16">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="tracking-widest uppercase">GrayScale</h4>
-          </div>
-
-          <div>
-            <button
-              type="button"
-              className="md:hidden text-gray-400 mt-1 hover:text-white focus:text-white focus:outline-none"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                ></path>
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-       <div className="mr-16 hidden md:block">
-        {isAuthenticated ? (
-          <NavItems links={loggedInLinks} />
-        ) : (
-          <NavItems links={loggedOutLinks} />
-        )}
-      </div> 
-    </div>*/
 }
