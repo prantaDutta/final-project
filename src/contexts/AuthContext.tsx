@@ -8,9 +8,10 @@ export const AuthContext = createContext({
 interface authContextProps {}
 
 const AuthContextProvider: React.FC<authContextProps> = (props) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   useEffect(() => {
     const localData = localStorage.getItem("authToken");
+
     // if (localData)
 
     // console.log("localData: ", localData);

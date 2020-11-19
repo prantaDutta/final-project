@@ -21,6 +21,18 @@ module.exports = {
         "9vh": "90vh",
         "10vh": "100vh",
       },
+      width: {
+        "1vw": "10vw",
+        "2vw": "20vw",
+        "3vw": "30vw",
+        "4vw": "40vw",
+        "5vw": "50vw",
+        "6vw": "60vw",
+        "7vw": "70vw",
+        "8vw": "80vw",
+        "9vw": "90vw",
+        "10vw": "100vw",
+      },
       colors: {
         mint: "##ADEFD1FF",
       },

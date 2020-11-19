@@ -8,15 +8,15 @@ import Layout from "../components/Layout";
 
 export default function IndexPage() {
   return (
-    <div className="h-10vh">
+    <div className="">
       <Layout>
-        <Introduction />
+        {/* <Introduction />
         <ProvideInvestors />
         <ProvideBorrowers />
         <Sponsors />
         <MobileApp />
-        <UpperFooter />
-        <hr className="border-gray-700 border-t" />
+        <UpperFooter /> */}
+        {/* <hr className="border-gray-700 border-t" /> */}
       </Layout>
     </div>
   );

@@ -5,7 +5,15 @@ import AuthContextProvider from "../contexts/AuthContext";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <AuthContextProvider>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
+      <style global jsx>
+        {`
+          .body-bg {
+            background-color: #9921e8;
+            background-image: linear-gradient(315deg, #9921e8 0%, #5f72be 50%);
+          }
+        `}
+      </style>
     </AuthContextProvider>
   );
 }
