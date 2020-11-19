@@ -2,13 +2,15 @@ interface provideInvestorsProps {}
 
 const ProvideInvestors: React.FC<provideInvestorsProps> = ({}) => {
   return (
-    <section className="bg-img-with-opacity">
-      <div className="container text-gray-400">
+    <section className="text-center">
+      <div className="text-gray-300">
         <div className="flex justify-center items-center">
-          <h2 className="text-4xl font-bold">We Provide Investors With</h2>
+          <h2 className="text-2xl md:text-4xl font-semibold md:font-bold">
+            We Provide Investors With
+          </h2>
         </div>
 
-        <div className="grid grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {investors &&
             investors.map((investor) => {
               return (

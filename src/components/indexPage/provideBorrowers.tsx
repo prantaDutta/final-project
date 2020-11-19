@@ -2,18 +2,23 @@ interface provideBorrowersProps {}
 
 const ProvideBorrowers: React.FC<provideBorrowersProps> = ({}) => {
   return (
-    <section className="bg-img-with-opacity pt-10 pb-5">
-      <div className="container text-gray-400">
+    <section className=" pt-10 pb-5">
+      <div className="text-gray-300">
         <div className="flex justify-center items-center">
-          <h2 className="text-4xl font-bold">Our Borrowers Can</h2>
+          <h2 className="text-2xl md:text-4xl font-semibold md:font-bold">
+            Our Borrowers Can
+          </h2>
         </div>
 
-        <div className="grid grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
           {borrowers &&
             borrowers.map((borrower) => {
               return (
-                <div className="p-5 mt-5 text-center" key={borrower.title}>
-                  <div className="flex justify-center items-center mb-4">
+                <div
+                  className="p-3 md:p-5 mt-3 md:mt-5 text-center"
+                  key={borrower.title}
+                >
+                  <div className="flex justify-center items-center mb-3 md:mb-4">
                     <svg
                       className="w-12 h-12 inline-block text-teal-500"
                       fill="none"

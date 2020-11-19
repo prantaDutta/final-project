@@ -2,13 +2,16 @@ interface upperFooterProps {}
 
 const UpperFooter: React.FC<upperFooterProps> = ({}) => {
   return (
-    <section className="pt-5 bg-indigo-900">
-      <div className="container text-gray-400">
-        <div className="flex justify-center items-center">
+    <section className="pt-5 text-center">
+      <div className="text-gray-300 mt-4 sm:mt-3 px-4 md:mt-0">
+        <h2 className="text-2xl md:text-4xl font-semibold md:font-bold pb-10 md:pb-6 sm:4">
+          Connect With Us
+        </h2>
+        <div className="flex justify-center items-center py-3">
           <svg
             width="48"
             height="48"
-            className="ml-6"
+            className="ml-3 md:ml-6"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -24,7 +27,7 @@ const UpperFooter: React.FC<upperFooterProps> = ({}) => {
           <svg
             width="48"
             height="48"
-            className="ml-6"
+            className="ml-3 md:ml-6"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -40,7 +43,7 @@ const UpperFooter: React.FC<upperFooterProps> = ({}) => {
           <svg
             width="48"
             height="48"
-            className="ml-6"
+            className="ml-3 md:ml-6"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -58,7 +61,7 @@ const UpperFooter: React.FC<upperFooterProps> = ({}) => {
           <svg
             width="48"
             height="48"
-            className="ml-6"
+            className="ml-3 md:ml-6"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 75.8 74.9"
           >
@@ -88,7 +91,7 @@ const UpperFooter: React.FC<upperFooterProps> = ({}) => {
           <svg
             width="48"
             height="48"
-            className="ml-6"
+            className="ml-3 md:ml-6"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -103,9 +106,11 @@ const UpperFooter: React.FC<upperFooterProps> = ({}) => {
             <path d="M21.6 28.8v-8l6.4 4-6.4 4z" fill="red" />
           </svg>
         </div>
-        <div className="grid grid-cols-4 text-center grid-gap-2">
-          <div className="mt-3 p-4 ml-8">
-            <h4 className="font-semibold text-xl">GrayScale</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 text-center py-5 grid-gap-2">
+          <div className="mt-4 sm:mt-3 px-4 md:mt-0">
+            <h4 className="font-semibold md:font-normal text-xl md:text-base">
+              GrayScale
+            </h4>
             <p className="text-md font-light mt-2">
               GrayScale is one of the fastest growing peer to peer (P2P) lending
               platforms in Bangladesh. It connects investors or lenders looking
@@ -113,8 +118,10 @@ const UpperFooter: React.FC<upperFooterProps> = ({}) => {
               term personal loans.
             </p>
           </div>
-          <div className="mt-3 p-4">
-            <h4 className="font-semibold text-xl">Quick Links</h4>
+          <div className="mt-4 sm:mt-3 px-4 md:mt-0">
+            <h4 className="font-semibold md:font-normal text-xl md:text-base">
+              Quick Links
+            </h4>
             <div className="text-md font-light mt-2">
               {quickLinks &&
                 quickLinks.map((link) => {
@@ -143,8 +150,11 @@ const UpperFooter: React.FC<upperFooterProps> = ({}) => {
                 })}
             </div>
           </div>
-          <div className="mt-3 p-4">
-            <h4 className="font-semibold text-xl">Address</h4>
+          <div className="mt-4 sm:mt-3 px-4 md:mt-0">
+            <h4 className="font-semibold md:font-normal text-xl md:text-base">
+              Address
+            </h4>
+
             <div className="flex my-3 justify-center items-center">
               <svg
                 className="w-4 h-4 mr-3"
@@ -220,8 +230,10 @@ const UpperFooter: React.FC<upperFooterProps> = ({}) => {
               <p>017XX-XXXXXX</p>
             </div>
           </div>
-          <div className="mt-3 p-4">
-            <h4 className="font-semibold text-xl">GrayScale</h4>
+          <div className="mt-4 sm:mt-3 px-4 md:mt-0">
+            <h4 className="font-semibold md:font-normal text-xl md:text-base">
+              Subscribe
+            </h4>
             <p className="text-md font-light mt-2">
               Subscribe to our newsletter for latest updates
             </p>
