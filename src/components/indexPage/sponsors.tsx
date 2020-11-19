@@ -1,4 +1,4 @@
-// import Image from "next/image";
+import Image from "next/image";
 
 interface sponsorsProps {}
 
@@ -21,20 +21,13 @@ const Sponsors: React.FC<sponsorsProps> = ({}) => {
                   key={img.img}
                 >
                   <div className="flex justify-center items-center mb-2 md:mb-4">
-                    {/* This doesn't work */}
-                    {/* <Image
+                    <Image
                       src={img.img}
                       alt="Picture of the author"
                       width="200"
                       height="200"
-                      className="bg-mint text-mint fill-current"
-                    ></Image> */}
-                    {/* This works */}
-                    <img
-                      src={img.img}
-                      className="bg-mint text-mint fill-current"
-                      alt="provider image"
-                    />
+                      className="object-contain"
+                    ></Image>
                   </div>
                 </div>
               );
