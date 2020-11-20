@@ -7,7 +7,7 @@ const links: linkArray[] = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/api/logout", label: "Log Out" },
+  { href: "#", label: "Log Out" },
   { href: "/login", label: "Log In" },
   { href: "/register", label: "Register" },
 ];
@@ -38,6 +38,20 @@ export default function Nav() {
           // not rendering item 3 & 4 when not authenticated
           else if (!isAuthenticated && (index === 3 || index === 4))
             return null;
+          else if (link.label === "Log Out")
+            return (
+              <Link href={link.href} key={link.label}>
+                <a
+                  key={link.label}
+                  onClick={() => localStorage.removeItem("authToken")}
+                  className={`block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
+                    index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
+                  }`}
+                >
+                  {link.label}
+                </a>
+              </Link>
+            );
           else
             return (
               <Link href={link.href} key={link.label}>
