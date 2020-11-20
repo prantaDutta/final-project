@@ -55,15 +55,25 @@ const register: React.FC<registerProps> = ({}) => {
     setSubmitting(true);
 
     try {
-      const response = await fetch("api/register", {
-        method: "POST",
-        headers: {
-          "content-type": "Application/JSON",
-        },
-        body: JSON.stringify(values),
-      });
-      const result = await response.json();
-      console.log(result);
+      const response = await axios.post("api/register", { values });
+      // const result = await response.json();
+      // console.log(response);
+
+      const { accessToken } = response.data;
+      if (accessToken) {
+        localStorage.setItem("authToken", JSON.stringify(accessToken));
+        // if (verifyJWTToken(accessToken)) {
+
+        // console.log("verify: ", verifyJWTToken(accessToken));
+
+        // }
+      } else {
+        console.log("Please Log In again");
+      }
+
+      // const authHeader = req.headers["authorization"];
+      // const token = authHeader && authHeader.split(" ")[1];
+      // if (token == null) return res.sendStatus(401);
 
       router.push("/");
     } catch (e) {

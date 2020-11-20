@@ -69,7 +69,7 @@ const login2: React.FC<loginProps> = ({}) => {
         localStorage.setItem("authToken", JSON.stringify(accessToken));
         // if (verifyJWTToken(accessToken)) {
 
-        console.log("verify: ", verifyJWTToken(accessToken));
+        // console.log("verify: ", verifyJWTToken(accessToken));
 
         // }
       } else {

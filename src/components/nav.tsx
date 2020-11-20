@@ -43,7 +43,7 @@ export default function Nav() {
               <Link href={link.href} key={link.label}>
                 <a
                   key={link.label}
-                  className={`block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-600 ${
+                  className={`block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
                   }`}
                 >
