@@ -104,7 +104,8 @@ const register: React.FC<registerProps> = ({}) => {
                 onSubmit={handleSubmit}
                 validationSchema={validation}
               >
-                {({ isSubmitting }) => (
+                {/* There's an isSubmitting here */}
+                {() => (
                   <Form
                     autoComplete="off"
                     className="flex flex-col"

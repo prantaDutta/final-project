@@ -107,7 +107,8 @@ const login2: React.FC<loginProps> = ({}) => {
                 onSubmit={handleSubmit}
                 validationSchema={validation}
               >
-                {({ isSubmitting }) => (
+                {/* There's an isSubmitting here */}
+                {() => (
                   <Form
                     autoComplete="off"
                     className="flex flex-col"
