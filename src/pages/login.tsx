@@ -72,6 +72,7 @@ const login2: React.FC<loginProps> = ({}) => {
         // console.log("verify: ", verifyJWTToken(accessToken));
 
         // }
+        console.log(verifyJWTToken(accessToken));
       } else {
         console.log("Please Log In again");
       }
@@ -80,7 +81,7 @@ const login2: React.FC<loginProps> = ({}) => {
       // const token = authHeader && authHeader.split(" ")[1];
       // if (token == null) return res.sendStatus(401);
 
-      router.push("/");
+      router.push("/dashboard");
     } catch (e) {
       console.log(e);
     }

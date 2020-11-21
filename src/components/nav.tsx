@@ -12,15 +12,16 @@ const links: linkArray[] = [
   { href: "/register", label: "Register" },
 ];
 
-interface linkArray {
+export interface linkArray {
   href: string;
   label: string;
+  svgD?: string;
 }
 
 // d attribute value of hambergur menu and cross sign
 const menu = ["M4 6h16M4 12h16M4 18h16", "M6 18L18 6M6 6l12 12"];
 
-interface NavItemsProps {
+export interface NavItemsProps {
   links: linkArray[];
 }
 

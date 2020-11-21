@@ -8,21 +8,21 @@ datasource db {
 }
 
 model borrowers {
-  id         Int       @id @default(autoincrement())
-  userId     Int
-  created_at DateTime?
-  updated_at DateTime?
-  users      users     @relation(fields: [userId], references: [id])
-  loans      loans[]
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  createdAt DateTime?
+  updatedAt DateTime?
+  users     users     @relation(fields: [userId], references: [id])
+  loans     loans[]
 }
 
 model lenders {
-  id         Int       @id @default(autoincrement())
-  userId     Int
-  created_at DateTime?
-  updated_at DateTime?
-  users      users     @relation(fields: [userId], references: [id])
-  loans      loans[]
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  createdAt DateTime?
+  updatedAt DateTime?
+  users     users     @relation(fields: [userId], references: [id])
+  loans     loans[]
 }
 
 model loans {
@@ -41,8 +41,8 @@ model loans {
   monthlyInstallment               Int
   loanStartDate                    DateTime
   loanEndDate                      DateTime
-  created_at                       DateTime?
-  updated_at                       DateTime?
+  createdAt                        DateTime?
+  updatedAt                        DateTime?
   borrowers                        borrowers   @relation(fields: [borrowerId], references: [id])
   lenders                          lenders     @relation(fields: [lenderId], references: [id])
   users                            users       @relation(fields: [userId], references: [id])
@@ -57,8 +57,8 @@ model penalties {
   month         String
   year          String
   penaltyAmount Int
-  created_at    DateTime?
-  updated_at    DateTime?
+  createdAt     DateTime?
+  updatedAt     DateTime?
   loans         loans     @relation(fields: [loanId], references: [id])
   users         users     @relation(fields: [userId], references: [id])
 }
@@ -72,10 +72,10 @@ model users {
   role               Role
   verified           Boolean           @default(false)
   verificationNo     String?
-  verificationPhotos Json
+  verificationPhotos Json?
   remember_token     String?
-  created_at         DateTime?
-  updated_at         DateTime?
+  createdAt          DateTime?
+  updatedAt          DateTime?
   borrowers          borrowers[]
   lenders            lenders[]
   loans              loans[]
@@ -85,15 +85,15 @@ model users {
 }
 
 model wallets {
-  id         Int       @id @default(autoincrement())
-  userId     Int
-  loanId     Int
-  balance    Int
-  type       String
-  created_at DateTime?
-  updated_at DateTime?
-  loans      loans     @relation(fields: [loanId], references: [id])
-  users      users     @relation(fields: [userId], references: [id])
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  loanId    Int
+  balance   Int
+  type      String
+  createdAt DateTime?
+  updatedAt DateTime?
+  loans     loans     @relation(fields: [loanId], references: [id])
+  users     users     @relation(fields: [userId], references: [id])
 }
 
 model password_resets {
@@ -108,7 +108,7 @@ model password_resets {
 }
 
 enum Role {
-  Admin
-  Borrower
-  Lender
+  admin
+  borrower
+  lender
 }

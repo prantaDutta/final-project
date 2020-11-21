@@ -10,17 +10,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     //   res.json({
     //     email,
     //   });
-    const findEmail = await prisma.user.findOne({
-      where: {
-        email,
-      },
-    });
-    if (findEmail) {
-      res.json({
-        msg: "Email already been taken",
+    try {
+      const findEmail = await prisma.users.findOne({
+        where: {
+          email,
+        },
       });
-    } else {
-      res.json({ msg: "Unique Email" });
+      if (findEmail) {
+        res.json({
+          msg: "Email already been taken",
+        });
+      } else {
+        res.json({ msg: "Unique Email" });
+      }
+    } catch (e) {
+      console.log(e);
+      res.send("Validating");
     }
   } else {
     res.send("Validating");

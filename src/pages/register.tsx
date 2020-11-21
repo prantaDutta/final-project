@@ -23,7 +23,7 @@ const register: React.FC<registerProps> = ({}) => {
   const validation = Yup.object({
     name: Yup.string().required("Required"),
     role: Yup.mixed()
-      .oneOf(["Lender", "Borrower"], "Role should be Lender or Borrower")
+      .oneOf(["lender", "borrower"], "Role should be Lender or Borrower")
       .required("Required"),
     email: Yup.string()
       .email("Invalid email")
@@ -75,7 +75,7 @@ const register: React.FC<registerProps> = ({}) => {
       // const token = authHeader && authHeader.split(" ")[1];
       // if (token == null) return res.sendStatus(401);
 
-      router.push("/");
+      router.push("/dashboard");
     } catch (e) {
       console.log(e);
     }
@@ -128,8 +128,8 @@ const register: React.FC<registerProps> = ({}) => {
                       component="select"
                     >
                       <option value="Default">Choose One...</option>
-                      <option value="Lender">Lender</option>
-                      <option value="Borrower">Borrower</option>
+                      <option value="lender">Lender</option>
+                      <option value="borrower">Borrower</option>
                     </FormikTextField>
 
                     <FormikTextField

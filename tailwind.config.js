@@ -35,6 +35,11 @@ module.exports = {
       },
       colors: {
         mint: "##ADEFD1FF",
+        lightIndigo: "#9921e8",
+        lighterBlue: "#5f72be",
+        sage: "#daf2dc",
+        grape: "#4d5198",
+        skyblue: "#81b7d2",
       },
       spacing: {
         1.5: "0.35rem",

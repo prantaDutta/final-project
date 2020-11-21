@@ -2,7 +2,7 @@ interface upperFooterProps {}
 
 const UpperFooter: React.FC<upperFooterProps> = ({}) => {
   return (
-    <section className="pt-5 text-center">
+    <section className="pt-10 pb-5 text-center">
       <div className="text-gray-300 mt-4 sm:mt-3 px-4 md:mt-0">
         <h2 className="text-2xl md:text-4xl font-semibold md:font-bold pb-10 md:pb-6 sm:4">
           Connect With Us

@@ -2,6 +2,37 @@
   "version": "0.3.14-fixed",
   "steps": [
     {
+      "tag": "CreateEnum",
+      "enum": "Role",
+      "values": [
+        "admin",
+        "borrower",
+        "lender"
+      ]
+    },
+    {
+      "tag": "CreateSource",
+      "source": "db"
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Source",
+        "source": "db"
+      },
+      "argument": "provider",
+      "value": "\"postgresql\""
+    },
+    {
+      "tag": "CreateArgument",
+      "location": {
+        "tag": "Source",
+        "source": "db"
+      },
+      "argument": "url",
+      "value": "\"***\""
+    },
+    {
       "tag": "CreateModel",
       "model": "borrowers"
     },
@@ -58,14 +89,14 @@
     {
       "tag": "CreateField",
       "model": "borrowers",
-      "field": "created_at",
+      "field": "createdAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
       "model": "borrowers",
-      "field": "updated_at",
+      "field": "updatedAt",
       "type": "DateTime",
       "arity": "Optional"
     },
@@ -179,14 +210,14 @@
     {
       "tag": "CreateField",
       "model": "lenders",
-      "field": "created_at",
+      "field": "createdAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
       "model": "lenders",
-      "field": "updated_at",
+      "field": "updatedAt",
       "type": "DateTime",
       "arity": "Optional"
     },
@@ -391,14 +422,14 @@
     {
       "tag": "CreateField",
       "model": "loans",
-      "field": "created_at",
+      "field": "createdAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
       "model": "loans",
-      "field": "updated_at",
+      "field": "updatedAt",
       "type": "DateTime",
       "arity": "Optional"
     },
@@ -639,14 +670,14 @@
     {
       "tag": "CreateField",
       "model": "penalties",
-      "field": "created_at",
+      "field": "createdAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
       "model": "penalties",
-      "field": "updated_at",
+      "field": "updatedAt",
       "type": "DateTime",
       "arity": "Optional"
     },
@@ -879,7 +910,7 @@
       "model": "users",
       "field": "verificationPhotos",
       "type": "Json",
-      "arity": "Required"
+      "arity": "Optional"
     },
     {
       "tag": "CreateField",
@@ -891,14 +922,14 @@
     {
       "tag": "CreateField",
       "model": "users",
-      "field": "created_at",
+      "field": "createdAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
       "model": "users",
-      "field": "updated_at",
+      "field": "updatedAt",
       "type": "DateTime",
       "arity": "Optional"
     },
@@ -1022,14 +1053,14 @@
     {
       "tag": "CreateField",
       "model": "wallets",
-      "field": "created_at",
+      "field": "createdAt",
       "type": "DateTime",
       "arity": "Optional"
     },
     {
       "tag": "CreateField",
       "model": "wallets",
-      "field": "updated_at",
+      "field": "updatedAt",
       "type": "DateTime",
       "arity": "Optional"
     },
@@ -1265,10 +1296,6 @@
         },
         "directive": "index"
       }
-    },
-    {
-      "tag": "DeleteModel",
-      "model": "User"
     }
   ]
 }
