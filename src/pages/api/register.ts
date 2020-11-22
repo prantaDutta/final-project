@@ -20,10 +20,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   });
 
   if (!user) {
+    console.log("something is wrong");
     res.send("error");
   } else {
     const accessToken = jwt.sign(user.email, process.env.ACCESS_TOKEN_SECRET!);
-    // console.log(accessToken);
+    console.log(accessToken);
     res.json({ accessToken });
   }
 };
