@@ -32,10 +32,36 @@ The database is hosted with heroku so it might be slow
 
 If you want to use your own postgresql database then download postgresql from [`here`](https://www.enterprisedb.com/postgresql-tutorial-resources-training?cid=55)
 
+Then run the following command to create the database table
+
+```
+yarn migration:up
+```
+
 # Open your database
 
 Open your database with following command
 
 ```
 yarn db:open
+```
+
+### Project Structure
+
+```
+Layout
+    NavBar
+        '/' Homepage
+            Introduction
+            ProvideInvestors
+            ProvideBorrowers
+            Sponsors
+            MobileApp
+            UpperFooter
+        '/login' Login Page
+            FormikTextField
+        '/register' Register Page
+            FormikTextField
+    Footer
+/dashboard Dashboard Page
 ```
