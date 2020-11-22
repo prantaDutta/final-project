@@ -1,6 +1,9 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
+  const router = useRouter();
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">
       <div className="flex items-center cursor-pointer p-4">
@@ -49,7 +52,16 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
       </div>
       <div className="p-4">
         <h4 className="p-2 cursor-pointer rounded border-solid border-2 border-purple-800 hover:bg-purple-900 hover:text-white">
-          Log Out
+          <Link href="#">
+            <a
+              onClick={() => {
+                localStorage.removeItem("authToken");
+                router.push("/");
+              }}
+            >
+              Log Out
+            </a>
+          </Link>
         </h4>
       </div>
     </div>

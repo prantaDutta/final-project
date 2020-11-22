@@ -6,6 +6,9 @@ import MobileApp from "./../components/indexPage/mobileApp";
 import UpperFooter from "../components/indexPage/upperFooter";
 import Layout from "../components/Layout";
 
+// This is the home page
+// the components of this page are in the components folder
+
 export default function IndexPage() {
   return (
     <Layout>
@@ -13,7 +16,6 @@ export default function IndexPage() {
         <Introduction />
         <ProvideInvestors />
         <ProvideBorrowers />
-
         <Sponsors />
         <MobileApp />
         <UpperFooter />

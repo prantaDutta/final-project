@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
@@ -28,6 +29,7 @@ export interface NavItemsProps {
 export default function Nav() {
   const { isAuthenticated } = useContext(AuthContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const router = useRouter();
 
   // rendering each nav items
   const NavItems: React.FC<NavItemsProps> = ({ links }) => {
@@ -44,7 +46,10 @@ export default function Nav() {
               <Link href={link.href} key={link.label}>
                 <a
                   key={link.label}
-                  onClick={() => localStorage.removeItem("authToken")}
+                  onClick={() => {
+                    localStorage.removeItem("authToken");
+                    router.push("/");
+                  }}
                   className={`block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
                   }`}

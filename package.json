@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next",
-    "build": "next build && npx prisma generate",
+    "build": "next build",
     "start": "next start",
     "migration:create": "npx prisma migrate save --experimental",
     "migration:up": "npx prisma migrate up --experimental",
-    "db:gen": "npx prisma generate"
+    "db:gen": "npx prisma generate",
+    "db:open": "npx prisma studio"
   },
   "dependencies": {
     "@adoxyz/tailwindcss-named-colors": "^0.1.0",

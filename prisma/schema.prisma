@@ -8,6 +8,8 @@ datasource db {
   url      = env("DATABASE_URL")
   // for production
   // url      = env("DATABASE_URL_ONLINE")
+  // for elephantSQL
+  // url      = env("DATABASE_URL_ONLINE_ELEPHANT")
 }
 
 model borrowers {
