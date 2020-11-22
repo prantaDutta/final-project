@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next",
-    "build": "next build",
+    "build": "next build && npx prisma generate",
     "start": "next start",
     "migration:create": "npx prisma migrate save --experimental",
     "migration:up": "npx prisma migrate up --experimental",
