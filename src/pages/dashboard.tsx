@@ -1,16 +1,14 @@
-import MainContent from "../components/dashboard/MainContent";
-import Sidebar from "../components/dashboard/Sidebar";
+import React from "react";
+import DashboardContent from "../components/dashboard/DashboardContent";
+import DashboardLayout from "../components/layouts/DashboardLayout";
 
 interface dashboardProps {}
 
 const dashboard: React.FC<dashboardProps> = () => {
   return (
-    <div>
-      <div className="grid grid-cols-5 h-screen">
-        <Sidebar />
-        <MainContent />
-      </div>
-    </div>
+    <DashboardLayout>
+      <DashboardContent />
+    </DashboardLayout>
   );
 };
 

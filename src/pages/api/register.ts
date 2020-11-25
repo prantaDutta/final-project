@@ -2,11 +2,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { parseISO, toDate } from "date-fns";
 
 const prisma = new PrismaClient();
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, role, password } = req.body.values;
+  const { name, email, role, password, dateOfBirth } = req.body.values;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -16,6 +17,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       email,
       role,
       password: hashedPassword,
+      dateOfBirth: toDate(parseISO(dateOfBirth)),
     },
   });
 
@@ -24,7 +26,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.send("error");
   } else {
     const accessToken = jwt.sign(user.email, process.env.ACCESS_TOKEN_SECRET!);
-    console.log(accessToken);
+    // console.log(accessToken);
     res.json({ accessToken });
   }
 };

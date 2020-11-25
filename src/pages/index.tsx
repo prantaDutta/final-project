@@ -4,7 +4,7 @@ import ProvideBorrowers from "../components/indexPage/provideBorrowers";
 import Sponsors from "../components/indexPage/sponsors";
 import MobileApp from "./../components/indexPage/mobileApp";
 import UpperFooter from "../components/indexPage/upperFooter";
-import Layout from "../components/Layout";
+import Layout from "../components/layouts/Layout";
 
 // This is the home page
 // the components of this page are in the components folder

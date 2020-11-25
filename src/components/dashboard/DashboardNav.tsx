@@ -1,9 +1,20 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { verifyJWTToken } from "../../utils/functions";
+
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
+  const [name, setName] = useState<string>("Loading");
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      const res = verifyJWTToken(JSON.parse(token));
+      setName((res as any).name);
+    }
+  });
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">
       <div className="flex items-center cursor-pointer p-4">
@@ -47,12 +58,13 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
         </div>
         <div>
           <h4 className="">Welcome, </h4>
-          <h4 className="font-semibold">Pranta Dutta</h4>
+          <h4 className="font-semibold">{name}</h4>
+          {/* <h4 className="font-semibold">Pranta Dutta</h4> */}
         </div>
       </div>
       <div className="p-4">
         <h4 className="p-2 cursor-pointer rounded border-solid border-2 border-purple-800 hover:bg-purple-900 hover:text-white">
-          <Link href="#">
+          <Link href={router.pathname + "#"}>
             <a
               onClick={() => {
                 localStorage.removeItem("authToken");

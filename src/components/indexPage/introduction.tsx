@@ -3,11 +3,11 @@ export default function Introduction() {
     <header className="px-4">
       <div className="flex justify-center items-center text-gray-300 w-full py-5 md:py-16">
         <div>
-          <h1 className=" font-medium md:font-semibold text-3xl md:text-5xl text-center">
+          <h1 className="font-medium md:font-semibold text-3xl md:text-5xl text-center">
             The Best p2p lending platform in Bangladesh
           </h1>
           <br />
-          <p className=" font-medium md:font-2xl text-xl md:text-4xl text-center">
+          <p className="font-medium md:font-2xl text-xl md:text-4xl text-center">
             Lend and Borrow Money Anytime
           </p>
           <br />

@@ -1,6 +1,6 @@
 import React from "react";
-import Footer from "./footer";
-import Nav from "./nav";
+import Footer from ".././shared/footer";
+import Nav from ".././shared/nav";
 
 interface LayoutProps {}
 

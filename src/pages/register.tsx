@@ -1,9 +1,10 @@
 import { useRouter } from "next/router";
-import Layout from "../components/Layout";
+import Layout from "../components/layouts/Layout";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import FormikTextField from "./../components/FormikTextField";
+import FormikTextField from "./../components/shared/FormikTextField";
+import { sub18Years, formatDate } from "../utils/functions";
 
 interface registerProps {}
 
@@ -13,6 +14,7 @@ interface Values {
   email: string;
   password: string;
   confirmPassword: string;
+  dateOfBirth: string;
 }
 
 const register: React.FC<registerProps> = ({}) => {
@@ -99,6 +101,7 @@ const register: React.FC<registerProps> = ({}) => {
                   password: "",
                   email: "",
                   role: "",
+                  dateOfBirth: formatDate(sub18Years(new Date())).toString(),
                   confirmPassword: "",
                 }}
                 onSubmit={handleSubmit}
@@ -121,6 +124,12 @@ const register: React.FC<registerProps> = ({}) => {
                       label="Enter your Email *"
                       name="email"
                       type="text"
+                    />
+
+                    <FormikTextField
+                      label="Enter your Birth Date *"
+                      name="dateOfBirth"
+                      type="date"
                     />
 
                     <FormikTextField

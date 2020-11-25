@@ -4,21 +4,17 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // for development
   url      = env("DATABASE_URL")
-  // for production
-  // url      = env("DATABASE_URL_ONLINE")
-  // for elephantSQL
-  // url      = env("DATABASE_URL_ONLINE_ELEPHANT")
 }
 
 model borrowers {
-  id        Int       @id @default(autoincrement())
-  userId    Int
-  createdAt DateTime?
-  updatedAt DateTime?
-  users     users     @relation(fields: [userId], references: [id])
-  loans     loans[]
+  id           Int       @id @default(autoincrement())
+  userId       Int
+  borrowerType String
+  createdAt    DateTime?
+  updatedAt    DateTime?
+  users        users     @relation(fields: [userId], references: [id])
+  loans        loans[]
 }
 
 model lenders {
@@ -73,12 +69,13 @@ model users {
   name               String
   email              String            @unique
   emailVerifiedAt    DateTime?
+  dateOfBirth        DateTime
   password           String
-  role               Role
+  role               String
+  gender             String?
   verified           Boolean           @default(false)
   verificationNo     String?
   verificationPhotos Json?
-  remember_token     String?
   createdAt          DateTime?
   updatedAt          DateTime?
   borrowers          borrowers[]
@@ -110,6 +107,12 @@ model password_resets {
   users      users     @relation(fields: [userId], references: [id])
 
   @@index([email], name: "password_resets_email_index")
+}
+
+model laravel_migrations {
+  id        Int    @id @default(autoincrement())
+  migration String
+  batch     Int
 }
 
 enum Role {

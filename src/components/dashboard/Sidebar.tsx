@@ -6,13 +6,17 @@ import { useRouter } from "next/router";
 const Sidebar: React.FC<SidebarProps> = ({}) => {
   const router = useRouter();
   return (
-    <div className="col-span-1 bg-gradient-to-r from-grape to-skyblue text-white">
-      <h4 className="font-semibold text-4xl text-center mt-5">GrayScale</h4>
+    <div className="col-span-1 body-bg text-white">
+      <Link href="/">
+        <a>
+          <h4 className="font-semibold text-4xl text-center mt-5">GrayScale</h4>
+        </a>
+      </Link>
       <div className="flex-col pt-10 uppercase">
         {links.map((link) => {
           return (
             <div
-              className={`p-3 font-normal text-base my-4 cursor-pointer border-l-4 border-solid hover:bg-grape hover:border-sage hover:text-skyblue ${
+              className={`p-3 font-semibold text-base my-4 cursor-pointer border-l-4 border-solid hover:bg-grape hover:border-sage hover:text-skyblue ${
                 router.pathname === link.href
                   ? "bg-grape border-sage text-skyblue"
                   : "border-grape"
@@ -47,14 +51,6 @@ const Sidebar: React.FC<SidebarProps> = ({}) => {
     </div>
   );
 };
-
-// <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=""></path></svg>
-// <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=""></path></svg>
-// <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=""></path></svg>
-// <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=""></path></svg>
-// <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=""></path></svg>
-// <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=""></path></svg>
-// <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d=""></path></svg>
 
 const links: linkArray[] = [
   {

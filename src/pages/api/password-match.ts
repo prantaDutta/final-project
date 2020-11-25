@@ -14,11 +14,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    if (user && (await bcrypt.compare(user.password, password))) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       // password match
       res.json({ msg: "Password Matching" });
     } else {
       // password did not match
+
       res.json({
         msg: "Wrong Credentials",
       });

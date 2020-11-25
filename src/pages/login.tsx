@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
-import Layout from "../components/Layout";
+import Layout from "../components/layouts/Layout";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import FormikTextField from "../components/FormikTextField";
-import { verifyJWTToken } from "../utils/functions";
+import FormikTextField from "../components/shared/FormikTextField";
+import { useLoading, ThreeDots } from "@agney/react-loading";
 
 interface loginProps {}
 
@@ -20,10 +20,10 @@ const login2: React.FC<loginProps> = ({}) => {
   const validation = Yup.object({
     email: Yup.string()
       .email("Invalid email")
-      .test("Unique Email", "Wrong Email", function (value) {
+      .test("Unique Email", "Email doesn't exist", function (value) {
         return new Promise((resolve, _) => {
           axios.post("/api/unique-email", { email: value }).then((res) => {
-            if (res.data.msg === "Email already been taken") {
+            if (res.data.msg !== "Unique Email") {
               resolve(true);
             }
             resolve(false);
@@ -41,10 +41,10 @@ const login2: React.FC<loginProps> = ({}) => {
               password: value,
             })
             .then((res) => {
-              if (res.data.msg !== "Password Matching") {
-                resolve(true);
+              if (res.data.msg === "Wrong Credentials") {
+                resolve(false);
               }
-              resolve(false);
+              resolve(true);
             });
         });
       })
@@ -65,6 +65,7 @@ const login2: React.FC<loginProps> = ({}) => {
       // console.log(response);
 
       const { accessToken } = response.data;
+      // console.log("l", accessToken);
       if (accessToken) {
         localStorage.setItem("authToken", JSON.stringify(accessToken));
         // if (verifyJWTToken(accessToken)) {
@@ -72,7 +73,7 @@ const login2: React.FC<loginProps> = ({}) => {
         // console.log("verify: ", verifyJWTToken(accessToken));
 
         // }
-        console.log(verifyJWTToken(accessToken));
+        // console.log(verifyJWTToken(accessToken));
       } else {
         console.log("Please Log In again");
       }
@@ -85,8 +86,13 @@ const login2: React.FC<loginProps> = ({}) => {
     } catch (e) {
       console.log(e);
     }
-    setSubmitting(false);
+    // setSubmitting(false);
   };
+
+  const { containerProps, indicatorEl } = useLoading({
+    loading: true,
+    indicator: <ThreeDots width="50" />,
+  });
 
   return (
     <div className="h-10vh">
@@ -108,7 +114,7 @@ const login2: React.FC<loginProps> = ({}) => {
                 validationSchema={validation}
               >
                 {/* There's an isSubmitting here */}
-                {() => (
+                {({ isSubmitting }) => (
                   <Form
                     autoComplete="off"
                     className="flex flex-col"
@@ -139,7 +145,16 @@ const login2: React.FC<loginProps> = ({}) => {
                       className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
                       type="submit"
                     >
-                      Log In
+                      {isSubmitting ? (
+                        <section
+                          className="p-1.5 flex justify-center"
+                          {...containerProps}
+                        >
+                          {indicatorEl} {/* renders only while loading */}
+                        </section>
+                      ) : (
+                        "Log In"
+                      )}
                     </button>
                   </Form>
                 )}
