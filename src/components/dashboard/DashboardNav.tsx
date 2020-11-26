@@ -1,20 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { verifyJWTToken } from "../../utils/functions";
+import { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
-  const [name, setName] = useState<string>("Loading");
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      const res = verifyJWTToken(JSON.parse(token));
-      setName((res as any).name);
-    }
-  });
+  const { user, toggleAuth } = useContext(AuthContext);
+
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">
       <div className="flex items-center cursor-pointer p-4">
@@ -58,7 +52,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
         </div>
         <div>
           <h4 className="">Welcome, </h4>
-          <h4 className="font-semibold">{name}</h4>
+          <h4 className="font-semibold">{(user as any).name}</h4>
           {/* <h4 className="font-semibold">Pranta Dutta</h4> */}
         </div>
       </div>
@@ -68,6 +62,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
             <a
               onClick={() => {
                 localStorage.removeItem("authToken");
+                toggleAuth();
                 router.push("/");
               }}
             >

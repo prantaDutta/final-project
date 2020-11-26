@@ -1,13 +1,27 @@
-import { Form, Formik, FormikConfig, FormikValues } from "formik";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import FormikTextField from "../components/shared/FormikTextField";
 import DashboardLayout from "../components/layouts/DashboardLayout";
-import StepperIcons, { icons } from "../components/verification/StepperIcons";
-import { sub18Years, formatDate } from "../utils/functions";
+import axios from "axios";
+import { formatDate, eightennYearsBackFromNow } from "../utils/functions";
+import { object } from "yup";
+import * as Yup from "yup";
+import {
+  FormikStepper,
+  FormikStepProps,
+} from "../components/shared/FormikStepper";
+import { AuthContext } from "../contexts/AuthContext";
+import { users } from "@prisma/client";
 
 interface verifyProps {}
 
 const verify: React.FC<verifyProps> = ({}) => {
+  const { user } = useContext(AuthContext);
+  const { id, name, gender, dateOfBirth, email } = user as users;
+
+  const formattedDate = dateOfBirth
+    ? dateOfBirth.toString().split("T")[0]
+    : formatDate(new Date());
+
   return (
     <DashboardLayout>
       <div className="p-5">
@@ -17,25 +31,58 @@ const verify: React.FC<verifyProps> = ({}) => {
 
         <div className="mt-4 p-4">
           <FormikStepper
+            enableReinitialize
             initialValues={{
               // Personal
-              name: "",
-              dateOfBirth: formatDate(sub18Years(new Date())),
-              address: "",
-              email: "",
-              mobileNo: "",
+              name: name || "",
+              dateOfBirth: formattedDate,
+              gender: gender || "",
+              // contact information
+              address: "RKM",
+              email: email || "",
+              mobileNo: "01851944587",
               // checking salaried individual or self-employed
               type: "",
               // KYC
-              verificationNo: "",
-              verificationPhotos: {},
+              documentType: "",
+              verificationPhotos: {
+                nidOrPassport: "",
+                addressProof: "",
+                recentPhoto: "",
+                backAccountStateMents: "",
+                businessProof: "",
+                salarySlip: "",
+                salaryIdCard: "",
+                companyName: "",
+                employeeStatus: "",
+              },
             }}
             onSubmit={async (values) => {
               console.log("values", values);
             }}
           >
             {/* Personal Tab */}
-            <FormikStep label="Personal Information">
+            <FormikStep
+              // initialValues={{
+              //   name: name || "",
+              //   dateOfBirth: formattedDate,
+              //   gender: gender || "",
+              //   address: "",
+              // }}
+              label="Personal Information"
+              validationSchema={object({
+                name: Yup.string().required("Required"),
+                gender: Yup.mixed()
+                  .oneOf(["male", "female"], "Gender should be Male or Female")
+                  .required("Required"),
+                dateOfBirth: Yup.date()
+                  .max(
+                    formatDate(eightennYearsBackFromNow()).toString(),
+                    "You Must be 18 Years Old"
+                  )
+                  .required("Required"),
+              })}
+            >
               <FormikTextField
                 label="Your Full Name *"
                 name="name"
@@ -55,13 +102,54 @@ const verify: React.FC<verifyProps> = ({}) => {
                 <option value="male">Male</option>
                 <option value="female">Female</option>
               </FormikTextField>
+            </FormikStep>
+            {/* contact Information */}
+            <FormikStep
+              // initialValues={{
+              //   address: "",
+              //   email: email || "",
+              //   mobileNo: "",
+              // }}
+              label="Contact Information"
+              validationSchema={object({
+                address: Yup.string().required("Required"),
+                email: Yup.string()
+                  .email("Invalid email")
+                  .test(
+                    "Unique Email",
+                    "Email already been taken",
+                    function (value) {
+                      return new Promise((resolve, _) => {
+                        axios
+                          .post("/api/unique-email-excluding-id", {
+                            email: value,
+                            id,
+                          })
+                          .then((res) => {
+                            if (res.data.msg === "Email already been taken") {
+                              resolve(false);
+                            }
+                            resolve(true);
+                          });
+                      });
+                    }
+                  )
+                  .required("Required"),
+                mobileNo: Yup.number()
+                  .typeError("age must be a number")
+                  .test(
+                    "len",
+                    "Mobile No must be 11 characters",
+                    (val) => val?.toString().length === 10
+                  )
+                  .required("Required"),
+              })}
+            >
               <FormikTextField
                 label="Your Address *"
                 name="address"
                 type="text"
               />
-            </FormikStep>
-            <FormikStep label="Contact Information">
               <FormikTextField label="Your Email *" name="email" type="email" />
 
               <FormikTextField
@@ -70,18 +158,56 @@ const verify: React.FC<verifyProps> = ({}) => {
                 type="text"
               />
             </FormikStep>
-            <FormikStep label="Necessary Papers">
+            {/* Necessary Papers */}
+            <FormikStep
+              // initialValues={{ type: "" }}
+              validationSchema={object({
+                type: Yup.mixed()
+                  .oneOf(["salaried", "self"], "You have to select a type")
+                  .required("Required"),
+              })}
+              label="Necessary Papers"
+            >
               <FormikTextField
-                label="Your Full Name *"
-                name="name"
-                type="text"
-              />
+                label="Select Borrower Type *"
+                name="type"
+                component="select"
+              >
+                <option value="Default">Choose One...</option>
+                <option value="salaried">Salaried Individual</option>
+                <option value="self">Self Employed</option>
+              </FormikTextField>
             </FormikStep>
-            <FormikStep label="Submit Page">
+            {/* {({initialValues}) => {
+              return ()
+            }} */}
+            <FormikStep
+              // initialValues={{ verificationNo: "", verificationPhotos: {} }}
+              validationSchema={object({
+                type: Yup.mixed()
+                  .oneOf(["salaried", "self"], "You have to select a type")
+                  .required("Required"),
+              })}
+              label="Submit Page"
+            >
               <FormikTextField
-                label="Your Full Name *"
-                name="name"
+                label="Verification Document *"
+                name="documentType"
+                component="select"
+              >
+                <option value="nid">NID</option>
+                <option value="passportNo">Passport</option>
+              </FormikTextField>
+
+              {/* <FormikTextField
+                label="Your NID / Passport No. *"
+                name="verificationNo"
                 type="text"
+              /> */}
+              <FormikTextField
+                label="Your NID / Passport *"
+                name="verificationNo"
+                type="file"
               />
             </FormikStep>
           </FormikStepper>
@@ -91,86 +217,8 @@ const verify: React.FC<verifyProps> = ({}) => {
   );
 };
 
-export interface FormikStepProps
-  extends Pick<FormikConfig<FormikValues>, "children" | "validationSchema"> {
-  label: string;
-}
-
 export function FormikStep({ children }: FormikStepProps) {
   return <>{children}</>;
-}
-
-export function FormikStepper({
-  children,
-  ...props
-}: FormikConfig<FormikValues>) {
-  const childrenArray = React.Children.toArray(
-    children
-  ) as React.ReactElement<FormikStepProps>[];
-  const [step, setStep] = useState(0);
-  const currentChild = childrenArray[step];
-  const [complete, setCompleted] = useState(false);
-
-  function isLastStep() {
-    return step === childrenArray.length - 1;
-  }
-
-  return (
-    <Formik
-      {...props}
-      validationSchema={currentChild.props.validationSchema}
-      onSubmit={async (values, helpers) => {
-        if (isLastStep()) {
-          await props.onSubmit(values, helpers);
-          setCompleted(true);
-        } else {
-          setStep((s) => s + 1);
-        }
-      }}
-    >
-      {({ isSubmitting }) => (
-        <Form autoComplete="off">
-          <div className="mb-4 p-4">
-            <div className="flex items-center">
-              {icons.map((item, index) => (
-                <StepperIcons
-                  key={index}
-                  index={index}
-                  item={item}
-                  isDone={step > index}
-                />
-              ))}
-            </div>
-          </div>
-
-          <h4 className="text-xl font-semibold my-4 mt-10">
-            {childrenArray[step].props.label}
-          </h4>
-          {currentChild}
-          <div
-            className={`flex ${step > 0 ? "justify-between" : "justify-end"}`}
-          >
-            {step > 0 && (
-              <button
-                type="button"
-                onClick={() => setStep(step - 1)}
-                className="bg-blue-500 text-white rounded px-5 py-3 focus:border-none"
-              >
-                Previous
-              </button>
-            )}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-teal text-white rounded px-8 py-3"
-            >
-              {isLastStep() ? "Submit" : "Next"}
-            </button>
-          </div>
-        </Form>
-      )}
-    </Formik>
-  );
 }
 
 export default verify;

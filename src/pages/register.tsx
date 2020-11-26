@@ -1,10 +1,12 @@
 import { useRouter } from "next/router";
 import Layout from "../components/layouts/Layout";
 import { Formik, Form, FormikHelpers } from "formik";
-import * as Yup from "yup";
 import axios from "axios";
 import FormikTextField from "./../components/shared/FormikTextField";
-import { sub18Years, formatDate } from "../utils/functions";
+import { yupValidationSchema } from "../utils/vaidationSchema";
+import { useLoading, ThreeDots } from "@agney/react-loading";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 interface registerProps {}
 
@@ -14,39 +16,20 @@ interface Values {
   email: string;
   password: string;
   confirmPassword: string;
+  gender: string;
   dateOfBirth: string;
 }
 
 const register: React.FC<registerProps> = ({}) => {
   const router = useRouter();
+  const { toggleAuth } = useContext(AuthContext);
+
+  const { containerProps, indicatorEl } = useLoading({
+    loading: true,
+    indicator: <ThreeDots width="50" />,
+  });
 
   // creating validation schema with YUP
-
-  const validation = Yup.object({
-    name: Yup.string().required("Required"),
-    role: Yup.mixed()
-      .oneOf(["lender", "borrower"], "Role should be Lender or Borrower")
-      .required("Required"),
-    email: Yup.string()
-      .email("Invalid email")
-      .test("Unique Email", "Email already been taken", function (value) {
-        return new Promise((resolve, _) => {
-          axios.post("/api/unique-email", { email: value }).then((res) => {
-            if (res.data.msg === "Email already been taken") {
-              resolve(false);
-            }
-            resolve(true);
-          });
-        });
-      })
-      .required("Required"),
-    password: Yup.string()
-      .min(6, "Password should be atleast six letters")
-      .required("Required"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password")], "Passwords must match")
-      .required("Required"),
-  });
 
   // Handling onSubmit property of formik with handleSubmit funtction
   const handleSubmit = async (
@@ -81,6 +64,7 @@ const register: React.FC<registerProps> = ({}) => {
     } catch (e) {
       console.log(e);
     }
+    toggleAuth();
     setSubmitting(false);
   };
 
@@ -101,14 +85,15 @@ const register: React.FC<registerProps> = ({}) => {
                   password: "",
                   email: "",
                   role: "",
-                  dateOfBirth: formatDate(sub18Years(new Date())).toString(),
+                  dateOfBirth: "",
+                  gender: "",
                   confirmPassword: "",
                 }}
                 onSubmit={handleSubmit}
-                validationSchema={validation}
+                validationSchema={yupValidationSchema}
               >
                 {/* There's an isSubmitting here */}
-                {() => (
+                {({ isSubmitting }) => (
                   <Form
                     autoComplete="off"
                     className="flex flex-col"
@@ -127,10 +112,14 @@ const register: React.FC<registerProps> = ({}) => {
                     />
 
                     <FormikTextField
-                      label="Enter your Birth Date *"
-                      name="dateOfBirth"
-                      type="date"
-                    />
+                      label="Your Gender"
+                      name="gender"
+                      component="select"
+                    >
+                      <option value="Default">Choose One...</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                    </FormikTextField>
 
                     <FormikTextField
                       label="You are a *"
@@ -141,6 +130,12 @@ const register: React.FC<registerProps> = ({}) => {
                       <option value="lender">Lender</option>
                       <option value="borrower">Borrower</option>
                     </FormikTextField>
+
+                    <FormikTextField
+                      label="Your Date of Birth *"
+                      name="dateOfBirth"
+                      type="date"
+                    />
 
                     <FormikTextField
                       label="Your Password *"
@@ -167,7 +162,16 @@ const register: React.FC<registerProps> = ({}) => {
                       className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
                       type="submit"
                     >
-                      Sign Up
+                      {isSubmitting ? (
+                        <section
+                          className="p-1.5 flex justify-center"
+                          {...containerProps}
+                        >
+                          {indicatorEl} {/* renders only while loading */}
+                        </section>
+                      ) : (
+                        "Sign Up"
+                      )}
                     </button>
                   </Form>
                 )}

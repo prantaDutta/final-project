@@ -8,7 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.body.password) {
     const { email, password } = req.body;
     // console.log(req.body);
-    const user = await prisma.users.findOne({
+    const user = await prisma.users.findUnique({
       where: {
         email,
       },

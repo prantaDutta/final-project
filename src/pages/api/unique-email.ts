@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     //     email,
     //   });
     try {
-      const user = await prisma.users.findOne({
+      const user = await prisma.users.findUnique({
         where: {
           email,
         },

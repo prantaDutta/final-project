@@ -13,7 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (!email) {
     res.send("Server Error");
   } else {
-    const user = await prisma.users.findOne({
+    const user = await prisma.users.findUnique({
       where: {
         email,
       },

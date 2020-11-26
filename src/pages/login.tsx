@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import axios from "axios";
 import FormikTextField from "../components/shared/FormikTextField";
 import { useLoading, ThreeDots } from "@agney/react-loading";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 interface loginProps {}
 
@@ -15,6 +17,7 @@ interface Values {
 
 const login2: React.FC<loginProps> = ({}) => {
   const router = useRouter();
+  const { toggleAuth } = useContext(AuthContext);
 
   // creating validation schema with YUP
   const validation = Yup.object({
@@ -61,19 +64,11 @@ const login2: React.FC<loginProps> = ({}) => {
 
     try {
       const response = await axios.post("api/login", { values });
-      // const result = await response.json();
-      // console.log(response);
 
       const { accessToken } = response.data;
       // console.log("l", accessToken);
       if (accessToken) {
         localStorage.setItem("authToken", JSON.stringify(accessToken));
-        // if (verifyJWTToken(accessToken)) {
-
-        // console.log("verify: ", verifyJWTToken(accessToken));
-
-        // }
-        // console.log(verifyJWTToken(accessToken));
       } else {
         console.log("Please Log In again");
       }
@@ -82,6 +77,7 @@ const login2: React.FC<loginProps> = ({}) => {
       // const token = authHeader && authHeader.split(" ")[1];
       // if (token == null) return res.sendStatus(401);
 
+      toggleAuth();
       router.push("/dashboard");
     } catch (e) {
       console.log(e);
@@ -106,6 +102,7 @@ const login2: React.FC<loginProps> = ({}) => {
 
             <section className="mt-5">
               <Formik
+                enableReinitialize
                 initialValues={{
                   password: "",
                   email: "",
