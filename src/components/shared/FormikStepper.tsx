@@ -1,5 +1,6 @@
 import { Form, Formik, FormikConfig, FormikValues } from "formik";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { BorrowerTypeContext } from "../../contexts/BorrowerTypeContext";
 import StepperIcons, { icons } from "../verification/StepperIcons";
 
 export interface FormikStepProps
@@ -19,7 +20,9 @@ export function FormikStepper({
   ) as React.ReactElement<FormikStepProps>[];
   const [step, setStep] = useState(0);
   const currentChild = childrenArray[step];
-  const [complete, setCompleted] = useState(false);
+  // const [complete, setCompleted] = useState(false);
+  const { setBorrowerType } = useContext(BorrowerTypeContext);
+  // console.log(typeof changeBorrowerType);
 
   function isLastStep() {
     return step === childrenArray.length - 1;
@@ -28,14 +31,20 @@ export function FormikStepper({
   return (
     <Formik
       {...props}
-      // initialValues={currentChild.props.initialValues}
       validationSchema={currentChild.props.validationSchema}
       onSubmit={async (values, helpers) => {
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
-          setCompleted(true);
+          // setCompleted(true);
         } else {
+          if (values.type) {
+            setBorrowerType(values.type);
+          }
+          if (values.nidOrPassport) {
+            console.log(values.nidOrPassport);
+          }
           setStep((s) => s + 1);
+          helpers.setTouched({});
         }
       }}
     >

@@ -13,7 +13,6 @@ const FormikTextField: React.FC<FormikTextFieldProps> = ({
   ...props
 }) => {
   const [field, { error, touched }] = useField<FieldProps>(props);
-  // console.log(touched, error);
 
   return (
     <div className="mb-6 pt-3 rounded bg-gray-200">

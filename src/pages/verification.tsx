@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import FormikTextField from "../components/shared/FormikTextField";
 import DashboardLayout from "../components/layouts/DashboardLayout";
 import axios from "axios";
@@ -11,17 +11,21 @@ import {
 } from "../components/shared/FormikStepper";
 import { AuthContext } from "../contexts/AuthContext";
 import { users } from "@prisma/client";
+import { BorrowerTypeContext } from "../contexts/BorrowerTypeContext";
+
+const FILE_SIZE = 1024 * 1024;
+const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
 interface verifyProps {}
 
 const verify: React.FC<verifyProps> = ({}) => {
   const { user } = useContext(AuthContext);
   const { id, name, gender, dateOfBirth, email } = user as users;
+  const { borrowerType } = useContext(BorrowerTypeContext);
 
   const formattedDate = dateOfBirth
     ? dateOfBirth.toString().split("T")[0]
     : formatDate(new Date());
-
   return (
     <DashboardLayout>
       <div className="p-5">
@@ -38,24 +42,21 @@ const verify: React.FC<verifyProps> = ({}) => {
               dateOfBirth: formattedDate,
               gender: gender || "",
               // contact information
-              address: "RKM",
+              address: "RKM, Chattagram, Bangladesh",
               email: email || "",
               mobileNo: "01851944587",
               // checking salaried individual or self-employed
               type: "",
               // KYC
-              documentType: "",
-              verificationPhotos: {
-                nidOrPassport: "",
-                addressProof: "",
-                recentPhoto: "",
-                backAccountStateMents: "",
-                businessProof: "",
-                salarySlip: "",
-                salaryIdCard: "",
-                companyName: "",
-                employeeStatus: "",
-              },
+              documentType: "nid",
+              // verification photos
+              nidOrPassport: "",
+              addressProof: "",
+              recentPhoto: "",
+              backAccountStateMents: "",
+              businessProof: "",
+              salarySlip: "",
+              employeeIdCard: "",
             }}
             onSubmit={async (values) => {
               console.log("values", values);
@@ -63,12 +64,6 @@ const verify: React.FC<verifyProps> = ({}) => {
           >
             {/* Personal Tab */}
             <FormikStep
-              // initialValues={{
-              //   name: name || "",
-              //   dateOfBirth: formattedDate,
-              //   gender: gender || "",
-              //   address: "",
-              // }}
               label="Personal Information"
               validationSchema={object({
                 name: Yup.string().required("Required"),
@@ -105,11 +100,6 @@ const verify: React.FC<verifyProps> = ({}) => {
             </FormikStep>
             {/* contact Information */}
             <FormikStep
-              // initialValues={{
-              //   address: "",
-              //   email: email || "",
-              //   mobileNo: "",
-              // }}
               label="Contact Information"
               validationSchema={object({
                 address: Yup.string().required("Required"),
@@ -160,7 +150,6 @@ const verify: React.FC<verifyProps> = ({}) => {
             </FormikStep>
             {/* Necessary Papers */}
             <FormikStep
-              // initialValues={{ type: "" }}
               validationSchema={object({
                 type: Yup.mixed()
                   .oneOf(["salaried", "self"], "You have to select a type")
@@ -182,11 +171,19 @@ const verify: React.FC<verifyProps> = ({}) => {
               return ()
             }} */}
             <FormikStep
-              // initialValues={{ verificationNo: "", verificationPhotos: {} }}
               validationSchema={object({
-                type: Yup.mixed()
-                  .oneOf(["salaried", "self"], "You have to select a type")
-                  .required("Required"),
+                nidOrPassport: Yup.mixed()
+                  .required("A file is required")
+                  .test(
+                    "fileSize",
+                    "File is too large",
+                    (value) => value && value.size <= FILE_SIZE
+                  )
+                  .test(
+                    "fileFormat",
+                    "Unsupported Format",
+                    (value) => value && SUPPORTED_FORMATS.includes(value.type)
+                  ),
               })}
               label="Submit Page"
             >
@@ -199,16 +196,55 @@ const verify: React.FC<verifyProps> = ({}) => {
                 <option value="passportNo">Passport</option>
               </FormikTextField>
 
-              {/* <FormikTextField
-                label="Your NID / Passport No. *"
-                name="verificationNo"
-                type="text"
-              /> */}
               <FormikTextField
                 label="Your NID / Passport *"
-                name="verificationNo"
+                name="nidOrPassport"
                 type="file"
               />
+
+              <FormikTextField
+                label="Address Proof *"
+                name="addressProof"
+                type="file"
+              />
+
+              <FormikTextField
+                label="Your Recent Photo *"
+                name="recentPhoto"
+                type="file"
+              />
+
+              <FormikTextField
+                label="Three Months Bank Statements *"
+                name="backAccountStateMents"
+                type="file"
+              />
+
+              {/* {console.log(borrowerType)} */}
+
+              {borrowerType === "salaried" && (
+                <>
+                  <FormikTextField
+                    label="Three months Salary Slip *"
+                    name="salarySlip"
+                    type="file"
+                  />
+                  <FormikTextField
+                    label="Employee ID CARD *"
+                    name="employeeIdCard"
+                    type="file"
+                  />
+                </>
+              )}
+
+              {borrowerType === "self" && (
+                <FormikTextField
+                  multiple
+                  label="Business Proof (i.e. Trading License) *"
+                  name="businessProof"
+                  type="file"
+                />
+              )}
             </FormikStep>
           </FormikStepper>
         </div>

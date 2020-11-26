@@ -30,7 +30,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           });
 
           if (newUser) {
-            console.log(newUser);
+            // console.log(newUser);
             res.json({
               msg: "Email already been taken",
             });

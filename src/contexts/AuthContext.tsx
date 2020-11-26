@@ -31,9 +31,7 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
   }, [isAuthenticated]);
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, toggleAuth: toggleAuth, user }}
-    >
+    <AuthContext.Provider value={{ isAuthenticated, toggleAuth, user }}>
       {props.children}
     </AuthContext.Provider>
   );
