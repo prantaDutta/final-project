@@ -2,6 +2,7 @@ import { Form, Formik, FormikConfig, FormikValues } from "formik";
 import React, { useContext, useState } from "react";
 import { BorrowerTypeContext } from "../../contexts/BorrowerTypeContext";
 import StepperIcons, { icons } from "../verification/StepperIcons";
+import VerificationImages from "../verification/VerificationImages";
 
 export interface FormikStepProps
   extends Pick<
@@ -22,7 +23,8 @@ export function FormikStepper({
   const currentChild = childrenArray[step];
   // const [complete, setCompleted] = useState(false);
   const { setBorrowerType } = useContext(BorrowerTypeContext);
-  // console.log(typeof changeBorrowerType);
+  const [showImageFiels, setShowImageFields] = useState<boolean>(false);
+  const [submitImage, setSubmitImage] = useState<boolean>(false);
 
   function isLastStep() {
     return step === childrenArray.length - 1;
@@ -34,16 +36,18 @@ export function FormikStepper({
       validationSchema={currentChild.props.validationSchema}
       onSubmit={async (values, helpers) => {
         if (isLastStep()) {
-          await props.onSubmit(values, helpers);
+          if (submitImage) {
+            await props.onSubmit(values, helpers);
+          }
           // setCompleted(true);
         } else {
           if (values.type) {
             setBorrowerType(values.type);
           }
-          if (values.nidOrPassport) {
-            console.log(values.nidOrPassport);
-          }
           setStep((s) => s + 1);
+          if (step === 2) {
+            setShowImageFields(true);
+          }
           helpers.setTouched({});
         }
       }}
@@ -67,6 +71,11 @@ export function FormikStepper({
             {childrenArray[step].props.label}
           </h4>
           {currentChild}
+
+          {showImageFiels && (
+            <VerificationImages setSubmitImage={setSubmitImage} />
+          )}
+
           <div
             className={`flex ${step > 0 ? "justify-between" : "justify-end"}`}
           >

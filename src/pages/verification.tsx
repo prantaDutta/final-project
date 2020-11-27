@@ -12,6 +12,8 @@ import {
 import { AuthContext } from "../contexts/AuthContext";
 import { users } from "@prisma/client";
 import { BorrowerTypeContext } from "../contexts/BorrowerTypeContext";
+import { useFormikContext } from "formik";
+import CustomImageComponent from "../components/verification/VerificationImages";
 
 const FILE_SIZE = 1024 * 1024;
 const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
@@ -26,12 +28,14 @@ const verify: React.FC<verifyProps> = ({}) => {
   const formattedDate = dateOfBirth
     ? dateOfBirth.toString().split("T")[0]
     : formatDate(new Date());
+
   return (
     <DashboardLayout>
       <div className="p-5">
         <p className=" font-medium md:font-2xl text-xl md:text-4xl text-center">
           Account Verification
         </p>
+        {}
 
         <div className="mt-4 p-4">
           <FormikStepper
@@ -50,13 +54,13 @@ const verify: React.FC<verifyProps> = ({}) => {
               // KYC
               documentType: "nid",
               // verification photos
-              nidOrPassport: "",
-              addressProof: "",
-              recentPhoto: "",
-              backAccountStateMents: "",
-              businessProof: "",
-              salarySlip: "",
-              employeeIdCard: "",
+              // nidOrPassport: "",
+              // addressProof: "",
+              // recentPhoto: "",
+              // backAccountStateMents: "",
+              // businessProof: "",
+              // salarySlip: "",
+              // employeeIdCard: "",
             }}
             onSubmit={async (values) => {
               console.log("values", values);
@@ -196,12 +200,12 @@ const verify: React.FC<verifyProps> = ({}) => {
                 <option value="passportNo">Passport</option>
               </FormikTextField>
 
-              <FormikTextField
+              {/* <FormikTextField
                 label="Your NID / Passport *"
                 name="nidOrPassport"
                 type="file"
-              />
-
+              /> */}
+              {/*
               <FormikTextField
                 label="Address Proof *"
                 name="addressProof"
@@ -219,8 +223,6 @@ const verify: React.FC<verifyProps> = ({}) => {
                 name="backAccountStateMents"
                 type="file"
               />
-
-              {/* {console.log(borrowerType)} */}
 
               {borrowerType === "salaried" && (
                 <>
@@ -244,7 +246,7 @@ const verify: React.FC<verifyProps> = ({}) => {
                   name="businessProof"
                   type="file"
                 />
-              )}
+              )} */}
             </FormikStep>
           </FormikStepper>
         </div>

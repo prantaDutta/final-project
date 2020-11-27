@@ -29,3 +29,7 @@ export const eightennYearsBackFromNow = () => {
     years: 18,
   });
 };
+
+export const objectToArray = (obj: Record<string, string>) => {
+  return Object.keys(obj).map((key) => [key, obj[key]]);
+};
