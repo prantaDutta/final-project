@@ -2,6 +2,9 @@ import * as Yup from "yup";
 import axios from "axios";
 import { eightennYearsBackFromNow, formatDate } from "./functions";
 
+const FILE_SIZE = 1024 * 1024;
+const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+
 export const yupValidationSchema = Yup.object({
   name: Yup.string().required("Required"),
   role: Yup.mixed()
@@ -36,3 +39,15 @@ export const yupValidationSchema = Yup.object({
     )
     .required("Required"),
 });
+
+export const imageValidation = Yup.mixed()
+  .required("A file is required")
+  .test("fileSize", "File is too large", (value) => {
+    // console.log("value: ", value);
+    return value && value.size <= FILE_SIZE;
+  })
+  .test(
+    "fileFormat",
+    "Unsupported Format",
+    (value) => value && SUPPORTED_FORMATS.includes(value.type)
+  );

@@ -12,11 +12,11 @@ import {
 import { AuthContext } from "../contexts/AuthContext";
 import { users } from "@prisma/client";
 import { BorrowerTypeContext } from "../contexts/BorrowerTypeContext";
+import FormikImageField from "../components/shared/FormikImageField";
+import { imageValidation } from "../utils/vaidationSchema";
+import VerificationImages2 from "../components/verification/VerificationImages2";
+import VerificationImages from "../components/verification/VerificationImages";
 import { useFormikContext } from "formik";
-import CustomImageComponent from "../components/verification/VerificationImages";
-
-const FILE_SIZE = 1024 * 1024;
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
 interface verifyProps {}
 
@@ -54,13 +54,13 @@ const verify: React.FC<verifyProps> = ({}) => {
               // KYC
               documentType: "nid",
               // verification photos
-              // nidOrPassport: "",
-              // addressProof: "",
-              // recentPhoto: "",
-              // backAccountStateMents: "",
-              // businessProof: "",
-              // salarySlip: "",
-              // employeeIdCard: "",
+              nidOrPassport: "",
+              addressProof: "",
+              recentPhoto: "",
+              backAccountStateMents: "",
+              businessProof: "",
+              salarySlip: "",
+              employeeIdCard: "",
             }}
             onSubmit={async (values) => {
               console.log("values", values);
@@ -171,80 +171,75 @@ const verify: React.FC<verifyProps> = ({}) => {
                 <option value="self">Self Employed</option>
               </FormikTextField>
             </FormikStep>
-            {/* {({initialValues}) => {
-              return ()
-            }} */}
+            {/* Submit Form */}
             <FormikStep
               validationSchema={object({
-                nidOrPassport: Yup.mixed()
-                  .required("A file is required")
-                  .test(
-                    "fileSize",
-                    "File is too large",
-                    (value) => value && value.size <= FILE_SIZE
-                  )
-                  .test(
-                    "fileFormat",
-                    "Unsupported Format",
-                    (value) => value && SUPPORTED_FORMATS.includes(value.type)
-                  ),
+                nidOrPassport: imageValidation,
+                addressProof: imageValidation,
+                recentPhoto: imageValidation,
+                backAccountStateMents: imageValidation,
+                businessProof: imageValidation,
+                salarySlip: imageValidation,
+                employeeIdCard: imageValidation,
               })}
               label="Submit Page"
             >
               <FormikTextField
-                label="Verification Document *"
-                name="documentType"
+                label="NID/ Passport *"
+                name="type"
                 component="select"
               >
                 <option value="nid">NID</option>
-                <option value="passportNo">Passport</option>
+                <option value="passport">Passport</option>
               </FormikTextField>
-
-              {/* <FormikTextField
-                label="Your NID / Passport *"
+              <VerificationImages />
+              {/* <FormikImageField
+                label="Photo of NID/ Passport"
                 name="nidOrPassport"
-                type="file"
-              /> */}
-              {/*
-              <FormikTextField
+                error={errors.nidOrPassport}
+                setFieldValue={setFieldValue}
+              />
+
+              <FormikImageField
                 label="Address Proof *"
                 name="addressProof"
-                type="file"
+                error={errors.addressProof}
+                setFieldValue={setFieldValue}
               />
-
-              <FormikTextField
+              <FormikImageField
                 label="Your Recent Photo *"
                 name="recentPhoto"
-                type="file"
+                error={errors.recentPhoto}
+                setFieldValue={setFieldValue}
               />
-
-              <FormikTextField
+              <FormikImageField
                 label="Three Months Bank Statements *"
                 name="backAccountStateMents"
-                type="file"
+                error={errors.backAccountStateMents}
+                setFieldValue={setFieldValue}
               />
-
               {borrowerType === "salaried" && (
                 <>
-                  <FormikTextField
+                  <FormikImageField
                     label="Three months Salary Slip *"
                     name="salarySlip"
-                    type="file"
+                    error={errors.salarySlip}
+                    setFieldValue={setFieldValue}
                   />
-                  <FormikTextField
+                  <FormikImageField
                     label="Employee ID CARD *"
                     name="employeeIdCard"
-                    type="file"
+                    error={errors.employeeIdCard}
+                    setFieldValue={setFieldValue}
                   />
                 </>
               )}
-
               {borrowerType === "self" && (
-                <FormikTextField
-                  multiple
+                <FormikImageField
                   label="Business Proof (i.e. Trading License) *"
                   name="businessProof"
-                  type="file"
+                  error={errors.businessProof}
+                  setFieldValue={setFieldValue}
                 />
               )} */}
             </FormikStep>

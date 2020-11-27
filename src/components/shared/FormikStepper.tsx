@@ -23,8 +23,7 @@ export function FormikStepper({
   const currentChild = childrenArray[step];
   // const [complete, setCompleted] = useState(false);
   const { setBorrowerType } = useContext(BorrowerTypeContext);
-  const [showImageFiels, setShowImageFields] = useState<boolean>(false);
-  const [submitImage, setSubmitImage] = useState<boolean>(false);
+  // console.log(typeof changeBorrowerType);
 
   function isLastStep() {
     return step === childrenArray.length - 1;
@@ -35,19 +34,17 @@ export function FormikStepper({
       {...props}
       validationSchema={currentChild.props.validationSchema}
       onSubmit={async (values, helpers) => {
+        console.log("submitting");
         if (isLastStep()) {
-          if (submitImage) {
-            await props.onSubmit(values, helpers);
-          }
+          await props.onSubmit(values, helpers);
           // setCompleted(true);
+          console.log("Going to Next Step");
         } else {
           if (values.type) {
             setBorrowerType(values.type);
           }
+          console.log("Submitting the form");
           setStep((s) => s + 1);
-          if (step === 2) {
-            setShowImageFields(true);
-          }
           helpers.setTouched({});
         }
       }}
@@ -71,10 +68,6 @@ export function FormikStepper({
             {childrenArray[step].props.label}
           </h4>
           {currentChild}
-
-          {showImageFiels && (
-            <VerificationImages setSubmitImage={setSubmitImage} />
-          )}
 
           <div
             className={`flex ${step > 0 ? "justify-between" : "justify-end"}`}

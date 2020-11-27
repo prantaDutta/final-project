@@ -1,3 +1,4 @@
+import { FormikErrors } from "formik";
 import { InputHTMLAttributes, useState } from "react";
 
 type FormikImageFieldProps = InputHTMLAttributes<HTMLElement> & {
@@ -9,7 +10,12 @@ type FormikImageFieldProps = InputHTMLAttributes<HTMLElement> & {
     value: any,
     shouldValidate?: boolean | undefined
   ) => void;
-  error: string | undefined;
+  error:
+    | string
+    | string[]
+    | FormikErrors<any>
+    | FormikErrors<any>[]
+    | undefined;
 };
 
 const FormikImageField: React.FC<FormikImageFieldProps> = ({
