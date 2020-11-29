@@ -33,3 +33,7 @@ export const eightennYearsBackFromNow = () => {
 export const objectToArray = (obj: Record<string, string>) => {
   return Object.keys(obj).map((key) => [key, obj[key]]);
 };
+
+export const isEmptyObj = (obj: Record<any, any>) => {
+  return Object.keys(obj).length === 0;
+};

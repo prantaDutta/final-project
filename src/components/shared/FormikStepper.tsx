@@ -2,7 +2,6 @@ import { Form, Formik, FormikConfig, FormikValues } from "formik";
 import React, { useContext, useState } from "react";
 import { BorrowerTypeContext } from "../../contexts/BorrowerTypeContext";
 import StepperIcons, { icons } from "../verification/StepperIcons";
-import VerificationImages from "../verification/VerificationImages";
 
 export interface FormikStepProps
   extends Pick<
@@ -34,16 +33,17 @@ export function FormikStepper({
       {...props}
       validationSchema={currentChild.props.validationSchema}
       onSubmit={async (values, helpers) => {
-        console.log("submitting");
+        // console.log(helpers)
+        // console.log("submitting");
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
           // setCompleted(true);
-          console.log("Going to Next Step");
+          // console.log("Going to Next Step");
         } else {
           if (values.type) {
             setBorrowerType(values.type);
           }
-          console.log("Submitting the form");
+          // console.log("Submitting the form");
           setStep((s) => s + 1);
           helpers.setTouched({});
         }

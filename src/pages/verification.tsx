@@ -11,12 +11,16 @@ import {
 } from "../components/shared/FormikStepper";
 import { AuthContext } from "../contexts/AuthContext";
 import { users } from "@prisma/client";
-import { BorrowerTypeContext } from "../contexts/BorrowerTypeContext";
+// import { BorrowerTypeContext } from "../contexts/BorrowerTypeContext";
+// import { useFormikContext } from "formik";
+// import CustomImageComponent from "../components/verification/VerificationImages";
 import FormikImageField from "../components/shared/FormikImageField";
 import { imageValidation } from "../utils/vaidationSchema";
-import VerificationImages2 from "../components/verification/VerificationImages2";
-import VerificationImages from "../components/verification/VerificationImages";
 import { useFormikContext } from "formik";
+import { BorrowerTypeContext } from "../contexts/BorrowerTypeContext";
+
+// const FILE_SIZE = 1024 * 1024;
+// const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
 
 interface verifyProps {}
 
@@ -24,6 +28,13 @@ const verify: React.FC<verifyProps> = ({}) => {
   const { user } = useContext(AuthContext);
   const { id, name, gender, dateOfBirth, email } = user as users;
   const { borrowerType } = useContext(BorrowerTypeContext);
+
+  if (borrowerType === "salaried") {
+    console.log("salaried");
+    const salariedImageValidation = {
+      ...imageValidation,
+    };
+  }
 
   const formattedDate = dateOfBirth
     ? dateOfBirth.toString().split("T")[0]
@@ -53,7 +64,7 @@ const verify: React.FC<verifyProps> = ({}) => {
               type: "",
               // KYC
               documentType: "nid",
-              // verification photos
+              // verificationphotos
               nidOrPassport: "",
               addressProof: "",
               recentPhoto: "",
@@ -171,66 +182,98 @@ const verify: React.FC<verifyProps> = ({}) => {
                 <option value="self">Self Employed</option>
               </FormikTextField>
             </FormikStep>
-            {/* Submit Form */}
+            {/*Submit Page */}
+
             <FormikStep
               validationSchema={object({
                 nidOrPassport: imageValidation,
                 addressProof: imageValidation,
                 recentPhoto: imageValidation,
                 backAccountStateMents: imageValidation,
-                businessProof: imageValidation,
-                salarySlip: imageValidation,
-                employeeIdCard: imageValidation,
+                // businessProof: Yup.string().when("borrowerType", {
+                //   is: "self",
+                //   then: imageValidation,
+                // }),
+                // salarySlip: Yup.string().when(Yup.ref("type"), {
+                //   is: "salaried",
+                //   then: imageValidation,
+                // }),
+                // employeeIdCard: Yup.string().when("borrowerType", {
+                //   is: "salaried",
+                //   then: imageValidation,
+                // }),
+                businessProof: Yup.lazy(() => {
+                  if (borrowerType === "self") {
+                    return imageValidation;
+                  } else {
+                    return Yup.mixed().notRequired();
+                  }
+                }),
+                salarySlip: Yup.lazy(() => {
+                  if (borrowerType === "salaried") {
+                    return imageValidation;
+                  } else {
+                    return Yup.mixed().notRequired();
+                  }
+                }),
+                employeeIdCard: Yup.lazy(() => {
+                  if (borrowerType === "salaried") {
+                    return imageValidation;
+                  } else {
+                    return Yup.mixed().notRequired();
+                  }
+                }),
+                // businessProof: imageValidation,
+                // salarySlip: imageValidation,
+                // employeeIdCard: imageValidation,
               })}
               label="Submit Page"
             >
               <FormikTextField
-                label="NID/ Passport *"
-                name="type"
+                label="Verification Document *"
+                name="documentType"
                 component="select"
               >
                 <option value="nid">NID</option>
-                <option value="passport">Passport</option>
+                <option value="passportNo">Passport</option>
               </FormikTextField>
-              <VerificationImages />
-              {/* <FormikImageField
+              <FormikImageField
                 label="Photo of NID/ Passport"
                 name="nidOrPassport"
-                error={errors.nidOrPassport}
-                setFieldValue={setFieldValue}
+                // error={errors.nidOrPassport}
+                // setFieldValue={setFieldValue}
               />
-
               <FormikImageField
                 label="Address Proof *"
                 name="addressProof"
-                error={errors.addressProof}
-                setFieldValue={setFieldValue}
+                // error={errors.addressProof}
+                // setFieldValue={setFieldValue}
               />
               <FormikImageField
                 label="Your Recent Photo *"
                 name="recentPhoto"
-                error={errors.recentPhoto}
-                setFieldValue={setFieldValue}
+                // error={errors.recentPhoto}
+                // setFieldValue={setFieldValue}
               />
               <FormikImageField
                 label="Three Months Bank Statements *"
                 name="backAccountStateMents"
-                error={errors.backAccountStateMents}
-                setFieldValue={setFieldValue}
+                // error={errors.backAccountStateMents}
+                // setFieldValue={setFieldValue}
               />
               {borrowerType === "salaried" && (
                 <>
                   <FormikImageField
                     label="Three months Salary Slip *"
                     name="salarySlip"
-                    error={errors.salarySlip}
-                    setFieldValue={setFieldValue}
+                    // error={errors.salarySlip}
+                    // setFieldValue={setFieldValue}
                   />
                   <FormikImageField
                     label="Employee ID CARD *"
                     name="employeeIdCard"
-                    error={errors.employeeIdCard}
-                    setFieldValue={setFieldValue}
+                    // error={errors.employeeIdCard}
+                    // setFieldValue={setFieldValue}
                   />
                 </>
               )}
@@ -238,10 +281,10 @@ const verify: React.FC<verifyProps> = ({}) => {
                 <FormikImageField
                   label="Business Proof (i.e. Trading License) *"
                   name="businessProof"
-                  error={errors.businessProof}
-                  setFieldValue={setFieldValue}
+                  // error={errors.businessProof}
+                  // setFieldValue={setFieldValue}
                 />
-              )} */}
+              )}
             </FormikStep>
           </FormikStepper>
         </div>
@@ -256,6 +299,57 @@ export function FormikStep({ children }: FormikStepProps) {
 
 export default verify;
 
+{
+  /* <FormikTextField
+                label="Your NID / Passport *"
+                name="nidOrPassport"
+                type="file"
+              /> */
+}
+{
+  /*
+              <FormikTextField
+                label="Address Proof *"
+                name="addressProof"
+                type="file"
+              />
+
+              <FormikTextField
+                label="Your Recent Photo *"
+                name="recentPhoto"
+                type="file"
+              />
+
+              <FormikTextField
+                label="Three Months Bank Statements *"
+                name="backAccountStateMents"
+                type="file"
+              />
+
+              {borrowerType === "salaried" && (
+                <>
+                  <FormikTextField
+                    label="Three months Salary Slip *"
+                    name="salarySlip"
+                    type="file"
+                  />
+                  <FormikTextField
+                    label="Employee ID CARD *"
+                    name="employeeIdCard"
+                    type="file"
+                  />
+                </>
+              )}
+
+              {borrowerType === "self" && (
+                <FormikTextField
+                  multiple
+                  label="Business Proof (i.e. Trading License) *"
+                  name="businessProof"
+                  type="file"
+                />
+              )} */
+}
 {
   /* <div>
             <div className="font-bold text-gray-600 text-xs leading-8 uppercase h-6 mx-2 mt-3">
