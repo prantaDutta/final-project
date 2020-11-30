@@ -29,8 +29,6 @@ const register: React.FC<registerProps> = ({}) => {
     indicator: <ThreeDots width="50" />,
   });
 
-  // creating validation schema with YUP
-
   // Handling onSubmit property of formik with handleSubmit funtction
   const handleSubmit = async (
     values: Values,
@@ -41,26 +39,15 @@ const register: React.FC<registerProps> = ({}) => {
 
     try {
       const response = await axios.post("api/register", { values });
-      // const result = await response.json();
-      // console.log(response);
 
       const { accessToken } = response.data;
       if (accessToken) {
         localStorage.setItem("authToken", JSON.stringify(accessToken));
-        // if (verifyJWTToken(accessToken)) {
-
-        // console.log("verify: ", verifyJWTToken(accessToken));
-
-        // }
       } else {
         console.log("Please Log In again");
       }
 
-      // const authHeader = req.headers["authorization"];
-      // const token = authHeader && authHeader.split(" ")[1];
-      // if (token == null) return res.sendStatus(401);
-
-      router.push("/dashboard");
+      router.push("/verification");
     } catch (e) {
       console.log(e);
     }

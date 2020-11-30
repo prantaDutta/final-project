@@ -14,6 +14,7 @@ import { users } from "@prisma/client";
 import FormikImageField from "../components/shared/FormikImageField";
 import { imageValidation } from "../utils/vaidationSchema";
 import { BorrowerTypeContext } from "../contexts/BorrowerTypeContext";
+import { useRouter } from "next/router";
 
 interface verifyProps {}
 
@@ -21,11 +22,10 @@ const verify: React.FC<verifyProps> = ({}) => {
   const { user } = useContext(AuthContext);
   const { id, name, gender, dateOfBirth, email } = user as users;
   const { borrowerType } = useContext(BorrowerTypeContext);
-
+  const router = useRouter();
   const formattedDate = dateOfBirth
-    ? dateOfBirth.toString().split("T")[0]
+    ? dateOfBirth /*.toString().split("T")[0] */
     : formatDate(new Date());
-
   return (
     <DashboardLayout>
       <div className="p-5">
@@ -44,9 +44,9 @@ const verify: React.FC<verifyProps> = ({}) => {
               dateOfBirth: formattedDate,
               gender: gender || "",
               // contact information
-              address: "RKM, Chattagram, Bangladesh",
+              address: "",
               email: email || "",
-              mobileNo: "01851944587",
+              mobileNo: "",
               // checking salaried individual or self-employed
               borrowerType: "",
               // KYC
@@ -63,39 +63,21 @@ const verify: React.FC<verifyProps> = ({}) => {
             onSubmit={async (values) => {
               // console.log("values", values);
               const formData = new FormData();
-              // let fileName: string = []; // for storing filename to the database
-              for (let [key, value] of Object.entries(values)) {
-                /*if (typeof value === "object")*/
+              for (let [key, value] of Object.entries(values))
                 formData.append(key, value);
-              }
 
               /* sending the image as FormData to the api to store locally */
               try {
-                const res = await axios("api/upload-image", {
+                const res = await axios("api/verification", {
                   data: formData,
                   method: "POST",
                   headers: { "content-type": "multipart/form-data" },
                 });
                 console.log(res);
+                router.push("/dashboard");
               } catch (e) {
-                console.log(e);
+                throw new Error(`You Messed Up ${e}`);
               }
-              // var filename = res.data.files.path.replace(/^.*[\\\/]/, "");
-              // for (let [key, value] of Object.entries(res.data.files)) {
-              //   // fileName.push((value as any).path.replace(/^.*[\\\/]/, ""));
-              //   fileName.push({
-
-              //   })
-              //   console.log(fileName);
-              // }
-
-              /* sending the verificatio data to the database */
-              // try {
-              //   for (let [key, value] of Object.entries(values)) {
-              //     if (typeof value === "object") values[key] = value.name;
-              //   }
-              //   const res = await axios("api")
-              // }
             }}
           >
             {/* Personal Tab */}

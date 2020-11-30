@@ -14,9 +14,7 @@ export const verifyJWTToken = (accessToken: string) => {
   );
 };
 
-export const formatDate = (date: Date) => {
-  return format(date, "yyyy-MM-dd");
-};
+export const formatDate = (date: Date) => format(date, "yyyy-MM-dd");
 
 export const sub18Years = (date: Date) => {
   return sub(date, {

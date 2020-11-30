@@ -7,23 +7,31 @@ const prisma = new PrismaClient();
 // const KEY = "kdjkskASDFSFKDLLDFDKDFDSKDL";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  // console.log(req.body);
-  const { email } = req.body.values;
-  // console.log(email);
-  if (!email) {
-    res.send("Server Error");
-  } else {
-    const user = await prisma.users.findUnique({
-      where: {
-        email,
-      },
-    });
-    if (!user) {
-      res.send("error");
+  return new Promise(async (resolve, reject) => {
+    const { email } = req.body.values;
+    if (!email) {
+      res.send("Server Error");
+      reject();
     } else {
-      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!);
-      // console.log(accessToken);
-      res.json({ accessToken });
+      try {
+        const user = await prisma.users.findUnique({
+          where: {
+            email,
+          },
+        });
+        if (!user) {
+          res.send("error");
+          reject();
+        } else {
+          const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!);
+          // console.log(accessToken);
+          res.json({ accessToken });
+          resolve();
+        }
+      } catch (e) {
+        console.log(e);
+        reject();
+      }
     }
-  }
+  });
 };
