@@ -8,13 +8,12 @@ datasource db {
 }
 
 model borrowers {
-  id           Int       @id @default(autoincrement())
-  userId       Int
-  borrowerType String
-  createdAt    DateTime?
-  updatedAt    DateTime?
-  users        users     @relation(fields: [userId], references: [id])
-  loans        loans[]
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  createdAt DateTime?
+  updatedAt DateTime?
+  users     users     @relation(fields: [userId], references: [id])
+  loans     loans[]
 }
 
 model lenders {
@@ -73,7 +72,11 @@ model users {
   password           String
   role               String
   gender             String
-  verified           Boolean           @default(false)
+  address            String?
+  mobileNo           String?
+  documentType       String?
+  verified           String            @default("false")
+  borrowerType       String?
   verificationNo     String?
   verificationPhotos Json?
   createdAt          DateTime?

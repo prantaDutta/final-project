@@ -2,11 +2,7 @@ import React, { useContext } from "react";
 import FormikTextField from "../components/shared/FormikTextField";
 import DashboardLayout from "../components/layouts/DashboardLayout";
 import axios from "axios";
-import {
-  formatDate,
-  eightennYearsBackFromNow,
-  isObject,
-} from "../utils/functions";
+import { formatDate, eightennYearsBackFromNow } from "../utils/functions";
 import { object } from "yup";
 import * as Yup from "yup";
 import {
@@ -43,6 +39,7 @@ const verify: React.FC<verifyProps> = ({}) => {
             enableReinitialize
             initialValues={{
               // Personal
+              id,
               name: name || "",
               dateOfBirth: formattedDate,
               gender: gender || "",
@@ -58,19 +55,23 @@ const verify: React.FC<verifyProps> = ({}) => {
               nidOrPassport: "",
               addressProof: "",
               recentPhoto: "",
-              backAccountStateMents: "",
+              bankAccountStateMents: "",
               businessProof: "",
               salarySlip: "",
               employeeIdCard: "",
             }}
             onSubmit={async (values) => {
-              console.log("values", values);
+              // console.log("values", values);
               const formData = new FormData();
-              for (let [key, value] of Object.entries(values))
-                if (typeof value === "object") formData.append(key, value);
+              // let fileName: string = []; // for storing filename to the database
+              for (let [key, value] of Object.entries(values)) {
+                /*if (typeof value === "object")*/
+                formData.append(key, value);
+              }
 
+              /* sending the image as FormData to the api to store locally */
               try {
-                const res = await axios("api/verification", {
+                const res = await axios("api/upload-image", {
                   data: formData,
                   method: "POST",
                   headers: { "content-type": "multipart/form-data" },
@@ -79,6 +80,22 @@ const verify: React.FC<verifyProps> = ({}) => {
               } catch (e) {
                 console.log(e);
               }
+              // var filename = res.data.files.path.replace(/^.*[\\\/]/, "");
+              // for (let [key, value] of Object.entries(res.data.files)) {
+              //   // fileName.push((value as any).path.replace(/^.*[\\\/]/, ""));
+              //   fileName.push({
+
+              //   })
+              //   console.log(fileName);
+              // }
+
+              /* sending the verificatio data to the database */
+              // try {
+              //   for (let [key, value] of Object.entries(values)) {
+              //     if (typeof value === "object") values[key] = value.name;
+              //   }
+              //   const res = await axios("api")
+              // }
             }}
           >
             {/* Personal Tab */}
@@ -193,7 +210,7 @@ const verify: React.FC<verifyProps> = ({}) => {
                 nidOrPassport: imageValidation,
                 addressProof: imageValidation,
                 recentPhoto: imageValidation,
-                backAccountStateMents: imageValidation,
+                bankAccountStateMents: imageValidation,
                 businessProof: Yup.lazy(() => {
                   if (borrowerType === "self") {
                     return imageValidation;
@@ -237,7 +254,7 @@ const verify: React.FC<verifyProps> = ({}) => {
               />
               <FormikImageField
                 label="Three Months Bank Statements *"
-                name="backAccountStateMents"
+                name="bankAccountStateMents"
               />
               {borrowerType === "salaried" && (
                 <>
