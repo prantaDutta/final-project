@@ -1,9 +1,7 @@
 import * as Yup from "yup";
 import axios from "axios";
 import { eightennYearsBackFromNow, formatDate } from "./functions";
-
-const FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+import { FILE_SIZE, SUPPORTED_FORMATS } from "./constants";
 
 export const yupValidationSchema = Yup.object({
   name: Yup.string().required("Required"),

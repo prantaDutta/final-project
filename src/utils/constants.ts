@@ -1,3 +1,6 @@
+export const FILE_SIZE = 5 * 1024 * 1024; // 5MB
+export const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+
 export const ACCESS_TOKEN_SECRET =
   "bd3c2d5d69cacc3ead822d4bbbcccfe3646d463f94b547ad44ddb60447adf5bd0078e8667d12e2694d74117fd008e78d912ba47325b3015d1649b19b7cf4449f";
 export const REFRESH_TOKEN_SECRET =

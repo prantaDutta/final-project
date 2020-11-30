@@ -20,9 +20,7 @@ export function FormikStepper({
   ) as React.ReactElement<FormikStepProps>[];
   const [step, setStep] = useState(0);
   const currentChild = childrenArray[step];
-  // const [complete, setCompleted] = useState(false);
   const { setBorrowerType } = useContext(BorrowerTypeContext);
-  // console.log(typeof changeBorrowerType);
 
   function isLastStep() {
     return step === childrenArray.length - 1;
@@ -33,17 +31,13 @@ export function FormikStepper({
       {...props}
       validationSchema={currentChild.props.validationSchema}
       onSubmit={async (values, helpers) => {
-        // console.log(helpers)
-        // console.log("submitting");
+        // checking the last step to submit
         if (isLastStep()) {
           await props.onSubmit(values, helpers);
-          // setCompleted(true);
-          // console.log("Going to Next Step");
         } else {
-          if (values.type) {
-            setBorrowerType(values.type);
+          if (values.borrowerType) {
+            setBorrowerType(values.borrowerType);
           }
-          // console.log("Submitting the form");
           setStep((s) => s + 1);
           helpers.setTouched({});
         }

@@ -37,3 +37,7 @@ export const objectToArray = (obj: Record<string, string>) => {
 export const isEmptyObj = (obj: Record<any, any>) => {
   return Object.keys(obj).length === 0;
 };
+
+export const isObject = (obj: any) => {
+  return obj != null && obj.constructor.name === "Object";
+};
