@@ -1,5 +1,5 @@
 interface SidebarProps {}
-import { linkArray } from "./../nav";
+import { linkArray } from "./../shared/nav";
 import Link from "next/link";
 import { useRouter } from "next/router";
 

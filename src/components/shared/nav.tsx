@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 
-const links: linkArray[] = [
+export const links: linkArray[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

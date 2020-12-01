@@ -1,13 +1,10 @@
-import { PrismaClient } from "@prisma/client";
-import { parseISO } from "date-fns";
 import formidable from "formidable";
 // We could have usedregular 'fs' and not a promise one
 import { promises as fs } from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 import path from "path";
 import { isEmptyObj } from "../../utils/functions";
-
-const prisma = new PrismaClient();
+import prisma from "../../lib/prisma";
 
 // first we need to disable the default body parser
 export const config = {

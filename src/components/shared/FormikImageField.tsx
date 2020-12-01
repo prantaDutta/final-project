@@ -21,7 +21,6 @@ const FormikImageField: React.FC<FormikImageFieldProps> = ({
     setTouched,
     handleSubmit,
     errors,
-    values,
   } = useFormikContext();
 
   return (
