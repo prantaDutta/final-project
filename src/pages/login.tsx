@@ -23,37 +23,37 @@ const login2: React.FC<loginProps> = ({}) => {
   const validation = Yup.object({
     email: Yup.string()
       .email("Invalid email")
-      .test("Unique Email", "Email doesn't exist", function (value) {
-        return new Promise((resolve, _) => {
-          axios
-            .post("/api/unique-email", { email: value })
-            .then((res) => {
-              if (res.data.msg !== "Unique Email") {
-                resolve(true);
-              }
-              resolve(false);
-            })
-            .catch(() => resolve(false));
-        });
-      })
+      // .test("Unique Email", "Email doesn't exist", function (value) {
+      //   return new Promise((resolve, _) => {
+      //     axios
+      //       .post("/api/unique-email", { email: value })
+      //       .then((res) => {
+      //         if (res.data.msg !== "Unique Email") {
+      //           resolve(true);
+      //         }
+      //         resolve(false);
+      //       })
+      //       .catch(() => resolve(false));
+      //   });
+      // })
       .required("Required"),
     password: Yup.string()
       .min(6, "Password should be atleast six letters")
-      .test("Password Matching", "Wrong Credentials", function (value) {
-        return new Promise((resolve, _) => {
-          axios
-            .post("/api/password-match", {
-              email: this.parent.email,
-              password: value,
-            })
-            .then((res) => {
-              if (res.data.msg === "Wrong Credentials") {
-                resolve(false);
-              }
-              resolve(true);
-            });
-        });
-      })
+      // .test("Password Matching", "Wrong Credentials", function (value) {
+      //   return new Promise((resolve, _) => {
+      //     axios
+      //       .post("/api/password-match", {
+      //         email: this.parent.email,
+      //         password: value,
+      //       })
+      //       .then((res) => {
+      //         if (res.data.msg === "Wrong Credentials") {
+      //           resolve(false);
+      //         }
+      //         resolve(true);
+      //       });
+      //   });
+      // })
       .required("Required"),
   });
 
