@@ -25,12 +25,15 @@ const login2: React.FC<loginProps> = ({}) => {
       .email("Invalid email")
       .test("Unique Email", "Email doesn't exist", function (value) {
         return new Promise((resolve, _) => {
-          axios.post("/api/unique-email", { email: value }).then((res) => {
-            if (res.data.msg !== "Unique Email") {
-              resolve(true);
-            }
-            resolve(false);
-          });
+          axios
+            .post("/api/unique-email", { email: value })
+            .then((res) => {
+              if (res.data.msg !== "Unique Email") {
+                resolve(true);
+              }
+              resolve(false);
+            })
+            .catch(() => resolve(false));
         });
       })
       .required("Required"),
@@ -66,18 +69,20 @@ const login2: React.FC<loginProps> = ({}) => {
       const response = await axios.post("api/login", { values });
 
       const { accessToken } = response.data;
+
       // console.log("l", accessToken);
-      if (accessToken) {
-        localStorage.setItem("authToken", JSON.stringify(accessToken));
-      } else {
-        console.log("Please Log In again");
-      }
+      // if (accessToken) {
+      //   localStorage.setItem("authToken", JSON.stringify(accessToken));
+      // } else {
+      //   console.log("Please Log In again");
+      // }
 
-      // const authHeader = req.headers["authorization"];
-      // const token = authHeader && authHeader.split(" ")[1];
-      // if (token == null) return res.sendStatus(401);
-
-      toggleAuth();
+      // toggleAuth();
+      // if (response.status === 200) {
+      //   console.log("success");
+      // }
+      console.log("response in login: ", response);
+      console.log("accessToken", accessToken);
       router.push("/dashboard");
     } catch (e) {
       console.log(e);

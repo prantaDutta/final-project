@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import prisma from "../../lib/prisma";
+import Axios from "axios";
 
 // const KEY = "kdjkskASDFSFKDLLDFDKDFDSKDL";
 
@@ -22,9 +23,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           reject();
         } else {
           const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!);
-          // console.log(accessToken);
-          res.json({ accessToken });
-          resolve();
+          try {
+            Axios.post("/api/setRedisData", {
+              key: process.env.AUTH_TOKEN_NAME!,
+              value: accessToken,
+            }).then((axiosResponse) => {
+              console.log("Response from login.ts: ", axiosResponse.data);
+              res.status(200).json({ accessToken });
+              resolve();
+            });
+          } catch (e) {
+            console.log(e);
+            res.status(422).json({ error: "ERROR" });
+            reject();
+          }
         }
       } catch (e) {
         console.log(e);

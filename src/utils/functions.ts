@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { format, sub } from "date-fns";
+import Axios from "axios";
 
 export const verifyJWTToken = (accessToken: string) => {
   return jwt.verify(
@@ -38,4 +39,15 @@ export const isEmptyObj = (obj: Record<any, any>) => {
 
 export const isObject = (obj: any) => {
   return obj != null && obj.constructor.name === "Object";
+};
+
+export const getCachedData = async () => {
+  try {
+    Axios.post("/api/getRedisData", { key: "authState" }).then((res) => {
+      console.log("Res: ", res);
+      return res.data;
+    });
+  } catch (e) {
+    console.log(e);
+  }
 };

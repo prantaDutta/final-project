@@ -6,7 +6,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // console.log(req.body);
     if (req.body.email) {
       const { email } = req.body;
-      //   res.json({
+      //   res.json({loca
       //     email,
       //   });
       try {
