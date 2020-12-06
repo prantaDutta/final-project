@@ -5,8 +5,8 @@ import * as Yup from "yup";
 import axios from "axios";
 import FormikTextField from "../components/shared/FormikTextField";
 import { useLoading, ThreeDots } from "@agney/react-loading";
-import { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { useService } from "@xstate/react";
+import { authService } from "../states/authMachine";
 
 interface loginProps {}
 
@@ -17,43 +17,46 @@ interface Values {
 
 const login2: React.FC<loginProps> = ({}) => {
   const router = useRouter();
-  const { toggleAuth } = useContext(AuthContext);
+
+  const [, send] = useService(authService);
 
   // creating validation schema with YUP
   const validation = Yup.object({
     email: Yup.string()
       .email("Invalid email")
-      // .test("Unique Email", "Email doesn't exist", function (value) {
-      //   return new Promise((resolve, _) => {
-      //     axios
-      //       .post("/api/unique-email", { email: value })
-      //       .then((res) => {
-      //         if (res.data.msg !== "Unique Email") {
-      //           resolve(true);
-      //         }
-      //         resolve(false);
-      //       })
-      //       .catch(() => resolve(false));
-      //   });
-      // })
+      .test("Unique Email", "Email doesn't exist", function (value) {
+        return new Promise((resolve, _) => {
+          axios
+            .post("/api/unique-email", { email: value })
+            .then((res) => {
+              if (res.data.msg !== "Unique Email") {
+                resolve(true);
+              }
+              resolve(false);
+            })
+            .catch(() => resolve(false));
+        });
+      })
       .required("Required"),
     password: Yup.string()
       .min(6, "Password should be atleast six letters")
-      // .test("Password Matching", "Wrong Credentials", function (value) {
-      //   return new Promise((resolve, _) => {
-      //     axios
-      //       .post("/api/password-match", {
-      //         email: this.parent.email,
-      //         password: value,
-      //       })
-      //       .then((res) => {
-      //         if (res.data.msg === "Wrong Credentials") {
-      //           resolve(false);
-      //         }
-      //         resolve(true);
-      //       });
-      //   });
-      // })
+      .test("Password Matching", "Wrong Credentials", function (value) {
+        if (value) {
+          return new Promise((resolve, _) => {
+            axios
+              .post("/api/password-match", {
+                email: this.parent.email,
+                password: value,
+              })
+              .then((res) => {
+                if (res.data.msg === "Wrong Credentials") {
+                  resolve(false);
+                }
+                resolve(true);
+              });
+          });
+        } else return true;
+      })
       .required("Required"),
   });
 
@@ -68,22 +71,22 @@ const login2: React.FC<loginProps> = ({}) => {
     try {
       const response = await axios.post("api/login", { values });
 
-      const { accessToken } = response.data;
-
-      // console.log("l", accessToken);
-      // if (accessToken) {
-      //   localStorage.setItem("authToken", JSON.stringify(accessToken));
-      // } else {
-      //   console.log("Please Log In again");
-      // }
-
-      // toggleAuth();
-      // if (response.status === 200) {
-      //   console.log("success");
-      // }
-      console.log("response in login: ", response);
-      console.log("accessToken", accessToken);
-      router.push("/dashboard");
+      const { token } = response.data;
+      try {
+        axios
+          .post("/api/setRedisData", {
+            key: process.env.AUTH_TOKEN_NAME!,
+            value: token,
+          })
+          .then(() => {
+            send({ type: "toggle", token });
+            router.push("/dashboard");
+          });
+      } catch (e) {
+        console.log(e);
+        throw e;
+      }
+      // router.push("/");
     } catch (e) {
       console.log(e);
     }

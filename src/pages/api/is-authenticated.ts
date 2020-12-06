@@ -6,11 +6,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   // console.log(req.body);
-  return new Promise(async (resolve) => {
-    const { token } = req.body;
-    console.log(token);
-    res.send(token);
-    resolve();
-  });
+  // return new Promise(async (resolve) => {
+  const { token } = req.body;
+  console.log(token);
+  res.status(200).send(token);
+  // resolve();
+  // });
   //   console.log(verifyJWTToken(token));
 };

@@ -1,11 +1,8 @@
-import { useMachine, useService } from "@xstate/react";
-import Axios from "axios";
+import { useService } from "@xstate/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
-import { StateMachine, AnyEventObject, interpret } from "xstate";
-import { AuthContext } from "../../contexts/AuthContext";
-import { authMachine, authService, toggleAuth } from "../../states/authMachine";
+import { useState } from "react";
+import { authService } from "../../states/authMachine";
 
 export const links: linkArray[] = [
   { href: "/", label: "Home" },
@@ -23,18 +20,6 @@ export interface linkArray {
   svgD?: string;
 }
 
-// interface authState {
-//   authState: StateMachine<
-//     toggleAuth,
-//     any,
-//     AnyEventObject,
-//     {
-//       value: any;
-//       context: toggleAuth;
-//     }
-//   >;
-// }
-
 // d attribute value of hambergur menu and cross sign
 const menu = ["M4 6h16M4 12h16M4 18h16", "M6 18L18 6M6 6l12 12"];
 
@@ -45,42 +30,12 @@ export interface NavItemsProps {
 export default function Nav() {
   // const { isAuthenticated, toggleAuth } = useContext(AuthContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  // const router = useRouter();
-  // let data;
-
-  // useEffect(() => {
-  //   try {
-  //     Axios.post("/api/getRedisData", { key: "authState" }).then((res) => {
-  //       data = res.data;
-  //       console.log("get:", data);
-  //     });
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }, []);
-
-  // const [current, send] = useMachine(data || authMachine);
-  // console.log(current.value);
-  // const { isAuthenticated } = current.context;
-
-  // // console.log(current.changed);
-  // useEffect(() => {
-  //   if (!current.changed) return;
-  //   try {
-  //     Axios.post("/api/setRedisData", {
-  //       key: "authState",
-  //       value: current,
-  //     }).then((res) => {
-  //       data = res.data;
-  //       console.log("set:", data);
-  //     });
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // }, [current.value]);
 
   const [state, send] = useService(authService);
   const { isAuthenticated } = state.context;
+  const router = useRouter();
+
+  console.log("auth", isAuthenticated);
 
   // rendering each nav items
   const NavItems: React.FC<NavItemsProps> = ({ links }) => {
@@ -97,7 +52,10 @@ export default function Nav() {
               <Link href={link.href} key={link.label}>
                 <a
                   key={link.label}
-                  onClick={() => send("toggle")}
+                  onClick={() => {
+                    send("toggle");
+                    router.push("/");
+                  }}
                   className={`block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
                   }`}
@@ -130,13 +88,6 @@ export default function Nav() {
         <div className="tracking-widest md:text-lg text-base font-semibold uppercase md:ml-10 ">
           GrayScale
         </div>
-        <button
-          type="button"
-          onClick={() => send("toggle")}
-          className="block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900"
-        >
-          Toggle
-        </button>
         <div className="md:hidden">
           <button
             type="button"

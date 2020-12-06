@@ -11,6 +11,7 @@ export const yupValidationSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email")
     .test("Unique Email", "Email already been taken", function (value) {
+      if (!value) return true;
       return new Promise((resolve, _) => {
         axios
           .post("/api/unique-email", { email: value })

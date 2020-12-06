@@ -1,13 +1,28 @@
+import { useService } from "@xstate/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
+import { authService } from "../../states/authMachine";
 
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
-  const { user, toggleAuth } = useContext(AuthContext);
+  // const { user, toggleAuth } = useContext(AuthContext);
+  const [state, send] = useService(authService);
+  const { token } = state.context;
+  // console.log("token", token);
+  // useEffect(() => {
+  //   let authToken = ((token as any).data as any).data;
+  //   if (authToken) {
+  //     const res = verifyJWTToken(authToken);
+  //     if ((res as any).err) {
+  //       console.log("Not Authenticated");
+  //     } else if ((res as any).user) {
+  //       console.log(res);
+  //     }
+  //   } else {
+  //   }
+  // }, []);
 
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">
@@ -52,8 +67,8 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
         </div>
         <div>
           <h4 className="">Welcome, </h4>
-          <h4 className="font-semibold">{(user as any).name}</h4>
-          {/* <h4 className="font-semibold">Pranta Dutta</h4> */}
+          {/* <h4 className="font-semibold">{(user as any).name}</h4> */}
+          <h4 className="font-semibold">Pranta Dutta</h4>
         </div>
       </div>
       <div className="p-4">
@@ -61,8 +76,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
           <Link href={router.pathname + "#"}>
             <a
               onClick={() => {
-                localStorage.removeItem("authToken");
-                toggleAuth();
+                send("toggle");
                 router.push("/");
               }}
             >

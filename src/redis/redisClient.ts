@@ -20,9 +20,15 @@ process.on("exit", () => {
 export default client;
 
 // export const getRedisData = (key: any) => {
-//   redis.get(key, function (err, reply) {
-//     console.log(reply);
-//     if (err) throw err;
-//     else return reply;
+//   client.get(key, function (err: any, value: any) {
+//     if (err) {
+//       console.log(err);
+//       return err;
+//     }
+//     if (value != null) {
+//       const data = JSON.parse(value);
+//       console.log("Getting Data from Redis");
+//       return data;
+//     }
 //   });
 // };

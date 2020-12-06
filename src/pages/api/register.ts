@@ -15,13 +15,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     } = req.body.values;
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // let d = new Date(dateOfBirth + "T00:00");
-    // // let f = format(d, "YYYY-MM-DD");
-
-    // console.log("dateOfBirth ", dateOfBirth);
-    // console.log("parsedDate ", parseISO(dateOfBirth));
-
     const user = await prisma.users.create({
       data: {
         name,
@@ -38,9 +31,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       res.send("error");
       reject();
     } else {
-      const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!);
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!);
       // console.log(accessToken);
-      res.json({ accessToken });
+      res.json({ token });
+
+      // }
       resolve();
     }
   });

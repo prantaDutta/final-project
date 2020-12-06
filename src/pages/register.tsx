@@ -5,8 +5,8 @@ import axios from "axios";
 import FormikTextField from "./../components/shared/FormikTextField";
 import { yupValidationSchema } from "../utils/vaidationSchema";
 import { useLoading, ThreeDots } from "@agney/react-loading";
-import { useContext } from "react";
-import { AuthContext } from "../contexts/AuthContext";
+import { useService } from "@xstate/react";
+import { authService } from "../states/authMachine";
 
 interface registerProps {}
 
@@ -22,7 +22,7 @@ interface Values {
 
 const register: React.FC<registerProps> = ({}) => {
   const router = useRouter();
-  const { toggleAuth } = useContext(AuthContext);
+  const [, send] = useService(authService);
 
   const { containerProps, indicatorEl } = useLoading({
     loading: true,
@@ -40,18 +40,23 @@ const register: React.FC<registerProps> = ({}) => {
     try {
       const response = await axios.post("api/register", { values });
 
-      const { accessToken } = response.data;
-      if (accessToken) {
-        localStorage.setItem("authToken", JSON.stringify(accessToken));
-      } else {
-        console.log("Please Log In again");
-      }
+      const { token } = response.data;
 
-      router.push("/verification");
+      axios
+        .post("/api/setRedisData", {
+          key: process.env.AUTH_TOKEN_NAME!,
+          value: token,
+        })
+        .then(() => {
+          send({ type: "toggle", data: token });
+          router.push("/verification");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } catch (e) {
       console.log(e);
     }
-    toggleAuth();
     setSubmitting(false);
   };
 
