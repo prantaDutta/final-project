@@ -74,7 +74,7 @@ const login2: React.FC<loginProps> = ({}) => {
       const { token } = response.data;
       try {
         axios
-          .post("/api/setRedisData", {
+          .put("/api/setRedisData", {
             key: process.env.AUTH_TOKEN_NAME!,
             value: token,
           })

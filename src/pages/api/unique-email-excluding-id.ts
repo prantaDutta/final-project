@@ -1,8 +1,7 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import handler from "../../apiHandlers/handler";
 import prisma from "../../lib/prisma";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  // return new Promise(async (resolve, reject) => {
+export default handler.post(async (req, res, next) => {
   if (req.body.email) {
     const { email, id } = req.body;
 
@@ -17,7 +16,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           res.status(200).json({
             msg: "Email already been taken By this user",
           });
-          // resolve();
         } else if (user && user.email !== email) {
           const newUser = await prisma.users.findUnique({
             where: {
@@ -29,27 +27,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             res.json({
               msg: "Email already been taken",
             });
-            // resolve();
           } else {
             res.status(200).json({ msg: "Unique Email" });
-            // resolve();
           }
         } else {
           res.status(200).json({ msg: "Unique Email" });
-          // resolve();
         }
       } catch (e) {
         console.log(e);
         res.status(200).send("Validating");
-        // reject();
       }
     } else {
       res.status(200).send("Validating");
-      // reject();
     }
   } else {
     res.status(200).send("Validating");
-    // reject();
   }
-  // });
-};
+  next();
+});

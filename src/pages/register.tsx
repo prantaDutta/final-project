@@ -43,7 +43,7 @@ const register: React.FC<registerProps> = ({}) => {
       const { token } = response.data;
 
       axios
-        .post("/api/setRedisData", {
+        .put("/api/redis", {
           key: process.env.AUTH_TOKEN_NAME!,
           value: token,
         })

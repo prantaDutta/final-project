@@ -1,32 +1,30 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import prisma from "../../lib/prisma";
+import handler from "../../apiHandlers/handler";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  return new Promise(async (resolve, reject) => {
-    const { email } = req.body.values;
-    if (!email) {
-      res.send("Server Error");
-      reject();
-    } else {
-      try {
-        const user = await prisma.users.findUnique({
-          where: {
-            email,
-          },
-        });
-        if (!user) {
-          res.send("error");
-          reject();
-        } else {
-          const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!);
-          res.status(200).json({ token });
-          resolve();
-        }
-      } catch (e) {
-        console.log(e);
-        reject();
+export default handler.post(async (req, res, next) => {
+  const { email } = req.body.values;
+  if (!email) {
+    res.send("Server Error");
+  } else {
+    try {
+      const user = await prisma.users.findUnique({
+        where: {
+          email,
+        },
+      });
+      if (!user) {
+        res.send("error");
+      } else {
+        const token = jwt.sign(
+          user.id.toString(),
+          process.env.ACCESS_TOKEN_SECRET!
+        );
+        res.status(200).json({ token });
       }
+    } catch (e) {
+      console.log(e);
     }
-  });
-};
+  }
+  next();
+});

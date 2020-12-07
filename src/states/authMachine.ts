@@ -1,6 +1,6 @@
 import axios from "axios";
 import { assign, createMachine, interpret } from "xstate";
-// import { cachedToken } from "../utils/functions";
+import { baseURL } from "../utils/constants";
 
 export interface toggleAuth {
   isAuthenticated: boolean;
@@ -10,12 +10,10 @@ export interface toggleAuth {
 const fetchToken = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/getRedisData",
-        {
-          key: process.env.AUTH_TOKEN_NAME!,
-        }
+      const response = await axios.get(
+        `${baseURL}/api/redis?key=${process.env.AUTH_TOKEN_NAME!}`
       );
+      console.log(response);
       resolve(response.data.data);
     } catch (e) {
       console.log("Error Fetching Token: ", e);
@@ -26,11 +24,8 @@ const fetchToken = () => {
 
 const deleteTokenFromCache = async () => {
   try {
-    const response = await axios.post(
-      "http://localhost:3000/api/deleteRedisData",
-      {
-        key: process.env.AUTH_TOKEN_NAME!,
-      }
+    const response = await axios.delete(
+      `${baseURL}/api/redis?key=${process.env.AUTH_TOKEN_NAME!}`
     );
     return response;
   } catch (e) {
