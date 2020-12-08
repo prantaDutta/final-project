@@ -29,7 +29,10 @@ export interface NavItemsProps {
 export default function Nav() {
   const { isAuthenticated, toggleAuth } = useContext(AuthContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
   const router = useRouter();
+
+  // console.log("auth", isAuthenticated);
 
   // rendering each nav items
   const NavItems: React.FC<NavItemsProps> = ({ links }) => {
@@ -47,8 +50,7 @@ export default function Nav() {
                 <a
                   key={link.label}
                   onClick={() => {
-                    localStorage.removeItem("authToken");
-                    toggleAuth();
+                    toggleAuth(false);
                     router.push("/");
                   }}
                   className={`block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${

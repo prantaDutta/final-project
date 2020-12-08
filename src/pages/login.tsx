@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import FormikTextField from "../components/shared/FormikTextField";
 import { useLoading, ThreeDots } from "@agney/react-loading";
+import { baseURL } from "../utils/constants";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 
@@ -17,7 +18,7 @@ interface Values {
 
 const login2: React.FC<loginProps> = ({}) => {
   const router = useRouter();
-  const { toggleAuth } = useContext(AuthContext);
+  const { toggleAuth, setUserId } = useContext(AuthContext);
 
   // creating validation schema with YUP
   const validation = Yup.object({
@@ -25,12 +26,14 @@ const login2: React.FC<loginProps> = ({}) => {
       .email("Invalid email")
       .test("Unique Email", "Email doesn't exist", function (value) {
         return new Promise((resolve, _) => {
-          axios.post("/api/unique-email", { email: value }).then((res) => {
-            if (res.data.msg !== "Unique Email") {
+          axios
+            .post(baseURL + "/api/unique-email", { email: value })
+            .then((res) => {
+              if (res.data.msg === "Unique Email") {
+                resolve(false);
+              }
               resolve(true);
-            }
-            resolve(false);
-          });
+            });
         });
       })
       .required("Required"),
@@ -39,15 +42,18 @@ const login2: React.FC<loginProps> = ({}) => {
       .test("Password Matching", "Wrong Credentials", function (value) {
         return new Promise((resolve, _) => {
           axios
-            .post("/api/password-match", {
+            .post(baseURL + "/api/password-match", {
               email: this.parent.email,
               password: value,
             })
             .then((res) => {
-              if (res.data.msg === "Wrong Credentials") {
-                resolve(false);
+              if (
+                res.data.msg !== "Wrong Credentials" ||
+                res.data.msg !== "validating"
+              ) {
+                resolve(true);
               }
-              resolve(true);
+              resolve(false);
             });
         });
       })
@@ -64,21 +70,10 @@ const login2: React.FC<loginProps> = ({}) => {
 
     try {
       const response = await axios.post("api/login", { values });
-
-      const { accessToken } = response.data;
-      // console.log("l", accessToken);
-      if (accessToken) {
-        localStorage.setItem("authToken", JSON.stringify(accessToken));
-      } else {
-        console.log("Please Log In again");
-      }
-
-      // const authHeader = req.headers["authorization"];
-      // const token = authHeader && authHeader.split(" ")[1];
-      // if (token == null) return res.sendStatus(401);
-
-      toggleAuth();
-      router.push("/dashboard");
+      const { userId } = response.data;
+      toggleAuth(true);
+      setUserId(userId);
+      router.push("/");
     } catch (e) {
       console.log(e);
     }

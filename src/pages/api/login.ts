@@ -1,35 +1,43 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import jwt from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
 import prisma from "../../lib/prisma";
+import handler from "../../apiHandlers/handler";
+import cookie from "cookie";
+import {
+  ACCESS_TOKEN_SECRET,
+  AUTH_TOKEN_NAME,
+  isProduction,
+} from "../../utils/constants";
 
-// const KEY = "kdjkskASDFSFKDLLDFDKDFDSKDL";
-
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  return new Promise(async (resolve, reject) => {
-    const { email } = req.body.values;
-    if (!email) {
-      res.send("Server Error");
-      reject();
-    } else {
-      try {
-        const user = await prisma.users.findUnique({
-          where: {
-            email,
-          },
-        });
-        if (!user) {
-          res.send("error");
-          reject();
-        } else {
-          const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET!);
-          // console.log(accessToken);
-          res.json({ accessToken });
-          resolve();
-        }
-      } catch (e) {
-        console.log(e);
-        reject();
+export default handler.post(async (req, res, next) => {
+  const { email } = req.body.values;
+  if (!email) {
+    res.send("Server Error");
+  } else {
+    try {
+      const user = await prisma.users.findUnique({
+        where: {
+          email,
+        },
+      });
+      if (!user) {
+        res.send("error");
+      } else {
+        const token = sign(user.id.toString(), ACCESS_TOKEN_SECRET);
+        res.setHeader(
+          "Set-Cookie",
+          cookie.serialize(AUTH_TOKEN_NAME, token, {
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: "strict",
+            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+            path: "/",
+          })
+        );
+        res.status(200).json({ userId: user.id });
       }
+    } catch (e) {
+      console.log(e);
     }
-  });
-};
+  }
+  next();
+});

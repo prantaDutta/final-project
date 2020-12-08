@@ -21,8 +21,8 @@ interface Values {
 }
 
 const register: React.FC<registerProps> = ({}) => {
+  const { toggleAuth, setUserId } = useContext(AuthContext);
   const router = useRouter();
-  const { toggleAuth } = useContext(AuthContext);
 
   const { containerProps, indicatorEl } = useLoading({
     loading: true,
@@ -39,19 +39,13 @@ const register: React.FC<registerProps> = ({}) => {
 
     try {
       const response = await axios.post("api/register", { values });
-
-      const { accessToken } = response.data;
-      if (accessToken) {
-        localStorage.setItem("authToken", JSON.stringify(accessToken));
-      } else {
-        console.log("Please Log In again");
-      }
-
-      router.push("/verification");
+      const { userId } = response.data;
+      toggleAuth(true);
+      setUserId(userId);
+      router.push("/");
     } catch (e) {
       console.log(e);
     }
-    toggleAuth();
     setSubmitting(false);
   };
 

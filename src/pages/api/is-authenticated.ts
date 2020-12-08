@@ -1,16 +1,10 @@
-import { NextApiRequest, NextApiResponse } from "next";
-// import jwt from "jsonwebtoken";
-// import { verifyJWTToken } from "../../utils/functions";
+import handler from "../../apiHandlers/handler";
 
-// const KEY = "kdjkskASDFSFKDLLDFDKDFDSKDL";
-
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  // console.log(req.body);
-  return new Promise(async (resolve) => {
-    const { token } = req.body;
-    console.log(token);
-    res.send(token);
-    resolve();
-  });
-  //   console.log(verifyJWTToken(token));
-};
+export default handler.get(async (req, res, next) => {
+  if (req.token) {
+    res.status(200).json({ token: req.token });
+  } else {
+    res.status(200).json({ token: null });
+  }
+  next();
+});

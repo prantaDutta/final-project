@@ -11,13 +11,17 @@ export const yupValidationSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email")
     .test("Unique Email", "Email already been taken", function (value) {
+      if (!value) return true;
       return new Promise((resolve, _) => {
-        axios.post("/api/unique-email", { email: value }).then((res) => {
-          if (res.data.msg === "Email already been taken") {
-            resolve(false);
-          }
-          resolve(true);
-        });
+        axios
+          .post("/api/unique-email", { email: value })
+          .then((res) => {
+            if (res.data.msg === "Email already been taken") {
+              resolve(false);
+            }
+            resolve(true);
+          })
+          .catch(() => resolve(false));
       });
     })
     .required("Required"),
