@@ -1,8 +1,7 @@
-import { useService } from "@xstate/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import { authService } from "../../states/authMachine";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 export const links: linkArray[] = [
   { href: "/", label: "Home" },
@@ -28,14 +27,12 @@ export interface NavItemsProps {
 }
 
 export default function Nav() {
-  // const { isAuthenticated, toggleAuth } = useContext(AuthContext);
+  const { isAuthenticated, toggleAuth } = useContext(AuthContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
-  const [state, send] = useService(authService);
-  const { isAuthenticated } = state.context;
   const router = useRouter();
 
-  console.log("auth", isAuthenticated);
+  // console.log("auth", isAuthenticated);
 
   // rendering each nav items
   const NavItems: React.FC<NavItemsProps> = ({ links }) => {
@@ -53,7 +50,7 @@ export default function Nav() {
                 <a
                   key={link.label}
                   onClick={() => {
-                    send("toggle");
+                    toggleAuth(false);
                     router.push("/");
                   }}
                   className={`block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${

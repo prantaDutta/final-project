@@ -5,8 +5,8 @@ import axios from "axios";
 import FormikTextField from "./../components/shared/FormikTextField";
 import { yupValidationSchema } from "../utils/vaidationSchema";
 import { useLoading, ThreeDots } from "@agney/react-loading";
-import { useService } from "@xstate/react";
-import { authService } from "../states/authMachine";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 interface registerProps {}
 
@@ -21,8 +21,8 @@ interface Values {
 }
 
 const register: React.FC<registerProps> = ({}) => {
+  const { toggleAuth, setUserId } = useContext(AuthContext);
   const router = useRouter();
-  const [, send] = useService(authService);
 
   const { containerProps, indicatorEl } = useLoading({
     loading: true,
@@ -39,21 +39,10 @@ const register: React.FC<registerProps> = ({}) => {
 
     try {
       const response = await axios.post("api/register", { values });
-
-      const { token } = response.data;
-
-      axios
-        .put("/api/redis", {
-          key: process.env.AUTH_TOKEN_NAME!,
-          value: token,
-        })
-        .then(() => {
-          send({ type: "toggle", data: token });
-          router.push("/verification");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      const { userId } = response.data;
+      toggleAuth(true);
+      setUserId(userId);
+      router.push("/");
     } catch (e) {
       console.log(e);
     }

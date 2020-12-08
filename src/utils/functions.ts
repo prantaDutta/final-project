@@ -1,19 +1,12 @@
-import jwt from "jsonwebtoken";
+import { verify } from "jsonwebtoken";
 import { format, sub } from "date-fns";
-import axios from "axios";
-import prisma from "../lib/prisma";
+import { ACCESS_TOKEN_SECRET } from "./constants";
 
 export const verifyJWTToken = (accessToken: string) => {
-  return jwt.verify(
-    accessToken,
-    process.env.ACCESS_TOKEN_SECRET!,
-    (err, user) => {
-      return {
-        err,
-        user,
-      };
-    }
-  );
+  return verify(accessToken, ACCESS_TOKEN_SECRET, (_err, user) => {
+    console.log("user: ", user);
+    return user;
+  });
 };
 
 export const formatDate = (date: Date) => format(date, "yyyy-MM-dd");

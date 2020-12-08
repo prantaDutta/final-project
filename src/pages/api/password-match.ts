@@ -3,7 +3,6 @@ import prisma from "../../lib/prisma";
 import handler from "../../apiHandlers/handler";
 
 export default handler.post(async (req, res, next) => {
-  console.log(req.body);
   if (req.body.password) {
     const { email, password } = req.body;
     const user = await prisma.users.findUnique({

@@ -1,28 +1,15 @@
-import { useService } from "@xstate/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { authService } from "../../states/authMachine";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
-  // const { user, toggleAuth } = useContext(AuthContext);
-  const [state, send] = useService(authService);
-  const { token } = state.context;
-  // console.log("token", token);
-  // useEffect(() => {
-  //   let authToken = ((token as any).data as any).data;
-  //   if (authToken) {
-  //     const res = verifyJWTToken(authToken);
-  //     if ((res as any).err) {
-  //       console.log("Not Authenticated");
-  //     } else if ((res as any).user) {
-  //       console.log(res);
-  //     }
-  //   } else {
-  //   }
-  // }, []);
+  const { userId, toggleAuth } = useContext(AuthContext);
+
+  useEffect(() => {}, []);
 
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">
@@ -76,7 +63,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
           <Link href={router.pathname + "#"}>
             <a
               onClick={() => {
-                send("toggle");
+                toggleAuth(false);
                 router.push("/");
               }}
             >

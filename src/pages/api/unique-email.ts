@@ -1,10 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import handler from "../../apiHandlers/handler";
 import prisma from "../../lib/prisma";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  // return new Promise(async (resolve, reject) => {
+  // console.log(req.body);
   if (req.body.email) {
     const { email } = req.body;
+    //   res.json({
+    //     email,
+    //   });
     try {
       const user = await prisma.users.findUnique({
         where: {
@@ -15,15 +19,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.json({
           msg: "Email already been taken",
         });
+        // resolve();
       } else {
         res.json({ msg: "Unique Email" });
+        // resolve();
       }
     } catch (e) {
       console.log(e);
-      res.json({ msg: "Validating" });
+      res.send("Validating");
+      // reject();
     }
   } else {
-    res.json({ msg: "Validating" });
+    res.send("Validating");
+    // reject();
   }
-  // next();
+  // });
 };

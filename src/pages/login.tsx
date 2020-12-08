@@ -5,9 +5,9 @@ import * as Yup from "yup";
 import axios from "axios";
 import FormikTextField from "../components/shared/FormikTextField";
 import { useLoading, ThreeDots } from "@agney/react-loading";
-import { useService } from "@xstate/react";
-import { authService } from "../states/authMachine";
 import { baseURL } from "../utils/constants";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
 
 interface loginProps {}
 
@@ -18,8 +18,7 @@ interface Values {
 
 const login2: React.FC<loginProps> = ({}) => {
   const router = useRouter();
-
-  const [, send] = useService(authService);
+  const { toggleAuth, setUserId } = useContext(AuthContext);
 
   // creating validation schema with YUP
   const validation = Yup.object({
@@ -71,23 +70,10 @@ const login2: React.FC<loginProps> = ({}) => {
 
     try {
       const response = await axios.post("api/login", { values });
-
-      const { token } = response.data;
-      // try {
-      //   axios
-      //     .put("/api/setRedisData", {
-      //       key: process.env.AUTH_TOKEN_NAME!,
-      //       value: token,
-      //     })
-      //     .then(() => {
-      //       send({ type: "toggle", token });
-      //       router.push("/dashboard");
-      //     });
-      // } catch (e) {
-      //   console.log(e);
-      //   throw e;
-      // }
-      // router.push("/");
+      const { userId } = response.data;
+      toggleAuth(true);
+      setUserId(userId);
+      router.push("/");
     } catch (e) {
       console.log(e);
     }

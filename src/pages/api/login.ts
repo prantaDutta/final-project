@@ -22,9 +22,7 @@ export default handler.post(async (req, res, next) => {
       if (!user) {
         res.send("error");
       } else {
-        const token = sign(user.id.toString(), ACCESS_TOKEN_SECRET, {
-          expiresIn: "1h",
-        });
+        const token = sign(user.id.toString(), ACCESS_TOKEN_SECRET);
         res.setHeader(
           "Set-Cookie",
           cookie.serialize(AUTH_TOKEN_NAME, token, {
@@ -35,7 +33,7 @@ export default handler.post(async (req, res, next) => {
             path: "/",
           })
         );
-        res.status(200).json({ token });
+        res.status(200).json({ userId: user.id });
       }
     } catch (e) {
       console.log(e);
