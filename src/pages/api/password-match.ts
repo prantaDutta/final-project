@@ -3,6 +3,7 @@ import prisma from "../../lib/prisma";
 import handler from "../../apiHandlers/handler";
 
 export default handler.post(async (req, res, next) => {
+  // console.log(req.body);
   if (req.body.password) {
     const { email, password } = req.body;
     const user = await prisma.users.findUnique({
@@ -13,7 +14,7 @@ export default handler.post(async (req, res, next) => {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       // password match
-      res.json({ msg: "Password Matching" });
+      res.json({ msg: "Password Matched" });
     } else {
       // password did not match
       res.json({
@@ -21,7 +22,8 @@ export default handler.post(async (req, res, next) => {
       });
     }
   } else {
-    res.send("Validating");
+    res.json({
+      msg: "Validating",
+    });
   }
-  next();
 });

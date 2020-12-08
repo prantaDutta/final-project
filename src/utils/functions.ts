@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { format, sub } from "date-fns";
 import axios from "axios";
+import prisma from "../lib/prisma";
 
 export const verifyJWTToken = (accessToken: string) => {
   return jwt.verify(
@@ -40,23 +41,3 @@ export const isEmptyObj = (obj: Record<any, any>) => {
 export const isObject = (obj: any) => {
   return obj != null && obj.constructor.name === "Object";
 };
-
-// export const cachedToken = async function () {
-//   // return new Promise(async (resolve, reject) => {
-//   try {
-//     axios
-//       .post("/api/getRedisData", {
-//         key: process.env.AUTH_TOKEN_NAME!,
-//       })
-//       .then((res) => {
-//         console.log("get:", res.data);
-//         // resolve(res.data);
-//         return res.data;
-//       });
-//   } catch (e) {
-//     console.log(e);
-//     return e;
-//     // reject
-//   }
-//   // });
-// };

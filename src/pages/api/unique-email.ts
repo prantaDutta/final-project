@@ -19,10 +19,10 @@ export default handler.post(async (req, res, next) => {
       }
     } catch (e) {
       console.log(e);
-      res.send("Validating");
+      res.json({ msg: "Validating" });
     }
   } else {
-    res.send("Validating");
+    res.json({ msg: "Validating" });
   }
   next();
 });

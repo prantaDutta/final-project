@@ -36,32 +36,32 @@ const deleteTokenFromCache = async () => {
 
 export const authMachine = createMachine<toggleAuth>({
   id: "auth",
-  initial: "loading",
+  initial: "unauthenticated",
   context: {
     isAuthenticated: false,
     token: undefined,
   },
   states: {
-    loading: {
-      invoke: {
-        id: "fetchToken",
-        src: fetchToken,
-        onDone: {
-          target: "authenticated",
-          actions: assign({
-            isAuthenticated: (_context, _event) => true,
-            token: (_context, event) => event.data,
-          }),
-        },
-        onError: {
-          target: "unauthenticated",
-          actions: assign({
-            isAuthenticated: (_context, _event) => false,
-            token: (_context, event) => event.data,
-          }),
-        },
-      },
-    },
+    // loading: {
+    //   invoke: {
+    //     id: "fetchToken",
+    //     src: fetchToken,
+    //     onDone: {
+    //       target: "authenticated",
+    //       actions: assign({
+    //         isAuthenticated: (_context, _event) => true,
+    //         token: (_context, event) => event.data,
+    //       }),
+    //     },
+    //     onError: {
+    //       target: "unauthenticated",
+    //       actions: assign({
+    //         isAuthenticated: (_context, _event) => false,
+    //         token: (_context, event) => event.data,
+    //       }),
+    //     },
+    //   },
+    // },
     authenticated: {
       on: {
         toggle: {
@@ -89,9 +89,9 @@ export const authMachine = createMachine<toggleAuth>({
 
 export const authService = interpret(authMachine)
   .onTransition(async (state) => {
-    console.log("Current State: ", state.value);
-    if (state.value === "unauthenticated") {
-      await deleteTokenFromCache();
-    }
+    // console.log("Current State: ", state.value);
+    // if (state.value === "unauthenticated") {
+    //   await deleteTokenFromCache();
+    // }
   })
   .start();
