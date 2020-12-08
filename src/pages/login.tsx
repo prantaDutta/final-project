@@ -48,10 +48,13 @@ const login2: React.FC<loginProps> = ({}) => {
               password: value,
             })
             .then((res) => {
-              if (res.data.msg === "Wrong Credentials") {
-                resolve(false);
+              if (
+                res.data.msg !== "Wrong Credentials" ||
+                res.data.msg !== "validating"
+              ) {
+                resolve(true);
               }
-              resolve(true);
+              resolve(false);
             });
         });
       })

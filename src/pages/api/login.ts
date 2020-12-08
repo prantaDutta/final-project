@@ -23,7 +23,7 @@ export default handler.post(async (req, res, next) => {
         res.send("error");
       } else {
         const token = sign(user.id.toString(), ACCESS_TOKEN_SECRET, {
-          expiresIn: "7d",
+          expiresIn: "1h",
         });
         res.setHeader(
           "Set-Cookie",

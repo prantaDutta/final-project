@@ -1,7 +1,8 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import handler from "../../apiHandlers/handler";
 import prisma from "../../lib/prisma";
 
-export default handler.post(async (req, res, next) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.body.email) {
     const { email } = req.body;
     try {
@@ -24,5 +25,5 @@ export default handler.post(async (req, res, next) => {
   } else {
     res.json({ msg: "Validating" });
   }
-  next();
-});
+  // next();
+};
