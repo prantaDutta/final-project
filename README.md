@@ -28,9 +28,11 @@ yarn dev
 
 ## Important
 
-The database is hosted with heroku so it might be slow
+Sorry I removed the heroku database. So you have to setup a database now.
 
 If you want to use your own postgresql database then download postgresql from [`here`](https://www.enterprisedb.com/postgresql-tutorial-resources-training?cid=55)
+
+Just edit the credentials in your prisma/.env file
 
 Then run the following command to create the database table
 
