@@ -16,6 +16,8 @@ import { BorrowerTypeContext } from "../contexts/BorrowerTypeContext";
 import { useRouter } from "next/router";
 import ReactLoader from "../components/ReactLoader";
 import { BallTriangle } from "@agney/react-loading";
+import { NextPageContext } from "next";
+import { isAuthenticated } from "../apiHandlers/isAuthenticated";
 
 const verify = ({}) => {
   const { userId } = useContext(AuthContext);
@@ -30,7 +32,6 @@ const verify = ({}) => {
             id: userId,
           });
           setUserData(data);
-          console.log("userData: ", userData);
         } catch (e) {
           console.log("You messed up: ", e);
         }
@@ -38,10 +39,6 @@ const verify = ({}) => {
     };
     func();
   }, [userId]);
-
-  // if (!userData) {
-  //   return router.push("/login");
-  // }
 
   if (!userData) {
     return <ReactLoader component={<BallTriangle width="50" />} />;
@@ -294,6 +291,14 @@ const verify = ({}) => {
 
 export function FormikStep({ children }: FormikStepProps) {
   return <>{children}</>;
+}
+
+export async function getServerSideProps(context: NextPageContext) {
+  await isAuthenticated(context);
+
+  return {
+    props: {}, // will be passed to the page component as props
+  };
 }
 
 export default verify;

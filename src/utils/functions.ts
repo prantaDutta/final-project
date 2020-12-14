@@ -34,3 +34,7 @@ export const isEmptyObj = (obj: Record<any, any>) => {
 export const isObject = (obj: any) => {
   return obj != null && obj.constructor.name === "Object";
 };
+
+export const isServer = () => {
+  return typeof window === "undefined";
+};

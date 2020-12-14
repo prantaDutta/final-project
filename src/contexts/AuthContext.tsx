@@ -23,7 +23,9 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [userId, setUserId] = useState<null | number>(null);
 
-  const toggleAuth = (value: boolean) => setIsAuthenticated(value);
+  const toggleAuth = (value: boolean) => {
+    setIsAuthenticated(value);
+  };
 
   useEffect(() => {
     const func = async () => {

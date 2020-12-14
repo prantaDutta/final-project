@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import { baseURL } from "../../utils/constants";
 
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
-  const { userId, toggleAuth } = useContext(AuthContext);
-
-  useEffect(() => {}, []);
+  const { toggleAuth } = useContext(AuthContext);
 
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">
@@ -62,8 +61,9 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
         <h4 className="p-2 cursor-pointer rounded border-solid border-2 border-purple-800 hover:bg-purple-900 hover:text-white">
           <Link href={router.pathname + "#"}>
             <a
-              onClick={() => {
+              onClick={async () => {
                 toggleAuth(false);
+                await fetch(`${baseURL}/api/logout`);
                 router.push("/");
               }}
             >

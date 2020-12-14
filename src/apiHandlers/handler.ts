@@ -30,7 +30,6 @@ export default nextConnect<NextApiRequestExtended, NextApiResponse>({
       token,
       process.env.ACCESS_TOKEN_SECRET!,
       (err: any, decoded: any) => {
-        // console.log("decoded from handler: ", decoded);
         if (!err && decoded) {
           req.token = decoded;
         }

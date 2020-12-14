@@ -2,6 +2,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import fetch from "isomorphic-unfetch";
+import { baseURL } from "../../utils/constants";
 
 export const links: linkArray[] = [
   { href: "/", label: "Home" },
@@ -49,8 +51,9 @@ export default function Nav() {
               <Link href={link.href} key={link.label}>
                 <a
                   key={link.label}
-                  onClick={() => {
+                  onClick={async () => {
                     toggleAuth(false);
+                    await fetch(`${baseURL}/api/logout`);
                     router.push("/");
                   }}
                   className={`block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
