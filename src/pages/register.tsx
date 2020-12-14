@@ -42,7 +42,7 @@ const register: React.FC<registerProps> = ({}) => {
       const { userId } = response.data;
       toggleAuth(true);
       setUserId(userId);
-      router.push("/");
+      router.push("/dashboard");
     } catch (e) {
       console.log(e);
     }

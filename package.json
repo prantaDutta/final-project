@@ -5,10 +5,9 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "migration:create": "npx prisma migrate save --experimental",
-    "migration:up": "npx prisma migrate up --experimental",
-    "db:gen": "npx prisma generate",
-    "db:open": "npx prisma studio",
+    "migrate": "npx prisma migrate dev --preview-feature",
+    "gen": "npx prisma generate",
+    "open": "npx prisma studio",
     "db:introspect": "npx prisma introspect"
   },
   "dependencies": {

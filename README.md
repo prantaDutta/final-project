@@ -35,7 +35,7 @@ If you want to use your own postgresql database then download postgresql from [`
 Then run the following command to create the database table
 
 ```
-yarn migration:up
+yarn migrate
 ```
 
 # Open your database
@@ -43,7 +43,7 @@ yarn migration:up
 Open your database with following command
 
 ```
-yarn db:open
+yarn open
 ```
 
 ### Project Structure

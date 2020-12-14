@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { config } from "process";
 import {
   createContext,
   Dispatch,
@@ -29,14 +30,18 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
   useEffect(() => {
     const func = async () => {
       try {
-        const res = await Axios.get(baseURL + "/api/is-authenticated");
+        const res = await Axios.get(baseURL + "/api/is-authenticated", {
+          withCredentials: true,
+        });
+        // console.log("data: ", res.data);
         if (res.data.token) {
-          const token = verifyJWTToken(res.data.token);
-          console.log("token: ", token);
+          toggleAuth(true);
+          // console.log("token: ", res.data.token);
         } else {
           toggleAuth(false);
         }
       } catch (e) {
+        setIsAuthenticated(false);
         console.log(e);
       }
     };
