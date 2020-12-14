@@ -1,5 +1,4 @@
 import Axios from "axios";
-import { config } from "process";
 import {
   createContext,
   Dispatch,
@@ -8,11 +7,10 @@ import {
   useState,
 } from "react";
 import { baseURL } from "../utils/constants";
-import { verifyJWTToken } from "../utils/functions";
 
 type authValues = {
   isAuthenticated: boolean;
-  userId: number | null;
+  userId: number | null | string;
   toggleAuth: (value: boolean) => void;
   setUserId: Dispatch<SetStateAction<number | null>>;
 };
@@ -36,6 +34,7 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
         // console.log("data: ", res.data);
         if (res.data.token) {
           toggleAuth(true);
+          setUserId(res.data.token);
           // console.log("token: ", res.data.token);
         } else {
           toggleAuth(false);
