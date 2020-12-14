@@ -46,6 +46,16 @@ Open your database with following command
 yarn open
 ```
 
+## Problems
+
+If you run into any errors, try running the following command and then try restarting the dev server
+
+```
+yarn clean
+```
+
+If this doesn't solve your problems, then delete node_nodules and yarn.lock files. Then try restarting the server.
+
 ### Project Structure
 
 ```

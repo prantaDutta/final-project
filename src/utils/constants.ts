@@ -1,6 +1,6 @@
 export const baseURL = "http://localhost:3000";
 
-export const isProduction = process.env.NODE_ENV !== "development";
+export const isProduction = process.env.NODE_ENV === "production";
 
 export const FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
