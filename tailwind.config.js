@@ -44,9 +44,6 @@ module.exports = {
         grape: "#4d5198",
         skyblue: "#81b7d2",
       },
-      spacing: {
-        1.5: "0.35rem",
-      },
     },
   },
   variants: {
