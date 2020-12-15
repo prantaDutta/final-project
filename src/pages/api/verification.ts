@@ -2,9 +2,10 @@ import formidable from "formidable";
 // We could have usedregular 'fs' and not a promise one
 import { promises as fs } from "fs";
 import path from "path";
-import { isEmptyObj } from "../../utils/functions";
-import prisma from "../../lib/prisma";
 import handler from "../../apiHandlers/handler";
+import DBClient from "../../lib/prisma";
+
+const prisma = DBClient.getInstance().prisma;
 
 // first we need to disable the default body parser
 export const config = {
@@ -13,8 +14,8 @@ export const config = {
   },
 };
 
-export default handler.post(async (req, res, next) => {
-  try {
+export default handler.put(async (req, res) => {
+  if (req.token) {
     const imagePath = path.join(`./public/uploads/verificationPapers/`);
     fs.mkdir(imagePath, { recursive: true });
     // parse form with a Promise wrapper
@@ -29,69 +30,52 @@ export default handler.post(async (req, res, next) => {
       });
 
       // saving the file to the local folder
-      try {
-        form.parse(req, async (err, fields, files) => {
-          if (err) return reject(err);
-          resolve({ fields, files });
 
-          for (let [key, value] of Object.entries(files)) {
-            fields[key] = value.path.replace(/^.*[\\\/]/, ""); // returns the file and extenstion from the path
-          }
+      form.parse(req, async (err, fields, files) => {
+        if (err) return reject(err);
+        resolve({ fields, files });
 
-          let verificationData = {};
+        for (let [key, value] of Object.entries(files)) {
+          fields[key] = value.path.replace(/^.*[\\\/]/, ""); // returns the file and extenstion from the path
+        }
 
-          try {
-            // sending data to the database
-            verificationData = await prisma.users.update({
-              where: {
-                id: parseInt((fields as any).id),
+        // sending data to the database
+        try {
+          await prisma.users.update({
+            where: {
+              id: parseInt((fields as any).id),
+            },
+            data: {
+              // Personal
+              name: (fields as any).name,
+              email: (fields as any).email,
+              dateOfBirth: (fields as any).dateOfBirth,
+              gender: (fields as any).gender,
+              // contact information
+              address: (fields as any).address,
+              mobileNo: (fields as any).mobileNo,
+              // checking salaried individual or self-employed
+              borrowerType: (fields as any).borrowerType,
+              // KYC
+              documentType: (fields as any).documentType,
+              verified: "pending",
+              // verificationphotos
+              verificationPhotos: {
+                nidOrPassport: (fields as any).nidOrPassport,
+                addressProof: (fields as any).addressProof,
+                recentPhoto: (fields as any).recentPhoto,
+                bankAccountStateMents: (fields as any).bankAccountStatements,
+                businessProof: (fields as any).businessProof,
+                salarySlip: (fields as any).salarySlip,
+                employeeIdCard: (fields as any).employeeIdCard,
               },
-              data: {
-                // Personal
-                name: (fields as any).name,
-                email: (fields as any).email,
-                dateOfBirth: (fields as any).dateOfBirth,
-                gender: (fields as any).gender,
-                // contact information
-                address: (fields as any).address,
-                mobileNo: (fields as any).mobileNo,
-                // checking salaried individual or self-employed
-                borrowerType: (fields as any).borrowerType,
-                // KYC
-                documentType: (fields as any).documentType,
-                verified: "pending",
-                // verificationphotos
-                verificationPhotos: {
-                  nidOrPassport: (fields as any).nidOrPassport,
-                  addressProof: (fields as any).addressProof,
-                  recentPhoto: (fields as any).recentPhoto,
-                  bankAccountStateMents: (fields as any).bankAccountStatements,
-                  businessProof: (fields as any).businessProof,
-                  salarySlip: (fields as any).salarySlip,
-                  employeeIdCard: (fields as any).employeeIdCard,
-                },
-              },
-            });
-          } catch (e) {
-            console.log(e);
-          }
-          if (isEmptyObj(verificationData)) {
-            res.status(405);
-            res.end("You Messed Up");
-          } else {
-            res.status(200);
-            res.json({ verificationData });
-          }
-        });
-      } catch (e) {
-        res.status(405);
-        res.end("You Messed Up");
-      }
+            },
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      });
     });
-  } catch (e) {
-    console.log(e);
-    res.send("ERROR");
-    res.status(405);
   }
-  next();
+  return res.status(200).end();
 });

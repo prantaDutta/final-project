@@ -1,37 +1,22 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import prisma from "../../lib/prisma";
+import handler from "../../apiHandlers/handler";
+import DBClient from "../../lib/prisma";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  // return new Promise(async (resolve, reject) => {
-  // console.log(req.body);
-  if (req.body.email) {
-    const { email } = req.body;
-    //   res.json({
-    //     email,
-    //   });
-    try {
-      const user = await prisma.users.findUnique({
-        where: {
-          email,
-        },
-      });
-      if (user) {
-        res.json({
-          msg: "Email already been taken",
-        });
-        // resolve();
-      } else {
-        res.json({ msg: "Unique Email" });
-        // resolve();
-      }
-    } catch (e) {
-      console.log(e);
-      res.send("Validating");
-      // reject();
-    }
-  } else {
-    res.send("Validating");
-    // reject();
+const prisma = DBClient.getInstance().prisma;
+
+export default handler.post(async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(422).end();
   }
-  // });
-};
+  const user = await prisma.users.findUnique({
+    where: {
+      email,
+    },
+  });
+  if (!user) {
+    return res.status(200).json({ msg: "Unique Email" });
+  }
+  return res.status(200).json({
+    msg: "Email already been taken",
+  });
+});

@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
-import prisma from "../../lib/prisma";
 import handler from "../../apiHandlers/handler";
 import cookie from "cookie";
 import {
@@ -8,8 +7,11 @@ import {
   AUTH_TOKEN_NAME,
   isProduction,
 } from "../../utils/constants";
+import DBClient from "../../lib/prisma";
 
-export default handler.post(async (req, res, next) => {
+const prisma = DBClient.getInstance().prisma;
+
+export default handler.post(async (req, res) => {
   const { name, email, role, password, dateOfBirth, gender } = req.body.values;
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,20 +28,24 @@ export default handler.post(async (req, res, next) => {
 
   if (!user) {
     console.log("something is wrong");
-    res.json({ error: "Something Went Wrong" });
-  } else {
-    const token = sign(user.id.toString(), ACCESS_TOKEN_SECRET);
-    res.setHeader(
-      "Set-Cookie",
-      cookie.serialize(AUTH_TOKEN_NAME, token, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: "strict",
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-        path: "/",
-      })
-    );
-    res.status(200).json({ userId: user.id });
+    return res.status(422).json({ error: "Something Went Wrong" });
   }
-  next();
+  const token = sign(user.id.toString(), ACCESS_TOKEN_SECRET);
+  res.setHeader(
+    "Set-Cookie",
+    cookie.serialize(AUTH_TOKEN_NAME, token, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24 * 3, // 3 days
+      path: "/",
+    })
+  );
+  return res.status(200).json({
+    id: user.id,
+    name: user.name,
+    gender: user.gender,
+    dateOfBirth: user.dateOfBirth,
+    email: user.email,
+  });
 });

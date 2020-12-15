@@ -1,7 +1,10 @@
 import handler from "../../apiHandlers/handler";
-import prisma from "../../lib/prisma";
+import DBClient from "../../lib/prisma";
+import { ModifiedUserData } from "../../utils/randomTypes";
 
-export default handler.post(async (req, res, next) => {
+const prisma = DBClient.getInstance().prisma;
+
+export default handler.post(async (req, res) => {
   if (req.token) {
     const { id } = req.body;
     const intId = parseInt(id);
@@ -11,7 +14,7 @@ export default handler.post(async (req, res, next) => {
       },
     });
     if (user) {
-      const userData = {
+      const userData: ModifiedUserData = {
         id: user.id,
         name: user.name,
         gender: user.gender,
@@ -19,13 +22,8 @@ export default handler.post(async (req, res, next) => {
         email: user.email,
       };
       // console.log(user);
-      res.status(200).json(userData);
-    } else {
-      res.status(422).json({ ERROR: "Error" });
+      return res.status(200).json(userData);
     }
-  } else {
-    res.status(422).json({ ERROR: "Error" });
   }
-  // return res.status(200).send("hello");
-  next();
+  return res.status(422).json({ ERROR: "Error" });
 });

@@ -18,14 +18,10 @@ export default nextConnect<NextApiRequestExtended, NextApiResponse>({
   },
 }).use((req, _res, next) => {
   req.token = null;
-  // const { cookie = undefined } = req.cookies;
   const cookie = req.cookies;
 
   const token = cookie[`${AUTH_TOKEN_NAME}`];
-  // console.log("Request: ", req);
-  if (!token) {
-    next();
-  } else {
+  if (token) {
     verify(
       token,
       process.env.ACCESS_TOKEN_SECRET!,
@@ -33,8 +29,8 @@ export default nextConnect<NextApiRequestExtended, NextApiResponse>({
         if (!err && decoded) {
           req.token = decoded;
         }
-        next();
       }
     );
   }
+  next();
 });

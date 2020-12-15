@@ -1,7 +1,7 @@
 import * as Yup from "yup";
-import axios from "axios";
 import { eightennYearsBackFromNow, formatDate } from "./functions";
 import { FILE_SIZE, SUPPORTED_FORMATS } from "./constants";
+import fetch from "isomorphic-unfetch";
 
 export const yupValidationSchema = Yup.object({
   name: Yup.string().required("Required"),
@@ -13,15 +13,19 @@ export const yupValidationSchema = Yup.object({
     .test("Unique Email", "Email already been taken", function (value) {
       if (!value) return true;
       return new Promise((resolve, _) => {
-        axios
-          .post("/api/unique-email", { email: value })
-          .then((res) => {
-            if (res.data.msg === "Email already been taken") {
-              resolve(false);
-            }
-            resolve(true);
-          })
-          .catch(() => resolve(false));
+        fetch("/api/unique-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: value }),
+        }).then(async (res) => {
+          const data = await res.json();
+          if (data.msg === "Email already been taken") {
+            resolve(false);
+          }
+          resolve(true);
+        });
       });
     })
     .required("Required"),

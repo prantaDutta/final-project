@@ -1,47 +1,28 @@
 import handler from "../../apiHandlers/handler";
-import prisma from "../../lib/prisma";
+import DBClient from "../../lib/prisma";
 
-export default handler.post(async (req, res, next) => {
-  if (req.body.email) {
-    const { email, id } = req.body;
+const prisma = DBClient.getInstance().prisma;
 
-    if (email && id) {
-      try {
-        const user = await prisma.users.findUnique({
-          where: {
-            id,
-          },
-        });
-        if (user && user.email === email) {
-          res.status(200).json({
-            msg: "Email already been taken By this user",
-          });
-        } else if (user && user.email !== email) {
-          const newUser = await prisma.users.findUnique({
-            where: {
-              email,
-            },
-          });
-
-          if (newUser) {
-            res.json({
-              msg: "Email already been taken",
-            });
-          } else {
-            res.status(200).json({ msg: "Unique Email" });
-          }
-        } else {
-          res.status(200).json({ msg: "Unique Email" });
-        }
-      } catch (e) {
-        console.log(e);
-        res.status(200).send("Validating");
-      }
-    } else {
-      res.status(200).send("Validating");
-    }
-  } else {
-    res.status(200).send("Validating");
+export default handler.post(async (req, res) => {
+  const { id, email } = req.body;
+  if (!id || !email) {
+    return res.status(404).json({ msg: "Something is Wrong" });
   }
-  next();
+  const user = await prisma.users.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (user?.email === email) {
+    return res.status(200).json({ msg: "Unique Email" });
+  }
+  const uniqueUser = await prisma.users.findUnique({
+    where: {
+      email,
+    },
+  });
+  if (uniqueUser) {
+    return res.status(200).json({ msg: "Email Taken" });
+  }
+  return res.status(200).json({ msg: "Unique Email" });
 });

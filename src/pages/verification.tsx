@@ -1,56 +1,40 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import FormikTextField from "../components/shared/FormikTextField";
 import DashboardLayout from "../components/layouts/DashboardLayout";
-import axios from "axios";
-import { formatDate, eightennYearsBackFromNow } from "../utils/functions";
+import {
+  formatDate,
+  eightennYearsBackFromNow,
+  verifyJWTToken,
+} from "../utils/functions";
 import { object } from "yup";
 import * as Yup from "yup";
 import {
   FormikStepper,
   FormikStepProps,
 } from "../components/shared/FormikStepper";
-import { AuthContext } from "../contexts/AuthContext";
 import FormikImageField from "../components/shared/FormikImageField";
 import { imageValidation } from "../utils/vaidationSchema";
 import { BorrowerTypeContext } from "../contexts/BorrowerTypeContext";
 import { useRouter } from "next/router";
-import ReactLoader from "../components/ReactLoader";
-import { BallTriangle } from "@agney/react-loading";
 import { NextPageContext } from "next";
 import { isAuthenticated } from "../apiHandlers/isAuthenticated";
+import fetch from "isomorphic-unfetch";
+import { AUTH_TOKEN_NAME, baseURL } from "../utils/constants";
+import { ModifiedUserData } from "../utils/randomTypes";
 
-const verify = ({}) => {
-  const { userId } = useContext(AuthContext);
-  const [userData, setUserData] = useState<undefined | {}>({});
+type VerifyProps = {
+  data: ModifiedUserData;
+};
+
+const verify: React.FC<VerifyProps> = ({ data }) => {
   const router = useRouter();
-
-  useEffect(() => {
-    const func = async () => {
-      if (userId) {
-        try {
-          const { data } = await axios.post(`/api/fetch-user-by-id`, {
-            id: userId,
-          });
-          setUserData(data);
-        } catch (e) {
-          console.log("You messed up: ", e);
-        }
-      }
-    };
-    func();
-  }, [userId]);
-
-  if (!userData) {
-    return <ReactLoader component={<BallTriangle width="50" />} />;
-  }
-  const { id, name, gender, dateOfBirth, email } = userData as any;
+  const { id, name, gender, dateOfBirth, email } = data;
   // console.log(userData);
   const { borrowerType } = useContext(BorrowerTypeContext);
 
   const formattedDate = dateOfBirth
     ? dateOfBirth /*.toString().split("T")[0] */
     : formatDate(new Date());
-  // console.log(data);
   return (
     // <p>hello</p>
     <DashboardLayout>
@@ -93,12 +77,13 @@ const verify = ({}) => {
 
               /* sending the image as FormData to the api to store locally */
               try {
-                const res = await axios("api/verification", {
-                  data: formData,
-                  method: "POST",
-                  headers: { "content-type": "multipart/form-data" },
+                const response = await fetch(`${baseURL}/api/verification`, {
+                  method: "PUT",
+                  body: formData,
+                  credentials: "include",
                 });
-                console.log(res);
+                const data = await response.json();
+                console.log(data);
                 router.push("/dashboard");
               } catch (e) {
                 throw new Error(`You Messed Up ${e}`);
@@ -152,18 +137,24 @@ const verify = ({}) => {
                     "Unique Email",
                     "Email already been taken",
                     function (value) {
-                      return new Promise((resolve, _) => {
-                        axios
-                          .post("/api/unique-email-excluding-id", {
-                            email: value,
-                            id,
-                          })
-                          .then((res) => {
-                            if (res.data.msg === "Email already been taken") {
-                              resolve(false);
+                      return new Promise(async (resolve, _) => {
+                        if (value) {
+                          const res = await fetch(
+                            "/api/unique-email-excluding-id",
+                            {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({ email: value, id }),
                             }
-                            resolve(true);
-                          });
+                          );
+                          const data = await res.json();
+                          if (data.msg === "Email Taken") {
+                            return resolve(false);
+                          }
+                        }
+                        resolve(true);
                       });
                     }
                   )
@@ -295,9 +286,24 @@ export function FormikStep({ children }: FormikStepProps) {
 
 export async function getServerSideProps(context: NextPageContext) {
   await isAuthenticated(context);
+  const cookie = context.req?.headers.cookie!;
+
+  let token = cookie.slice(`${AUTH_TOKEN_NAME}`.length + 1);
+
+  const id = verifyJWTToken(token);
+
+  const response = await fetch(`${baseURL}/api/fetch-user-by-id`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      cookie: cookie!,
+    },
+    body: JSON.stringify({ id }),
+  });
+  const data = await response.json();
 
   return {
-    props: {}, // will be passed to the page component as props
+    props: { data }, // will be passed to the page component as props
   };
 }
 

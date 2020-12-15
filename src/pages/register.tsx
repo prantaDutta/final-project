@@ -1,12 +1,12 @@
 import { useRouter } from "next/router";
 import Layout from "../components/layouts/Layout";
 import { Formik, Form, FormikHelpers } from "formik";
-import axios from "axios";
 import FormikTextField from "./../components/shared/FormikTextField";
 import { yupValidationSchema } from "../utils/vaidationSchema";
 import { useLoading, ThreeDots } from "@agney/react-loading";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { baseURL } from "../utils/constants";
 
 interface registerProps {}
 
@@ -21,7 +21,7 @@ interface Values {
 }
 
 const register: React.FC<registerProps> = ({}) => {
-  const { toggleAuth, setUserId } = useContext(AuthContext);
+  const { toggleAuth, setUserData } = useContext(AuthContext);
   const router = useRouter();
 
   const { containerProps, indicatorEl } = useLoading({
@@ -37,14 +37,18 @@ const register: React.FC<registerProps> = ({}) => {
     // creating loader button
     setSubmitting(true);
 
-    try {
-      const response = await axios.post("api/register", { values });
-      const { userId } = response.data;
+    const response = await fetch(`${baseURL}/api/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ values }),
+    });
+    const data = await response.json();
+    if (data.id) {
       toggleAuth(true);
-      setUserId(userId);
+      setUserData(data);
       router.push("/dashboard");
-    } catch (e) {
-      console.log(e);
     }
     setSubmitting(false);
   };
