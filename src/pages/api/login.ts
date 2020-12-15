@@ -1,5 +1,4 @@
 import { sign } from "jsonwebtoken";
-import prisma from "../../lib/prisma";
 import handler from "../../apiHandlers/handler";
 import cookie from "cookie";
 import {
@@ -7,37 +6,51 @@ import {
   AUTH_TOKEN_NAME,
   isProduction,
 } from "../../utils/constants";
+import bcrypt from "bcrypt";
+import DBClient from "../../lib/prisma";
 
-export default handler.post(async (req, res, next) => {
-  const { email } = req.body.values;
-  if (!email) {
-    res.send("Server Error");
-  } else {
-    try {
-      const user = await prisma.users.findUnique({
-        where: {
-          email,
-        },
-      });
-      if (!user) {
-        res.send("error");
-      } else {
-        const token = sign(user.id.toString(), ACCESS_TOKEN_SECRET);
-        res.setHeader(
-          "Set-Cookie",
-          cookie.serialize(AUTH_TOKEN_NAME, token, {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: "strict",
-            maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-            path: "/",
-          })
-        );
-        res.status(200).json({ userId: user.id });
-      }
-    } catch (e) {
-      console.log(e);
-    }
+const prisma = DBClient.getInstance().prisma;
+
+export default handler.post(async (req, res) => {
+  const { email, password } = req.body.values;
+  if (!email || !password) {
+    return res.status(406).json({
+      error: "Something Went Wrong",
+    });
   }
-  next();
+  const user = await prisma.users.findUnique({
+    where: {
+      email,
+    },
+  });
+  if (!user) {
+    return res.status(404).json({
+      email: "Email Doesn't Exist",
+    });
+  }
+  if (await bcrypt.compare(password, user.password)) {
+    // Password Match
+    const token = sign(user.id.toString(), ACCESS_TOKEN_SECRET);
+    res.setHeader(
+      "Set-Cookie",
+      cookie.serialize(AUTH_TOKEN_NAME, token, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 3, // 3 days
+        path: "/",
+      })
+    );
+    return res.status(200).json({
+      id: user.id,
+      name: user.name,
+      gender: user.gender,
+      dateOfBirth: user.dateOfBirth,
+      email: user.email,
+    });
+  }
+  // Password didn't match
+  return res.status(401).json({
+    password: "Incorrect Credentials",
+  });
 });

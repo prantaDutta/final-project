@@ -3,8 +3,8 @@ import { format, sub } from "date-fns";
 import { ACCESS_TOKEN_SECRET } from "./constants";
 
 export const verifyJWTToken = (accessToken: string) => {
-  return verify(accessToken, ACCESS_TOKEN_SECRET, (_err, user) => {
-    console.log("user: ", user);
+  return verify(accessToken, ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return err;
     return user;
   });
 };

@@ -1,4 +1,3 @@
-import Axios from "axios";
 import {
   createContext,
   Dispatch,
@@ -7,12 +6,14 @@ import {
   useState,
 } from "react";
 import { baseURL } from "../utils/constants";
+import fetch from "isomorphic-unfetch";
+import { ModifiedUserData } from "../utils/randomTypes";
 
 type authValues = {
   isAuthenticated: boolean;
-  userId: number | null | string;
+  userData: ModifiedUserData | null;
   toggleAuth: (value: boolean) => void;
-  setUserId: Dispatch<SetStateAction<number | null>>;
+  setUserData: Dispatch<SetStateAction<ModifiedUserData | null>>;
 };
 
 export const AuthContext = createContext({} as authValues);
@@ -21,7 +22,7 @@ interface authContextProps {}
 
 const AuthContextProvider: React.FC<authContextProps> = (props) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [userId, setUserId] = useState<null | number>(null);
+  const [userData, setUserData] = useState<null | ModifiedUserData>(null);
 
   const toggleAuth = (value: boolean) => {
     setIsAuthenticated(value);
@@ -29,21 +30,12 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
 
   useEffect(() => {
     const func = async () => {
-      try {
-        const res = await Axios.get(baseURL + "/api/is-authenticated", {
-          withCredentials: true,
-        });
-        // console.log("data: ", res.data);
-        if (res.data.token) {
-          toggleAuth(true);
-          setUserId(res.data.token);
-          // console.log("token: ", res.data.token);
-        } else {
-          toggleAuth(false);
-        }
-      } catch (e) {
-        setIsAuthenticated(false);
-        console.log(e);
+      const response = await fetch(`${baseURL}/api/is-authenticated`);
+      const res = await response.json();
+      if (res.token) {
+        toggleAuth(true);
+      } else {
+        toggleAuth(false);
       }
     };
     func();
@@ -51,7 +43,7 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, toggleAuth, userId, setUserId }}
+      value={{ isAuthenticated, toggleAuth, userData, setUserData }}
     >
       {props.children}
     </AuthContext.Provider>

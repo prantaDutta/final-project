@@ -3,12 +3,13 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { baseURL } from "../../utils/constants";
+import fetch from "isomorphic-unfetch";
 
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
-  const { toggleAuth } = useContext(AuthContext);
+  const { toggleAuth, userData } = useContext(AuthContext);
 
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">
@@ -53,8 +54,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
         </div>
         <div>
           <h4 className="">Welcome, </h4>
-          {/* <h4 className="font-semibold">{(user as any).name}</h4> */}
-          <h4 className="font-semibold">Pranta Dutta</h4>
+          <h4 className="font-semibold">{userData?.name}</h4>
         </div>
       </div>
       <div className="p-4">

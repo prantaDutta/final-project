@@ -56,7 +56,12 @@ If you run into any errors, try running the following command and then try resta
 yarn clean
 ```
 
-If this doesn't solve your problems, then delete node_nodules and yarn.lock files. Then try restarting the server.
+If this doesn't solve your problems, then delete node_nodules and yarn.lock files. Then run yarn and try restarting the server.
+You can also run the following command
+
+```
+yarn deep-clean
+```
 
 ### Project Structure
 

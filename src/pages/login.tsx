@@ -2,12 +2,12 @@ import { useRouter } from "next/router";
 import Layout from "../components/layouts/Layout";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import FormikTextField from "../components/shared/FormikTextField";
 import { useLoading, ThreeDots } from "@agney/react-loading";
 import { baseURL } from "../utils/constants";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import fetch from "isomorphic-unfetch";
 
 interface loginProps {}
 
@@ -18,66 +18,46 @@ interface Values {
 
 const login2: React.FC<loginProps> = ({}) => {
   const router = useRouter();
-  const { toggleAuth, setUserId } = useContext(AuthContext);
+  const { toggleAuth, setUserData } = useContext(AuthContext);
 
   // creating validation schema with YUP
   const validation = Yup.object({
-    email: Yup.string()
-      .email("Invalid email")
-      .test("Unique Email", "Email doesn't exist", function (value) {
-        return new Promise((resolve, _) => {
-          axios
-            .post(baseURL + "/api/unique-email", { email: value })
-            .then((res) => {
-              if (res.data.msg === "Unique Email") {
-                resolve(false);
-              }
-              resolve(true);
-            });
-        });
-      })
-      .required("Required"),
+    email: Yup.string().email("Invalid email").required("Required"),
     password: Yup.string()
       .min(6, "Password should be atleast six letters")
-      .test("Password Matching", "Wrong Credentials", function (value) {
-        return new Promise((resolve, _) => {
-          axios
-            .post(baseURL + "/api/password-match", {
-              email: this.parent.email,
-              password: value,
-            })
-            .then((res) => {
-              if (
-                res.data.msg !== "Wrong Credentials" ||
-                res.data.msg !== "validating"
-              ) {
-                resolve(true);
-              }
-              resolve(false);
-            });
-        });
-      })
       .required("Required"),
   });
 
   // Handling onSubmit property of formik with handleSubmit funtction
   const handleSubmit = async (
     values: Values,
-    { setSubmitting }: FormikHelpers<Values>
+    { setSubmitting, setFieldError }: FormikHelpers<Values>
   ) => {
     // creating loader button
     setSubmitting(true);
 
-    try {
-      const response = await axios.post("api/login", { values });
-      const { userId } = response.data;
+    const response = await fetch(`${baseURL}/api/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ values }),
+    });
+    const data = await response.json();
+    if (data.id) {
       toggleAuth(true);
-      setUserId(userId);
+      setUserData(data);
+
       router.push("/dashboard");
-    } catch (e) {
-      console.log(e);
+    } else if (data.email) {
+      setFieldError("email", data.email);
+    } else if (data.password) {
+      setFieldError("password", data.password);
+    } else {
+      setFieldError("email", "Something Went Wrong");
     }
-    // setSubmitting(false);
+
+    setSubmitting(false);
   };
 
   const { containerProps, indicatorEl } = useLoading({

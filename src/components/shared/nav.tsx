@@ -34,8 +34,6 @@ export default function Nav() {
 
   const router = useRouter();
 
-  // console.log("auth", isAuthenticated);
-
   // rendering each nav items
   const NavItems: React.FC<NavItemsProps> = ({ links }) => {
     return (
