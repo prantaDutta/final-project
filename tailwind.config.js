@@ -3,10 +3,11 @@ module.exports = {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,
   },
-  purge: [
-    "./src/components/**/*.{js,ts,jsx,tsx}",
-    "./src/pages/**/*.{js,ts,jsx,tsx}",
-  ],
+  // purge: [
+  //   "./src/components/**/*.{js,ts,jsx,tsx}",
+  //   "./src/pages/**/*.{js,ts,jsx,tsx}",
+  // ],
+  purge: false,
   theme: {
     extend: {
       backgroundImage: (theme) => ({
@@ -43,14 +44,12 @@ module.exports = {
         sage: "#daf2dc",
         grape: "#4d5198",
         skyblue: "#81b7d2",
+        primary: "#2caeba",
       },
     },
   },
   variants: {
     animation: ["responsive", "motion-safe", "motion-reduce"],
   },
-  plugins: [
-    require("@adoxyz/tailwindcss-named-colors"),
-    // require("./tailwindPlugins/bg-img-with-opacity"),
-  ],
+  plugins: [require("@adoxyz/tailwindcss-named-colors")],
 };

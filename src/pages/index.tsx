@@ -21,7 +21,7 @@ export default function IndexPage() {
         <UpperFooter />
       </div>
 
-      <hr className="border-gray-700 border-t" />
+      {/* <hr className="border-gray-700 border-t" /> */}
     </Layout>
   );
 }

@@ -54,7 +54,7 @@ export default function Nav() {
                     await fetch(`${baseURL}/api/logout`);
                     router.push("/");
                   }}
-                  className={` text-indigo block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
+                  className={`text-indigo block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent transition duration-500 ease-in-out ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
                   }`}
                 >
@@ -67,7 +67,7 @@ export default function Nav() {
               <Link href={link.href} key={link.label}>
                 <a
                   key={link.label}
-                  className={` text-gray-600 block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
+                  className={`text-gray-600 block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent transition duration-500 ease-in-out ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
                   }`}
                 >
@@ -81,10 +81,10 @@ export default function Nav() {
   };
 
   return (
-    <div className="text-white md:flex md:justify-between md:items-center md:px-4 md:py-3">
+    <div className="font-bold md:flex md:justify-between md:items-center md:px-4 md:py-3 md:mt-3">
       <div className="flex items-center justify-between px-4 py-3 md:p-0">
         <div className="tracking-widest md:text-lg text-base font-semibold uppercase md:ml-10 ">
-          GrayScale
+          <span className="text-slategray">GrayScale</span>
         </div>
         <div className="md:hidden">
           <button
