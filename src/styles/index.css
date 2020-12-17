@@ -16,7 +16,7 @@
 
 /* My own custom classses */
 
-.bg-img-with-opacity {
+/* .bg-img-with-opacity {
   background: -webkit-gradient(
       linear,
       left top,
@@ -33,7 +33,6 @@
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
-  /* height: 85vh; */
   position: relative;
 }
 
@@ -54,6 +53,5 @@
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
-  /* height: 85vh; */
   position: relative;
-}
+} */

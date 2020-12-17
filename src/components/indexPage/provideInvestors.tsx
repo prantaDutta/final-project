@@ -1,28 +1,22 @@
+import IndexPageSection from "./IndexPageSection";
+
 interface provideInvestorsProps {}
 
 const ProvideInvestors: React.FC<provideInvestorsProps> = ({}) => {
   return (
-    <section className="text-center">
-      <div className="text-gray-300">
-        <div className="flex justify-center items-center">
-          <h2 className="text-2xl md:text-4xl font-semibold md:font-bold">
-            We Provide Investors With
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {investors &&
-            investors.map((investor) => {
-              return (
-                <div className="p-5 mt-5 text-center" key={investor.title}>
-                  <h4 className="font-semibold text-2xl">{investor.title}</h4>
-                  <p className="font-normal text-lg mt-5">{investor.content}</p>
-                </div>
-              );
-            })}
-        </div>
+    <IndexPageSection title="Our Investors Get">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {investors &&
+          investors.map((investor) => {
+            return (
+              <div className="p-5 mt-5 text-center" key={investor.title}>
+                <h4 className="font-semibold text-2xl">{investor.title}</h4>
+                <p className="font-normal text-lg mt-5">{investor.content}</p>
+              </div>
+            );
+          })}
       </div>
-    </section>
+    </IndexPageSection>
   );
 };
 

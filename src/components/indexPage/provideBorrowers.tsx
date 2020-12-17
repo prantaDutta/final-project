@@ -1,47 +1,41 @@
+import IndexPageSection from "./IndexPageSection";
+
 interface provideBorrowersProps {}
 
 const ProvideBorrowers: React.FC<provideBorrowersProps> = ({}) => {
   return (
-    <section className=" pt-10 pb-5">
-      <div className="text-gray-300">
-        <div className="flex justify-center items-center">
-          <h2 className="text-2xl md:text-4xl font-semibold md:font-bold">
-            Our Borrowers Can
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {borrowers &&
-            borrowers.map((borrower) => {
-              return (
-                <div
-                  className="p-3 md:p-5 mt-3 md:mt-5 text-center"
-                  key={borrower.title}
-                >
-                  <div className="flex justify-center items-center mb-3 md:mb-4">
-                    <svg
-                      className="w-12 h-12 inline-block text-teal-500"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d={borrower.d}
-                      ></path>
-                    </svg>
-                  </div>
-                  <h4 className="font-semibold text-2xl">{borrower.title}</h4>
-                  <p className="font-normal text-lg mt-5">{borrower.content}</p>
+    <IndexPageSection title="Our Borrowers Can">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {borrowers &&
+          borrowers.map((borrower) => {
+            return (
+              <div
+                className="p-3 md:p-5 mt-3 md:mt-5 text-center"
+                key={borrower.title}
+              >
+                <div className="flex justify-center items-center mb-3 md:mb-4">
+                  <svg
+                    className="w-12 h-12 inline-block text-teal-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d={borrower.d}
+                    ></path>
+                  </svg>
                 </div>
-              );
-            })}
-        </div>
+                <h4 className="font-semibold text-2xl">{borrower.title}</h4>
+                <p className="font-normal text-lg mt-5">{borrower.content}</p>
+              </div>
+            );
+          })}
       </div>
-    </section>
+    </IndexPageSection>
   );
 };
 

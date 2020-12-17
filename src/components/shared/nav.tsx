@@ -54,7 +54,7 @@ export default function Nav() {
                     await fetch(`${baseURL}/api/logout`);
                     router.push("/");
                   }}
-                  className={`block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
+                  className={` text-indigo block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
                   }`}
                 >
@@ -67,7 +67,7 @@ export default function Nav() {
               <Link href={link.href} key={link.label}>
                 <a
                   key={link.label}
-                  className={`block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
+                  className={` text-gray-600 block font-semibold md:text-lg text-base rounded px-2 py-1 hover:bg-indigo-900 ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
                   }`}
                 >
@@ -81,7 +81,7 @@ export default function Nav() {
   };
 
   return (
-    <div className="body-bg text-white md:flex md:justify-between md:items-center md:px-4 md:py-3">
+    <div className="text-white md:flex md:justify-between md:items-center md:px-4 md:py-3">
       <div className="flex items-center justify-between px-4 py-3 md:p-0">
         <div className="tracking-widest md:text-lg text-base font-semibold uppercase md:ml-10 ">
           GrayScale

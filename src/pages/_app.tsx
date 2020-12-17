@@ -10,6 +10,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
         <style global jsx>
           {`
+            body {
+              background: #eee;
+            }
+            ,
             .body-bg {
               background-color: #9921e8;
               background-image: linear-gradient(

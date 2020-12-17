@@ -51,6 +51,6 @@ module.exports = {
   },
   plugins: [
     require("@adoxyz/tailwindcss-named-colors"),
-    require("./tailwindPlugins/bg-img-with-opacity"),
+    // require("./tailwindPlugins/bg-img-with-opacity"),
   ],
 };
