@@ -129,15 +129,6 @@ const register: React.FC<registerProps> = ({}) => {
                     type="password"
                   />
 
-                  <div className="flex justify-end">
-                    <a
-                      href="#"
-                      className="text-sm text-purple-600 hover:text-purple-700 hover:underline mb-6"
-                    >
-                      Forgot your password?
-                    </a>
-                  </div>
-
                   <button
                     className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
                     type="submit"

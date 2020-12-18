@@ -35,8 +35,7 @@
     "react-hook-form": "^6.13.1",
     "slugify": "^1.4.6",
     "xstate": "^4.14.1",
-    "yup": "^0.32.1",
-    "zustand": "^3.2.0"
+    "yup": "^0.32.1"
   },
   "devDependencies": {
     "@prisma/cli": "^2.12.0",
