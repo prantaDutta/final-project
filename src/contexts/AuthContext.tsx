@@ -1,19 +1,13 @@
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
-import { baseURL } from "../utils/constants";
 import fetch from "isomorphic-unfetch";
+import { createContext, useEffect, useState } from "react";
+import { baseURL } from "../utils/constants";
 import { ModifiedUserData } from "../utils/randomTypes";
 
 type authValues = {
   isAuthenticated: boolean;
   userData: ModifiedUserData | null;
   toggleAuth: (value: boolean) => void;
-  setUserData: Dispatch<SetStateAction<ModifiedUserData | null>>;
+  changeUserData: (data: ModifiedUserData) => void;
 };
 
 export const AuthContext = createContext({} as authValues);
@@ -28,6 +22,10 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
     setIsAuthenticated(value);
   };
 
+  const changeUserData = (data: ModifiedUserData) => {
+    setUserData(data);
+  };
+
   useEffect(() => {
     const func = async () => {
       const response = await fetch(`${baseURL}/api/is-authenticated`);
@@ -39,11 +37,11 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
       }
     };
     func();
-  }, []);
+  }, [userData]);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, toggleAuth, userData, setUserData }}
+      value={{ isAuthenticated, toggleAuth, userData, changeUserData }}
     >
       {props.children}
     </AuthContext.Provider>

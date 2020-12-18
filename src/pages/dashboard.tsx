@@ -1,14 +1,20 @@
-import React from "react";
+import { NextPageContext } from "next";
+import React, { useContext, useEffect } from "react";
+import { isAuthenticated } from "../apiHandlers/isAuthenticated";
 import DashboardContent from "../components/dashboard/DashboardContent";
 import DashboardLayout from "../components/layouts/DashboardLayout";
-import { NextPageContext } from "next";
-import { isAuthenticated } from "../apiHandlers/isAuthenticated";
-import { AUTH_TOKEN_NAME, baseURL } from "../utils/constants";
-import { verifyJWTToken } from "../utils/functions";
+import { AuthContext } from "../contexts/AuthContext";
+import { ModifiedUserData } from "../utils/randomTypes";
 
-interface dashboardProps {}
+interface dashboardProps {
+  data: ModifiedUserData;
+}
 
-const dashboard: React.FC<dashboardProps> = () => {
+const dashboard: React.FC<dashboardProps> = ({ data }) => {
+  const { changeUserData } = useContext(AuthContext);
+
+  useEffect(() => changeUserData(data), []);
+
   return (
     <DashboardLayout>
       <DashboardContent />
@@ -17,23 +23,8 @@ const dashboard: React.FC<dashboardProps> = () => {
 };
 
 export async function getServerSideProps(context: NextPageContext) {
-  await isAuthenticated(context);
-  const cookie = context.req?.headers.cookie!;
-
-  let token = cookie.slice(`${AUTH_TOKEN_NAME}`.length + 1);
-
-  const id = verifyJWTToken(token);
-
-  const response = await fetch(`${baseURL}/api/fetch-user-by-id`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      cookie: cookie!,
-    },
-    body: JSON.stringify({ id }),
-  });
-  const data = await response.json();
-
+  // The following function checks whether the user is authenticated and returns the userdata
+  const data = await isAuthenticated(context);
   return {
     props: { data }, // will be passed to the page component as props
   };

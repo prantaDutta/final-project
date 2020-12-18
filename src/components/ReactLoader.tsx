@@ -1,11 +1,15 @@
+import { LoaderProvider, useLoading } from "@agney/react-loading";
 import React, { ReactElement } from "react";
-import { useLoading, LoaderProvider } from "@agney/react-loading";
 
 function App() {
   const { containerProps, indicatorEl } = useLoading({
     loading: true,
   });
-  return <section {...containerProps}>{indicatorEl}</section>;
+  return (
+    <section className="p-1.5 flex justify-center" {...containerProps}>
+      {indicatorEl}
+    </section>
+  );
 }
 
 interface ReactLoaderProps {
@@ -21,7 +25,3 @@ const ReactLoader: React.FC<ReactLoaderProps> = ({ component }) => {
 };
 
 export default ReactLoader;
-
-{
-  /* <BallTriangle width="50" /> */
-}

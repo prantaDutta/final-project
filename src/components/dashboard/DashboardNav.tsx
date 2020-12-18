@@ -1,16 +1,19 @@
+import fetch from "isomorphic-unfetch";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { baseURL } from "../../utils/constants";
-import fetch from "isomorphic-unfetch";
 
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
   const { toggleAuth, userData } = useContext(AuthContext);
-
+  // if (userData === null) {
+  //   router.replace("/login");
+  //   return <div></div>;
+  // }
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">
       <div className="flex items-center cursor-pointer p-4">
@@ -31,7 +34,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
           </svg>
         </div>
         <div>
-          <h4 className="">Balance: </h4>
+          <h4>Balance: </h4>
           <h4 className="font-semibold">Tk. 2000</h4>
         </div>
       </div>

@@ -5,3 +5,9 @@ export type ModifiedUserData = {
   dateOfBirth: string;
   email: string;
 };
+
+export interface linkArray {
+  href: string;
+  label: string;
+  svgD?: string;
+}

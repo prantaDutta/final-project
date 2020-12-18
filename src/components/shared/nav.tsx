@@ -1,9 +1,10 @@
+import fetch from "isomorphic-unfetch";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import fetch from "isomorphic-unfetch";
 import { baseURL } from "../../utils/constants";
+import { linkArray } from "../../utils/randomTypes";
 
 export const links: linkArray[] = [
   { href: "/", label: "Home" },
@@ -14,12 +15,6 @@ export const links: linkArray[] = [
   { href: "/login", label: "Log In" },
   { href: "/register", label: "Register" },
 ];
-
-export interface linkArray {
-  href: string;
-  label: string;
-  svgD?: string;
-}
 
 // d attribute value of hambergur menu and cross sign
 const menu = ["M4 6h16M4 12h16M4 18h16", "M6 18L18 6M6 6l12 12"];
@@ -54,9 +49,9 @@ export default function Nav() {
                     await fetch(`${baseURL}/api/logout`);
                     router.push("/");
                   }}
-                  className={`text-indigo block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent transition duration-500 ease-in-out ${
+                  className={`text-indigo block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
-                  }`}
+                  } transition duration-500 ease-in-out`}
                 >
                   {link.label}
                 </a>
@@ -67,9 +62,9 @@ export default function Nav() {
               <Link href={link.href} key={link.label}>
                 <a
                   key={link.label}
-                  className={`text-gray-600 block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent transition duration-500 ease-in-out ${
+                  className={`text-gray-600 block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
-                  }`}
+                  } transition duration-500 ease-in-out`}
                 >
                   {link.label}
                 </a>
@@ -90,7 +85,7 @@ export default function Nav() {
           <button
             type="button"
             onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-            className="md:hidden block text-gray-200 hover:text-white focus:text-white focus:outline-none"
+            className="md:hidden block text-gray-600 hover:text-gray-900 focus:text-gray-900 focus:outline-none"
           >
             <svg
               className="w-6 h-6"

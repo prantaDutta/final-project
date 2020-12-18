@@ -1,26 +1,23 @@
-import React, { useContext } from "react";
-import FormikTextField from "../components/shared/FormikTextField";
-import DashboardLayout from "../components/layouts/DashboardLayout";
-import {
-  formatDate,
-  eightennYearsBackFromNow,
-  verifyJWTToken,
-} from "../utils/functions";
-import { object } from "yup";
+import fetch from "isomorphic-unfetch";
+import { NextPageContext } from "next";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect } from "react";
 import * as Yup from "yup";
+import { object } from "yup";
+import { isAuthenticated } from "../apiHandlers/isAuthenticated";
+import DashboardLayout from "../components/layouts/DashboardLayout";
+import FormikImageField from "../components/shared/FormikImageField";
 import {
   FormikStepper,
   FormikStepProps,
 } from "../components/shared/FormikStepper";
-import FormikImageField from "../components/shared/FormikImageField";
-import { imageValidation } from "../utils/vaidationSchema";
+import FormikTextField from "../components/shared/FormikTextField";
+import { AuthContext } from "../contexts/AuthContext";
 import { BorrowerTypeContext } from "../contexts/BorrowerTypeContext";
-import { useRouter } from "next/router";
-import { NextPageContext } from "next";
-import { isAuthenticated } from "../apiHandlers/isAuthenticated";
-import fetch from "isomorphic-unfetch";
-import { AUTH_TOKEN_NAME, baseURL } from "../utils/constants";
+import { baseURL } from "../utils/constants";
+import { eightennYearsBackFromNow, formatDate } from "../utils/functions";
 import { ModifiedUserData } from "../utils/randomTypes";
+import { imageValidation } from "../utils/vaidationSchema";
 
 type VerifyProps = {
   data: ModifiedUserData;
@@ -31,6 +28,9 @@ const verify: React.FC<VerifyProps> = ({ data }) => {
   const { id, name, gender, dateOfBirth, email } = data;
   // console.log(userData);
   const { borrowerType } = useContext(BorrowerTypeContext);
+  const { changeUserData } = useContext(AuthContext);
+
+  useEffect(() => changeUserData(data));
 
   const formattedDate = dateOfBirth
     ? dateOfBirth /*.toString().split("T")[0] */
@@ -285,23 +285,8 @@ export function FormikStep({ children }: FormikStepProps) {
 }
 
 export async function getServerSideProps(context: NextPageContext) {
-  await isAuthenticated(context);
-  const cookie = context.req?.headers.cookie!;
-
-  let token = cookie.slice(`${AUTH_TOKEN_NAME}`.length + 1);
-
-  const id = verifyJWTToken(token);
-
-  const response = await fetch(`${baseURL}/api/fetch-user-by-id`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      cookie: cookie!,
-    },
-    body: JSON.stringify({ id }),
-  });
-  const data = await response.json();
-
+  // The following function checks whether the user is authenticated and returns the userdata
+  const data = await isAuthenticated(context);
   return {
     props: { data }, // will be passed to the page component as props
   };
