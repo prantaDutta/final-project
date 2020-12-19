@@ -1,15 +1,16 @@
 import { ThreeDots } from "@agney/react-loading";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import Layout from "../components/layouts/Layout";
 import ReactLoader from "../components/ReactLoader";
 import { AuthContext } from "../contexts/AuthContext";
-import InputField from "../ReactHookForm/InputField";
+import InputTextField from "../ReactHookForm/InputTextField";
 import { baseURL } from "../utils/constants";
 import { LoginFormValues } from "../utils/randomTypes";
-import { loginFormSchema } from "../validations/LoginFormValidation";
+import { loginValidationSchema } from "../validations/LoginFormValidation";
 
 interface login2Props {}
 
@@ -17,7 +18,7 @@ const login: React.FC<login2Props> = ({}) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { register, handleSubmit, errors, setError } = useForm<LoginFormValues>(
     {
-      resolver: yupResolver(loginFormSchema),
+      resolver: yupResolver(loginValidationSchema),
       mode: "onTouched",
       reValidateMode: "onBlur",
     }
@@ -63,11 +64,11 @@ const login: React.FC<login2Props> = ({}) => {
       <div className="pb-3 px-2 md:px-0">
         <main className="bg-white max-w-lg mx-auto p-4 md:p-8 my-5 rounded-lg shadow-2xl">
           <section>
-            <h3 className="font-bold text-2xl">Welcome to GrayScale</h3>
+            <h3 className="font-bold text-2xl">Welcome Back to GrayScale</h3>
             <p className="text-gray-600 pt-2">Log In to Your Account</p>
           </section>
           <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
-            <InputField
+            <InputTextField
               type="email"
               name="email"
               label="Email Address"
@@ -76,7 +77,7 @@ const login: React.FC<login2Props> = ({}) => {
               register={register}
             />
             <div className="mt-6">
-              <InputField
+              <InputTextField
                 type="password"
                 name="password"
                 label="Password"
@@ -110,9 +111,11 @@ const login: React.FC<login2Props> = ({}) => {
           </form>
           <div className="mt-6 text-sm font-display font-semibold text-gray-700 text-center">
             Don't have an account ?{" "}
-            <a className="cursor-pointer text-primary hover:text-primaryAccent">
-              Sign up
-            </a>
+            <Link href="/login">
+              <a className="cursor-pointer text-primary hover:text-primaryAccent">
+                Sign Up
+              </a>
+            </Link>
           </div>
         </main>
       </div>

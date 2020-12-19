@@ -1,38 +1,39 @@
 import { ThreeDots } from "@agney/react-loading";
-import { Form, Formik, FormikHelpers } from "formik";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext } from "react";
+import React, { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
 import Layout from "../components/layouts/Layout";
 import ReactLoader from "../components/ReactLoader";
 import { AuthContext } from "../contexts/AuthContext";
+import InputSelectField from "../ReactHookForm/InputSelectField";
+import InputTextField from "../ReactHookForm/InputTextField";
 import { baseURL } from "../utils/constants";
-import { yupValidationSchema } from "../utils/vaidationSchema";
-import FormikTextField from "./../components/shared/FormikTextField";
+import { UserRole } from "../utils/constantsArray";
+import { RegisterFormValues } from "../utils/randomTypes";
+import { registerValitationSchema } from "../validations/RegisterFormValiadtion";
 
 interface registerProps {}
 
-interface Values {
-  name: string;
-  role: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  gender: string;
-  dateOfBirth: string;
-}
-
 const register: React.FC<registerProps> = ({}) => {
-  const { toggleAuth, changeUserData } = useContext(AuthContext);
+  // const { toggleAuth, changeUserData } = useContext(AuthContext);
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const {
+    register,
+    handleSubmit,
+    errors,
+    setError,
+  } = useForm<RegisterFormValues>({
+    resolver: yupResolver(registerValitationSchema),
+    mode: "onTouched",
+    reValidateMode: "onBlur",
+  });
   const router = useRouter();
+  const { toggleAuth, changeUserData } = useContext(AuthContext);
 
-  // Handling onSubmit property of formik with handleSubmit funtction
-  const handleSubmit = async (
-    values: Values,
-    { setSubmitting }: FormikHelpers<Values>
-  ) => {
-    // creating loader button
+  const onSubmit = async (values: RegisterFormValues) => {
     setSubmitting(true);
-
     const response = await fetch(`${baseURL}/api/register`, {
       method: "POST",
       headers: {
@@ -41,11 +42,16 @@ const register: React.FC<registerProps> = ({}) => {
       body: JSON.stringify({ values }),
     });
     const data = await response.json();
+    console.log(data);
     if (data.id) {
       toggleAuth(true);
       changeUserData(data);
-      router.push("/dashboard");
+      return router.push("/dashboard");
     }
+    setError("name", {
+      type: "manual",
+      message: "Registration Failed, Please Try Again",
+    });
     setSubmitting(false);
   };
 
@@ -58,102 +64,74 @@ const register: React.FC<registerProps> = ({}) => {
             <p className="text-gray-600 pt-2">Create Your Account</p>
           </section>
 
-          <section className="mt-5">
-            <Formik
-              initialValues={{
-                name: "",
-                password: "",
-                email: "",
-                role: "",
-                dateOfBirth: "",
-                gender: "",
-                confirmPassword: "",
-              }}
-              onSubmit={handleSubmit}
-              validationSchema={yupValidationSchema}
-            >
-              {/* There's an isSubmitting here */}
-              {({ isSubmitting }) => (
-                <Form
-                  autoComplete="off"
-                  className="flex flex-col"
-                  method="POST"
-                >
-                  <FormikTextField
-                    label="Your Full Name *"
-                    name="name"
-                    type="text"
-                  />
+          <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
+            <InputTextField
+              name="name"
+              label="Full Name"
+              error={errors.name?.message}
+              placeholder="John Doe"
+              register={register}
+            />
 
-                  <FormikTextField
-                    label="Enter your Email *"
-                    name="email"
-                    type="text"
-                  />
+            <InputTextField
+              type="email"
+              name="email"
+              label="Email Address"
+              error={errors.email?.message}
+              placeholder="youremail@email.com"
+              register={register}
+            />
 
-                  <FormikTextField
-                    label="Your Gender"
-                    name="gender"
-                    component="select"
-                  >
-                    <option value="Default">Choose One...</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </FormikTextField>
+            <InputSelectField
+              name="role"
+              label="You Are a"
+              error={errors.role?.message}
+              options={UserRole}
+              register={register}
+            />
 
-                  <FormikTextField
-                    label="You are a *"
-                    name="role"
-                    component="select"
-                  >
-                    <option value="Default">Choose One...</option>
-                    <option value="lender">Lender</option>
-                    <option value="borrower">Borrower</option>
-                  </FormikTextField>
+            <InputTextField
+              type="password"
+              name="password"
+              label="Password"
+              error={errors.password?.message}
+              placeholder="Enter Your Password"
+              register={register}
+            />
 
-                  <FormikTextField
-                    label="Your Date of Birth *"
-                    name="dateOfBirth"
-                    type="date"
-                  />
+            <InputTextField
+              type="password"
+              name="confirmPassword"
+              label="Password"
+              error={errors.confirmPassword?.message}
+              placeholder="Confirm Your Password"
+              register={register}
+            />
 
-                  <FormikTextField
-                    label="Your Password *"
-                    type="password"
-                    name="password"
-                  />
+            <div className="mt-6">
+              <button
+                className="bg-primary text-gray-100 p-3 w-full rounded-full tracking-wide
+                                font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-primaryAccent
+                                shadow-lg transition-css"
+              >
+                {submitting ? (
+                  <ReactLoader component={<ThreeDots width="50" />} />
+                ) : (
+                  "Register"
+                )}
+              </button>
+            </div>
+          </form>
 
-                  <FormikTextField
-                    label="Confirm Your Password *"
-                    name="confirmPassword"
-                    type="password"
-                  />
-
-                  <button
-                    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
-                    type="submit"
-                  >
-                    {isSubmitting ? (
-                      <ReactLoader component={<ThreeDots width="50" />} />
-                    ) : (
-                      "Sign Up"
-                    )}
-                  </button>
-                </Form>
-              )}
-            </Formik>
-          </section>
+          <div className="mt-6 text-sm font-display font-semibold text-gray-700 text-center">
+            Already have an account ?{" "}
+            <Link href="/login">
+              <a className="cursor-pointer text-primary hover:text-primaryAccent">
+                Log In
+              </a>
+            </Link>
+          </div>
         </main>
-
-        <div className="max-w-lg mx-auto text-center mt-4">
-          <p className="text-gray-600">
-            Already have an account?{" "}
-            <a href="#" className="font-bold hover:underline">
-              Sign in
-            </a>
-            .
-          </p>
-        </div>
       </div>
     </Layout>
   );

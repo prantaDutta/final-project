@@ -1,24 +1,24 @@
 import { InputHTMLAttributes } from "react";
 import { RefReturn } from "../utils/randomTypes";
 
-type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
+type InputTextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   component?: string;
   error: string | undefined | null;
   register: () => RefReturn;
 };
 
-const InputField: React.FC<InputFieldProps> = ({
+const InputTextField: React.FC<InputTextFieldProps> = ({
   error,
   label,
   register,
   ...props
 }) => {
   return (
-    <div>
-      <div className="text-md font-bold text-gray-700 tracking-wide">
+    <div className="mt-6">
+      <label className="text-md font-bold text-gray-700 tracking-wide">
         {label}
-      </div>
+      </label>
       <input
         className="w-full text-md text-gray-500 font-semibold py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
         {...props}
@@ -32,4 +32,4 @@ const InputField: React.FC<InputFieldProps> = ({
   );
 };
 
-export default InputField;
+export default InputTextField;

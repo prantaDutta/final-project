@@ -1,18 +1,18 @@
 import bcrypt from "bcrypt";
+import cookie from "cookie";
 import { sign } from "jsonwebtoken";
 import handler from "../../apiHandlers/handler";
-import cookie from "cookie";
+import DBClient from "../../lib/prisma";
 import {
   ACCESS_TOKEN_SECRET,
   AUTH_TOKEN_NAME,
   isProduction,
 } from "../../utils/constants";
-import DBClient from "../../lib/prisma";
 
 const prisma = DBClient.getInstance().prisma;
 
 export default handler.post(async (req, res) => {
-  const { name, email, role, password, dateOfBirth, gender } = req.body.values;
+  const { name, email, role, password } = req.body.values;
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await prisma.users.create({
@@ -20,9 +20,7 @@ export default handler.post(async (req, res) => {
       name,
       email,
       role,
-      gender,
       password: hashedPassword,
-      dateOfBirth,
     },
   });
 
@@ -44,8 +42,6 @@ export default handler.post(async (req, res) => {
   return res.status(200).json({
     id: user.id,
     name: user.name,
-    gender: user.gender,
-    dateOfBirth: user.dateOfBirth,
     email: user.email,
   });
 });

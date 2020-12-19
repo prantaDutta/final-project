@@ -68,10 +68,10 @@ model users {
   name               String
   email              String            @unique
   emailVerifiedAt    DateTime?
-  dateOfBirth        String
+  dateOfBirth        String?
   password           String
   role               String
-  gender             String
+  gender             String?
   address            String?
   mobileNo           String?
   documentType       String?
