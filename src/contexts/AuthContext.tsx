@@ -30,6 +30,7 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
     const func = async () => {
       const response = await fetch(`${baseURL}/api/is-authenticated`);
       const res = await response.json();
+      console.clear();
       if (res.token) {
         toggleAuth(true);
       } else {

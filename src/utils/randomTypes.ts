@@ -11,3 +11,15 @@ export interface linkArray {
   label: string;
   svgD?: string;
 }
+
+export interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
+export type RefReturn =
+  | string
+  | ((instance: HTMLInputElement | null) => void)
+  | React.RefObject<HTMLInputElement>
+  | null
+  | undefined;

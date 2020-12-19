@@ -51,7 +51,7 @@ export default function Nav() {
                   }}
                   className={`text-indigo block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
-                  } transition duration-500 ease-in-out`}
+                  } transition-css`}
                 >
                   {link.label}
                 </a>
@@ -64,7 +64,7 @@ export default function Nav() {
                   key={link.label}
                   className={`text-gray-600 block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent ${
                     index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
-                  } transition duration-500 ease-in-out`}
+                  } transition-css`}
                 >
                   {link.label}
                 </a>
@@ -76,10 +76,12 @@ export default function Nav() {
   };
 
   return (
-    <div className="font-bold md:flex md:justify-between md:items-center md:px-4 md:py-3 md:mt-3">
+    <div className="font-bold md:flex md:justify-between md:items-center md:px-4 md:py-3 md:mt-1">
       <div className="flex items-center justify-between px-4 py-3 md:p-0">
         <div className="tracking-widest md:text-lg text-base font-semibold uppercase md:ml-10 ">
-          <span className="text-slategray">GrayScale</span>
+          <span className="text-transparent bg-gradient-to-l bg-clip-text from-gray-300 via-gray-800 to-gray-300">
+            GrayScale
+          </span>
         </div>
         <div className="md:hidden">
           <button

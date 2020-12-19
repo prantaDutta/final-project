@@ -1,5 +1,5 @@
-import { verify } from "jsonwebtoken";
 import { format, sub } from "date-fns";
+import { verify } from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRET } from "./constants";
 
 export const verifyJWTToken = (accessToken: string) => {
@@ -37,4 +37,9 @@ export const isObject = (obj: any) => {
 
 export const isServer = () => {
   return typeof window === "undefined";
+};
+
+export const validateEmail = (email: string) => {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
 };

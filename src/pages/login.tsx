@@ -9,13 +9,9 @@ import ReactLoader from "../components/ReactLoader";
 import FormikTextField from "../components/shared/FormikTextField";
 import { AuthContext } from "../contexts/AuthContext";
 import { baseURL } from "../utils/constants";
+import { LoginFormValues } from "../utils/randomTypes";
 
 interface loginProps {}
-
-interface Values {
-  email: string;
-  password: string;
-}
 
 const login2: React.FC<loginProps> = ({}) => {
   const router = useRouter();
@@ -31,8 +27,8 @@ const login2: React.FC<loginProps> = ({}) => {
 
   // Handling onSubmit property of formik with handleSubmit funtction
   const handleSubmit = async (
-    values: Values,
-    { setSubmitting, setFieldError }: FormikHelpers<Values>
+    values: LoginFormValues,
+    { setSubmitting, setFieldError }: FormikHelpers<LoginFormValues>
   ) => {
     // creating loader button
     setSubmitting(true);
@@ -72,7 +68,7 @@ const login2: React.FC<loginProps> = ({}) => {
           <section className="mt-5">
             <Formik
               enableReinitialize
-              initialValues={{
+              initialLoginFormValues={{
                 password: "",
                 email: "",
               }}

@@ -104,7 +104,7 @@ const UpperFooter: React.FC<upperFooterProps> = ({}) => {
           <path d="M21.6 28.8v-8l6.4 4-6.4 4z" fill="red" />
         </svg>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 text-center py-5 grid-gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 text-center pt-5 grid-gap-2">
         <div className="mt-4 sm:mt-3 px-4 md:mt-0">
           <h4 className="font-semibold md:font-semibold text-xl md:text-base">
             GrayScale

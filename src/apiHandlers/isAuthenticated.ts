@@ -11,6 +11,7 @@ export const isAuthenticated = async (context: NextPageContext) => {
       cookie: cookie!,
     },
   });
+  console.clear();
   if (resp.status === 422 && !context.req) {
     //  On client
     const router = useRouter();
