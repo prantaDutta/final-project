@@ -1,38 +1,32 @@
 import { ThreeDots } from "@agney/react-loading";
-import { Form, Formik, FormikHelpers } from "formik";
-import fetch from "isomorphic-unfetch";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/router";
-import { useContext } from "react";
-import * as Yup from "yup";
+import React, { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
 import Layout from "../components/layouts/Layout";
 import ReactLoader from "../components/ReactLoader";
-import FormikTextField from "../components/shared/FormikTextField";
 import { AuthContext } from "../contexts/AuthContext";
+import InputField from "../ReactHookForm/InputField";
 import { baseURL } from "../utils/constants";
 import { LoginFormValues } from "../utils/randomTypes";
+import { loginFormSchema } from "../validations/LoginFormValidation";
 
-interface loginProps {}
+interface login2Props {}
 
-const login2: React.FC<loginProps> = ({}) => {
+const login: React.FC<login2Props> = ({}) => {
+  const [submitting, setSubmitting] = useState<boolean>(false);
+  const { register, handleSubmit, errors, setError } = useForm<LoginFormValues>(
+    {
+      resolver: yupResolver(loginFormSchema),
+      mode: "onTouched",
+      reValidateMode: "onBlur",
+    }
+  );
   const router = useRouter();
   const { toggleAuth, changeUserData } = useContext(AuthContext);
 
-  // creating validation schema with YUP
-  const validation = Yup.object({
-    email: Yup.string().email("Invalid email").required("Required"),
-    password: Yup.string()
-      .min(6, "Password should be atleast six letters")
-      .required("Required"),
-  });
-
-  // Handling onSubmit property of formik with handleSubmit funtction
-  const handleSubmit = async (
-    values: LoginFormValues,
-    { setSubmitting, setFieldError }: FormikHelpers<LoginFormValues>
-  ) => {
-    // creating loader button
+  const onSubmit = async (values: LoginFormValues) => {
     setSubmitting(true);
-
     const response = await fetch(`${baseURL}/api/login`, {
       method: "POST",
       headers: {
@@ -40,22 +34,30 @@ const login2: React.FC<loginProps> = ({}) => {
       },
       body: JSON.stringify({ values }),
     });
+
     const data = await response.json();
     if (data.id) {
       toggleAuth(true);
       changeUserData(data);
-      router.push("/dashboard");
+      return router.push("/dashboard");
     } else if (data.email) {
-      setFieldError("email", data.email);
+      setError("email", {
+        type: "manual",
+        message: data.email,
+      });
     } else if (data.password) {
-      setFieldError("password", data.password);
+      setError("password", {
+        type: "manual",
+        message: data.password,
+      });
     } else {
-      setFieldError("email", "Something Went Wrong");
+      setError("email", {
+        type: "manual",
+        message: "Login Failed, Please Try Again",
+      });
     }
-
     setSubmitting(false);
   };
-
   return (
     <Layout>
       <div className="pb-3 px-2 md:px-0">
@@ -64,73 +66,58 @@ const login2: React.FC<loginProps> = ({}) => {
             <h3 className="font-bold text-2xl">Welcome to GrayScale</h3>
             <p className="text-gray-600 pt-2">Log In to Your Account</p>
           </section>
+          <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
+            <InputField
+              type="email"
+              name="email"
+              label="Email Address"
+              error={errors.email?.message}
+              placeholder="youremail@email.com"
+              register={register}
+            />
+            <div className="mt-6">
+              <InputField
+                type="password"
+                name="password"
+                label="Password"
+                error={errors.password?.message}
+                placeholder="Enter Your Password"
+                register={register}
+              />
+            </div>
 
-          <section className="mt-5">
-            <Formik
-              enableReinitialize
-              initialLoginFormValues={{
-                password: "",
-                email: "",
-              }}
-              onSubmit={handleSubmit}
-              validationSchema={validation}
-            >
-              {/* There's an isSubmitting here */}
-              {({ isSubmitting }) => (
-                <Form
-                  autoComplete="off"
-                  className="flex flex-col"
-                  method="POST"
+            <div className="mt-6">
+              <div className="text-right mb-4">
+                <a
+                  className="text-sm font-display font-semibold text-primary hover:text-primaryAccent
+                                        cursor-pointer"
                 >
-                  <FormikTextField
-                    label="Enter your Email *"
-                    name="email"
-                    type="text"
-                  />
-
-                  <FormikTextField
-                    label="Your Password *"
-                    type="password"
-                    name="password"
-                  />
-
-                  <div className="flex justify-end">
-                    <a
-                      href="#"
-                      className="text-sm text-purple-600 hover:text-purple-700 hover:underline mb-6"
-                    >
-                      Forgot your password?
-                    </a>
-                  </div>
-
-                  <button
-                    className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded shadow-lg hover:shadow-xl transition duration-200"
-                    type="submit"
-                  >
-                    {isSubmitting ? (
-                      <ReactLoader component={<ThreeDots width="50" />} />
-                    ) : (
-                      "Log In"
-                    )}
-                  </button>
-                </Form>
-              )}
-            </Formik>
-          </section>
-        </main>
-
-        <div className="max-w-lg mx-auto text-center mt-4">
-          <p className="text-gray-600">
-            Don't have an account?{" "}
-            <a href="#" className="font-bold hover:underline">
+                  Forgot Password?
+                </a>
+              </div>
+              <button
+                className="bg-primary text-gray-100 p-3 w-full rounded-full tracking-wide
+                                font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-primaryAccent
+                                shadow-lg transition-css"
+              >
+                {submitting ? (
+                  <ReactLoader component={<ThreeDots width="50" />} />
+                ) : (
+                  "Log In"
+                )}
+              </button>
+            </div>
+          </form>
+          <div className="mt-6 text-sm font-display font-semibold text-gray-700 text-center">
+            Don't have an account ?{" "}
+            <a className="cursor-pointer text-primary hover:text-primaryAccent">
               Sign up
             </a>
-            .
-          </p>
-        </div>
+          </div>
+        </main>
       </div>
     </Layout>
   );
 };
 
-export default login2;
+export default login;

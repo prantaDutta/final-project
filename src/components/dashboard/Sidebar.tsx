@@ -16,9 +16,9 @@ const Sidebar: React.FC<SidebarProps> = () => {
         {sideBarLinks.map((link) => {
           return (
             <div
-              className={`p-3 font-semibold text-base my-4 cursor-pointer border-l-4 border-solid hover:bg-primary hover:border-lighterBlue hover:text-gray-100 ${
+              className={`p-3 font-semibold text-base my-4 cursor-pointer border-l-4 border-solid hover:bg-primary hover:border-blue-400 hover:text-gray-100 ${
                 router.pathname === link.href
-                  ? "bg-primary border-lighterBlue text-gray-100"
+                  ? "bg-primary border-blue-400 text-gray-100"
                   : "border-transparent"
               } transition duration-500 ease-in-out`}
               key={link.label}

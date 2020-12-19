@@ -1,10 +1,12 @@
+import { AnimatePresence, motion } from "framer-motion";
 import type { AppProps /*, AppContext */ } from "next/app";
 import NextNprogress from "nextjs-progressbar";
+import React from "react";
 import AuthContextProvider from "../contexts/AuthContext";
 import BorrowerTypeContextProvider from "../contexts/BorrowerTypeContext";
 import "../styles/index.css";
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <AuthContextProvider>
       <BorrowerTypeContextProvider>
@@ -16,7 +18,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           height={1}
           options={{ easing: "ease", speed: 500, showSpinner: false }}
         />
-        <Component {...pageProps} />
+        <AnimatePresence exitBeforeEnter>
+          <motion.div key={router.route} {...pageMotionProps}>
+            <Component {...pageProps} />
+          </motion.div>
+        </AnimatePresence>
         <style global jsx>
           {`
             body {
@@ -30,3 +36,29 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp;
+
+// animation
+const pageVariants = {
+  pageInitial: {
+    // backgroundColor: "#eee",
+    // filter: `invert()`,
+    opacity: 0,
+  },
+  pageAnimate: {
+    // backgroundColor: "transparent",
+    // filter: ``,
+    opacity: 1,
+  },
+  pageExit: {
+    // backgroundColor: "#eee",
+    // filter: `invert()`,
+    opacity: 0,
+  },
+};
+
+const pageMotionProps = {
+  initial: "pageInitial",
+  animate: "pageAnimate",
+  exit: "pageExit",
+  variants: pageVariants,
+};
