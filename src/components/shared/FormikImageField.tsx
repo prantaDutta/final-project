@@ -24,11 +24,8 @@ const FormikImageField: React.FC<FormikImageFieldProps> = ({
   } = useFormikContext();
 
   return (
-    <div className="mb-6 pt-3 rounded bg-gray-200">
-      <label
-        className="block text-gray-700 text-sm font-bold mb-2 ml-3"
-        htmlFor={name}
-      >
+    <div className="mt-6">
+      <label className="text-md font-bold text-gray-700 tracking-wide">
         {label}
       </label>
 
@@ -40,20 +37,19 @@ const FormikImageField: React.FC<FormikImageFieldProps> = ({
           setFieldError(name, (errors as any)[name]);
           setFieldValue(name, (e.target as any).files[0]);
           if (isEmptyObj(errors)) {
-            // console.log(values);
             handleSubmit();
           }
         }}
         id={name}
-        className={`bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3 ${
+        className={`w-full text-md text-gray-500 font-semibold py-2 border-b focus:outline-none ${
           (touched as any)[name] && (errors as any)[name]
-            ? "border-red-600"
-            : ""
+            ? "border-red-600 focus:border-red-600"
+            : "border-gray-300 focus:border-indigo-500"
         }`}
       />
 
       {(touched as any)[name] && (
-        <div className="text-md text-red-600 italic">
+        <div className="text-red pt-2 font-semibold text-sm italic">
           {(errors as any)[name]}
         </div>
       )}

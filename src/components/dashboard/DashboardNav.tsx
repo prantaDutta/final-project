@@ -61,7 +61,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
         </div>
       </div>
       <div className="p-4">
-        <h4 className="p-2 cursor-pointer rounded border-solid border-2 border-purple-800 hover:bg-purple-900 hover:text-white">
+        <h4 className="p-2 cursor-pointer rounded border-solid border-2 border-primary hover:bg-primaryAccent hover:text-white hover:border-0">
           <Link href={router.pathname + "#"}>
             <a
               onClick={async () => {

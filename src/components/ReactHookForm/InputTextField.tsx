@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from "react";
-import { RefReturn } from "../utils/randomTypes";
+import { RefReturn } from "../../utils/randomTypes";
 
 type InputTextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
@@ -20,7 +20,11 @@ const InputTextField: React.FC<InputTextFieldProps> = ({
         {label}
       </label>
       <input
-        className="w-full text-md text-gray-500 font-semibold py-2 border-b border-gray-300 focus:outline-none focus:border-indigo-500"
+        className={`w-full text-md text-gray-500 font-semibold py-2 border-b focus:outline-none ${
+          error
+            ? "border-red-600 focus:border-red-600"
+            : "border-gray-300 focus:border-indigo-500"
+        }`}
         {...props}
         ref={register}
       />

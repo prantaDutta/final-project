@@ -34,7 +34,7 @@ interface stepperIconsProps {
 const StepperIcons: React.FC<stepperIconsProps> = ({ item, index, isDone }) => {
   return (
     <>
-      <div className="flex items-center text-teal relative">
+      <div className="flex items-center text-primary relative">
         <div className="rounded-full flex justify-center items-center transition duration-500 ease-in-out h-12 w-12 py-3 border-2 border-teal-600">
           {isDone ? (
             <svg

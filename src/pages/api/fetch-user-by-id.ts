@@ -17,8 +17,6 @@ export default handler.post(async (req, res) => {
       const userData: ModifiedUserData = {
         id: user.id,
         name: user.name,
-        gender: user.gender,
-        dateOfBirth: user.dateOfBirth,
         email: user.email,
       };
       // console.log(user);
