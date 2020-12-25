@@ -68,7 +68,7 @@ const StepperIcons: React.FC<stepperIconsProps> = ({ item, index, isDone }) => {
             </svg>
           )}
         </div>
-        <div className="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-teal-600">
+        <div className="absolute top-0 -ml-10 text-center mt-16 w-32 text-xs font-medium uppercase text-primary">
           {item.label}
         </div>
       </div>

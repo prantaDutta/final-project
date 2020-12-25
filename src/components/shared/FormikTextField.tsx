@@ -15,9 +15,9 @@ const FormikTextField: React.FC<FormikTextFieldProps> = ({
   const [field, { error, touched }] = useField<FieldProps>(props);
 
   return (
-    <div className="mt-6">
+    <div className="mb-6 pt-3 rounded bg-gray-200">
       <label
-        className="text-md font-bold text-gray-700 tracking-wide"
+        className="block text-gray-700 text-sm font-bold mb-2 ml-3"
         htmlFor={field.name}
       >
         {label}
@@ -26,19 +26,13 @@ const FormikTextField: React.FC<FormikTextFieldProps> = ({
         {...field}
         {...props}
         id={field.name}
-        className={`w-full text-md text-gray-500 font-semibold py-2 border-b focus:outline-none ${
-          touched && error
-            ? "border-red-600 focus:border-red-600"
-            : "border-gray-300 focus:border-indigo-500"
+        className={`bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-300 focus:border-purple-600 transition duration-500 px-3 pb-3 ${
+          touched && error ? "border-red-600" : ""
         }`}
       />
       {touched && (
         <ErrorMessage name={field.name}>
-          {() => (
-            <div className="text-red pt-2 font-semibold text-sm italic">
-              {error}
-            </div>
-          )}
+          {() => <div className="text-md text-red-600 italic">{error}</div>}
         </ErrorMessage>
       )}
     </div>

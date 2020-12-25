@@ -25,16 +25,12 @@ type VerifyProps = {
 
 const verify: React.FC<VerifyProps> = ({ data }) => {
   const router = useRouter();
-  const { id, name, gender, dateOfBirth, email } = data;
+  const { id, name, email } = data;
   // console.log(userData);
   const { borrowerType } = useContext(BorrowerTypeContext);
   const { changeUserData } = useContext(AuthContext);
 
   useEffect(() => changeUserData(data));
-
-  const formattedDate = dateOfBirth
-    ? dateOfBirth /*.toString().split("T")[0] */
-    : formatDate(new Date());
   return (
     // <p>hello</p>
     <DashboardLayout>
@@ -50,8 +46,8 @@ const verify: React.FC<VerifyProps> = ({ data }) => {
               // Personal
               id,
               name: name || "",
-              dateOfBirth: formattedDate,
-              gender: gender || "",
+              dateOfBirth: "",
+              gender: "",
               // contact information
               address: "",
               email: email || "",
@@ -77,13 +73,13 @@ const verify: React.FC<VerifyProps> = ({ data }) => {
 
               /* sending the image as FormData to the api to store locally */
               try {
-                const response = await fetch(`${baseURL}/api/verification`, {
+                await fetch(`${baseURL}/api/verification`, {
                   method: "PUT",
                   body: formData,
                   credentials: "include",
                 });
-                const data = await response.json();
-                console.log(data);
+                // const data = await response.json();
+                // console.log(data);
                 router.push("/dashboard");
               } catch (e) {
                 throw new Error(`You Messed Up ${e}`);

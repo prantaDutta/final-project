@@ -10,12 +10,12 @@ const ProvideBorrowers: React.FC<provideBorrowersProps> = ({}) => {
           borrowers.map((borrower) => {
             return (
               <div
-                className="p-3 md:p-5 mt-3 md:mt-5 text-center"
+                className="bg-gray-300 text-gray-700 shadow-md p-3 md:p-5 mt-10 text-center cursor-pointer rounded-md"
                 key={borrower.title}
               >
                 <div className="flex justify-center items-center mb-3 md:mb-4">
                   <svg
-                    className="w-12 h-12 inline-block text-teal-500"
+                    className="w-12 h-12 inline-block text-primary"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"

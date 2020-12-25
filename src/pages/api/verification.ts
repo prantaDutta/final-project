@@ -33,7 +33,6 @@ export default handler.put(async (req, res) => {
 
       form.parse(req, async (err, fields, files) => {
         if (err) return reject(err);
-        resolve({ fields, files });
 
         for (let [key, value] of Object.entries(files)) {
           fields[key] = value.path.replace(/^.*[\\\/]/, ""); // returns the file and extenstion from the path
@@ -71,6 +70,7 @@ export default handler.put(async (req, res) => {
               },
             },
           });
+          resolve({ fields, files });
         } catch (e) {
           console.log(e);
         }

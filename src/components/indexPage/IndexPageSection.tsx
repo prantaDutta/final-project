@@ -7,7 +7,7 @@ const IndexPageSection: React.FC<IndexPageSectionProps> = ({
   title,
 }) => {
   return (
-    <section className="pt-10">
+    <section className="py-6 mx-1 md:mx-2">
       <div className="text-gray-600">
         <div className="flex justify-center items-center">
           <h2 className="text-2xl md:text-4xl font-semibold md:font-bold text-center">

@@ -111,7 +111,7 @@ const login: React.FC<login2Props> = ({}) => {
           </form>
           <div className="mt-6 text-sm font-display font-semibold text-gray-700 text-center">
             Don't have an account ?{" "}
-            <Link href="/login">
+            <Link href="/register">
               <a className="cursor-pointer text-primary hover:text-primaryAccent">
                 Sign Up
               </a>

@@ -9,7 +9,10 @@ const ProvideInvestors: React.FC<provideInvestorsProps> = ({}) => {
         {investors &&
           investors.map((investor) => {
             return (
-              <div className="p-5 mt-5 text-center" key={investor.title}>
+              <div
+                className="bg-gray-300 text-gray-700 shadow-md p-3 md:p-5 mt-10 text-center cursor-pointer rounded-md"
+                key={investor.title}
+              >
                 <h4 className="font-semibold text-2xl">{investor.title}</h4>
                 <p className="font-normal text-lg mt-5">{investor.content}</p>
               </div>

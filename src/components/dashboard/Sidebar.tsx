@@ -1,7 +1,8 @@
-interface SidebarProps {}
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { sideBarLinks } from "../../utils/constantsArray";
+
+interface SidebarProps {}
 
 const Sidebar: React.FC<SidebarProps> = () => {
   const router = useRouter();
@@ -9,7 +10,11 @@ const Sidebar: React.FC<SidebarProps> = () => {
     <div className="col-span-1 bg-gray-100 text-gray-600">
       <Link href="/">
         <a>
-          <h4 className="font-semibold text-4xl text-center mt-5">GrayScale</h4>
+          <h4 className="text-5xl font-bold text-center mt-5">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
+              GrayScale
+            </span>
+          </h4>
         </a>
       </Link>
       <div className="flex-col pt-10 uppercase">
