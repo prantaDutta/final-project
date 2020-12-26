@@ -6,7 +6,7 @@
     "build": "next build",
     "start": "next start",
     "clean": "npx rimraf .next",
-    "deep-clean": "npx rimraf .next && rimraf node_modules && rimraf yarn.lock && yarn && yarn gen",
+    "deep-clean": "npx rimraf .next && npx rimraf node_modules && npx rimraf yarn.lock && yarn && yarn gen",
     "migrate": "npx prisma migrate dev --preview-feature",
     "gen": "npx prisma generate",
     "open": "npx prisma studio",
