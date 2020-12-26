@@ -1,10 +1,10 @@
 import Introduction from "../components/indexPage/introduction";
-import ProvideInvestors from "../components/indexPage/provideInvestors";
 import ProvideBorrowers from "../components/indexPage/provideBorrowers";
+import ProvideInvestors from "../components/indexPage/provideInvestors";
 import Sponsors from "../components/indexPage/sponsors";
-import MobileApp from "./../components/indexPage/mobileApp";
 import UpperFooter from "../components/indexPage/upperFooter";
 import Layout from "../components/layouts/Layout";
+import MobileApp from "./../components/indexPage/mobileApp";
 
 // This is the home page
 // the components of this page are in the components folder
@@ -12,14 +12,12 @@ import Layout from "../components/layouts/Layout";
 export default function IndexPage() {
   return (
     <Layout>
-      <div className="bg-img-with-opacity">
-        <Introduction />
-        <ProvideInvestors />
-        <ProvideBorrowers />
-        <Sponsors />
-        <MobileApp />
-        <UpperFooter />
-      </div>
+      <Introduction />
+      <ProvideInvestors />
+      <ProvideBorrowers />
+      <Sponsors />
+      <MobileApp />
+      <UpperFooter />
 
       {/* <hr className="border-gray-700 border-t" /> */}
     </Layout>

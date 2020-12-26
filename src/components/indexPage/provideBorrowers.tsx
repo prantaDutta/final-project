@@ -10,7 +10,7 @@ const ProvideBorrowers: React.FC<provideBorrowersProps> = ({}) => {
           borrowers.map((borrower) => {
             return (
               <div
-                className="bg-gray-300 text-gray-700 shadow-md p-3 md:p-5 mt-10 text-center cursor-pointer rounded-md"
+                className="bg-gray-200 text-gray-700 shadow-md p-3 md:p-5 mt-10 text-center cursor-pointer rounded-md hover:shadow-2xl transition-css"
                 key={borrower.title}
               >
                 <div className="flex justify-center items-center mb-3 md:mb-4">

@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
           color="#29D"
           startPosition={0.3}
           stopDelayMs={200}
-          height={1}
+          height={3}
           options={{ easing: "ease", speed: 500, showSpinner: false }}
         />
         <AnimatePresence exitBeforeEnter>

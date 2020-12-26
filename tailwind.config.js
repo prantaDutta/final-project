@@ -14,6 +14,7 @@ module.exports = {
         "header-img": "url('/background-1.jpg')",
         "intro-img": "url('/modern-background.jpg')",
         "new-bg": "url('/new-bg.png')",
+        "hero-img": "url('/hero.png')",
       }),
       height: {
         "1vh": "10vh",

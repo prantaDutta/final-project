@@ -256,7 +256,7 @@ const UpperFooter: React.FC<upperFooterProps> = ({}) => {
               className="bg-transparent border-b-2 border-gray-600 px-4 py-1"
             />
           </div>
-          <button className="px-4 py-1 rounded-xl mt-2 bg-indigo-500">
+          <button className="px-4 py-1 rounded-xl mt-2 bg-primary text-white hover:bg-primaryAccent">
             Subscribe
           </button>
         </div>

@@ -4,8 +4,8 @@ import { RefReturn } from "../../utils/randomTypes";
 type InputTextFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   component?: string;
-  error: string | undefined | null;
-  register: () => RefReturn;
+  error?: string | undefined | null;
+  register?: () => RefReturn;
 };
 
 const InputTextField: React.FC<InputTextFieldProps> = ({

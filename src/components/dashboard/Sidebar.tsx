@@ -10,7 +10,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     <div className="col-span-1 bg-gray-100 text-gray-600">
       <Link href="/">
         <a>
-          <h4 className="text-5xl font-bold text-center mt-5">
+          <h4 className="text-5xl font-bold tracking-wider text-center mt-5">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
               GrayScale
             </span>
