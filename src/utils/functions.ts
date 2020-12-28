@@ -3,10 +3,16 @@ import { verify } from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRET } from "./constants";
 
 export const verifyJWTToken = (accessToken: string) => {
-  return verify(accessToken, ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return err;
-    return user;
-  });
+  // return verify(accessToken, ACCESS_TOKEN_SECRET, (err, user) => {
+  //   if (err) return err;
+  //   return user;
+  // });
+  try {
+    var decoded = verify(accessToken, ACCESS_TOKEN_SECRET);
+    return decoded;
+  } catch (err) {
+    return err;
+  }
 };
 
 export const formatDate = (date: Date) => format(date, "yyyy-MM-dd");
