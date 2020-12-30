@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
 import Layout from "../components/layouts/Layout";
 import InputSelectField from "../components/ReactHookForm/InputSelectField";
 import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
 import { AuthContext } from "../contexts/AuthContext";
+import { authenticatedUserData } from "../states/userStates";
 import { baseURL } from "../utils/constants";
 import { UserRole } from "../utils/constantsArray";
 import { RegisterFormValues } from "../utils/randomTypes";
@@ -30,7 +32,8 @@ const register: React.FC<registerProps> = ({}) => {
     reValidateMode: "onBlur",
   });
   const router = useRouter();
-  const { toggleAuth, changeUserData } = useContext(AuthContext);
+  const { toggleAuth } = useContext(AuthContext);
+  const [, setUserData] = useRecoilState(authenticatedUserData);
 
   const onSubmit = async (values: RegisterFormValues) => {
     setSubmitting(true);
@@ -42,10 +45,9 @@ const register: React.FC<registerProps> = ({}) => {
       body: JSON.stringify({ values }),
     });
     const data = await response.json();
-    console.log(data);
     if (data.id) {
       toggleAuth(true);
-      changeUserData(data);
+      setUserData(data);
       return router.push("/dashboard");
     }
     setError("name", {

@@ -1,14 +1,22 @@
-import React, { useState } from "react";
+import { NextPageContext } from "next";
+import React, { useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { isAuthenticated } from "../apiHandlers/isAuthenticated";
 import DashboardLayout from "../components/layouts/DashboardLayout";
-import StepperIcons, { icons } from "../components/verification/StepperIcons";
 import Contact from "../components/verify/Contact";
 import Images from "../components/verify/Images";
 import Papers from "../components/verify/Papers";
 import Personal from "../components/verify/Personal";
+import StepperIcons, { icons } from "../components/verify/StepperIcons";
+import { authenticatedUserData } from "../states/userStates";
+import { verificationStep } from "../states/verificationStates";
+import { ModifiedUserData } from "../utils/randomTypes";
 
-interface verifyProps {}
+interface showVerifyComponentProps {
+  step: number;
+}
 
-const showVerifyComponent = (step: number) => {
+const ShowVerifyComponent: React.FC<showVerifyComponentProps> = ({ step }) => {
   switch (step) {
     case 0:
       return <Personal />;
@@ -19,14 +27,21 @@ const showVerifyComponent = (step: number) => {
     case 3:
       return <Images />;
     default:
-      return;
+      return <></>;
   }
 };
 
-const verify: React.FC<verifyProps> = ({}) => {
-  const [step, setStep] = useState<number>(0);
+interface verifyProps {
+  data: ModifiedUserData;
+}
+
+const verify: React.FC<verifyProps> = ({ data }) => {
+  const [step] = useRecoilState(verificationStep);
+  const [, changeUserData] = useRecoilState(authenticatedUserData);
+
+  useEffect(() => changeUserData(data));
   return (
-    <DashboardLayout>
+    <DashboardLayout data={data}>
       <div className="p-5">
         <p className=" font-medium md:font-2xl text-xl md:text-4xl text-center">
           Account Verification
@@ -41,12 +56,19 @@ const verify: React.FC<verifyProps> = ({}) => {
             />
           ))}
         </div>
-        <div>{showVerifyComponent(step)}</div>
-        {/* <button onClick={() => setStep(step + 1)}>Next</button>
-        <button onClick={() => setStep(step - 1)}>Previous</button> */}
+
+        <ShowVerifyComponent step={step} />
       </div>
     </DashboardLayout>
   );
 };
+
+export async function getServerSideProps(context: NextPageContext) {
+  // The following function checks whether the user is authenticated and returns the userdata
+  const data = await isAuthenticated(context);
+  return {
+    props: { data }, // will be passed to the page component as props
+  };
+}
 
 export default verify;

@@ -1,8 +1,6 @@
 import handler from "../../apiHandlers/handler";
-import DBClient from "../../lib/prisma";
+import { prisma } from "../../lib/prisma";
 import { ModifiedUserData } from "../../utils/randomTypes";
-
-const prisma = DBClient.getInstance().prisma;
 
 export default handler.post(async (req, res) => {
   if (req.token) {

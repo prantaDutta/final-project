@@ -2,14 +2,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { AppProps /*, AppContext */ } from "next/app";
 import NextNprogress from "nextjs-progressbar";
 import React from "react";
+import { RecoilRoot } from "recoil";
 import AuthContextProvider from "../contexts/AuthContext";
-import BorrowerTypeContextProvider from "../contexts/BorrowerTypeContext";
 import "../styles/index.css";
 
 function MyApp({ Component, pageProps, router }: AppProps) {
   return (
-    <AuthContextProvider>
-      <BorrowerTypeContextProvider>
+    <RecoilRoot>
+      <AuthContextProvider>
         {/*  This component shows the progress bar  */}
         <NextNprogress
           color="#29D"
@@ -23,6 +23,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
             <Component {...pageProps} />
           </motion.div>
         </AnimatePresence>
+
         <style global jsx>
           {`
             body {
@@ -30,8 +31,8 @@ function MyApp({ Component, pageProps, router }: AppProps) {
             }
           `}
         </style>
-      </BorrowerTypeContextProvider>
-    </AuthContextProvider>
+      </AuthContextProvider>
+    </RecoilRoot>
   );
 }
 

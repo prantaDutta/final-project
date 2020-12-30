@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
 import Layout from "../components/layouts/Layout";
 import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
 import { AuthContext } from "../contexts/AuthContext";
+import { authenticatedUserData } from "../states/userStates";
 import { baseURL } from "../utils/constants";
 import { LoginFormValues } from "../utils/randomTypes";
 import { loginValidationSchema } from "../validations/LoginFormValidation";
@@ -24,7 +26,8 @@ const login: React.FC<login2Props> = ({}) => {
     }
   );
   const router = useRouter();
-  const { toggleAuth, changeUserData } = useContext(AuthContext);
+  const { toggleAuth } = useContext(AuthContext);
+  const [, setUserData] = useRecoilState(authenticatedUserData);
 
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitting(true);
@@ -39,7 +42,7 @@ const login: React.FC<login2Props> = ({}) => {
     const data = await response.json();
     if (data.id) {
       toggleAuth(true);
-      changeUserData(data);
+      setUserData(data);
       return router.push("/dashboard");
     } else if (data.email) {
       setError("email", {

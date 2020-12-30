@@ -53,3 +53,25 @@ export const UserRole: SelectOptionsTypes[] = [
     title: "Borrower",
   },
 ];
+
+export const Gender: SelectOptionsTypes[] = [
+  {
+    value: "male",
+    title: "Male",
+  },
+  {
+    value: "female",
+    title: "Female",
+  },
+];
+
+export const BorrowerTypes: SelectOptionsTypes[] = [
+  {
+    value: "salaried",
+    title: "Salaried Individual",
+  },
+  {
+    value: "self",
+    title: "Self Employed",
+  },
+];

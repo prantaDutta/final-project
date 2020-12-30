@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { authenticatedUserData } from "../../states/userStates";
+import { ModifiedUserData } from "../../utils/randomTypes";
 import MainContentNav from ".././dashboard/DashboardNav";
 import Sidebar from ".././dashboard/Sidebar";
 
-interface DashboardLayoutProps {}
+interface DashboardLayoutProps {
+  data: ModifiedUserData;
+}
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({
+  data,
+  children,
+}) => {
+  const [, setUserData] = useRecoilState(authenticatedUserData);
+
+  useEffect(() => setUserData(data), []);
   return (
     <div className="grid grid-cols-5 h-screen">
       <Sidebar />

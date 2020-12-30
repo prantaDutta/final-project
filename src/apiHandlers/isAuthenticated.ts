@@ -1,11 +1,9 @@
 import { NextPageContext } from "next";
 import { useRouter } from "next/router";
-import DBClient from "../lib/prisma";
+import { prisma } from "../lib/prisma";
 import { AUTH_TOKEN_NAME, baseURL } from "../utils/constants";
 import { verifyJWTToken } from "../utils/functions";
 import { ModifiedUserData } from "../utils/randomTypes";
-
-const prisma = DBClient.getInstance().prisma;
 
 export const isAuthenticated = async (context: NextPageContext) => {
   const cookie = context.req?.headers.cookie;
@@ -18,14 +16,12 @@ export const isAuthenticated = async (context: NextPageContext) => {
           id: parseInt(id),
         },
       });
-      // console.log("user: ", user);
       if (user) {
         const userData: ModifiedUserData = {
           id: user.id,
           name: user.name,
           email: user.email,
         };
-        // console.log(user);
         return userData;
       }
     }

@@ -2,14 +2,12 @@ import bcrypt from "bcrypt";
 import cookie from "cookie";
 import { sign } from "jsonwebtoken";
 import handler from "../../apiHandlers/handler";
-import DBClient from "../../lib/prisma";
+import { prisma } from "../../lib/prisma";
 import {
   ACCESS_TOKEN_SECRET,
   AUTH_TOKEN_NAME,
   isProduction,
 } from "../../utils/constants";
-
-const prisma = DBClient.getInstance().prisma;
 
 export default handler.post(async (req, res) => {
   const { name, email, role, password } = req.body.values;

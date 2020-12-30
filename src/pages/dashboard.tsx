@@ -1,9 +1,8 @@
 import { NextPageContext } from "next";
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { isAuthenticated } from "../apiHandlers/isAuthenticated";
 import DashboardContent from "../components/dashboard/DashboardContent";
 import DashboardLayout from "../components/layouts/DashboardLayout";
-import { AuthContext } from "../contexts/AuthContext";
 import { ModifiedUserData } from "../utils/randomTypes";
 
 interface dashboardProps {
@@ -11,12 +10,8 @@ interface dashboardProps {
 }
 
 const dashboard: React.FC<dashboardProps> = ({ data }) => {
-  const { changeUserData } = useContext(AuthContext);
-
-  useEffect(() => changeUserData(data), []);
-
   return (
-    <DashboardLayout>
+    <DashboardLayout data={data}>
       <DashboardContent />
     </DashboardLayout>
   );

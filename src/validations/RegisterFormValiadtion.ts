@@ -26,19 +26,10 @@ export const registerValitationSchema = Yup.object({
       });
     })
     .required("Required"),
-  //   gender: Yup.mixed()
-  //     .oneOf(["male", "female"], "Gender should be Male or Female")
-  //     .required("Required"),
   password: Yup.string()
     .min(6, "Password should be atleast six letters")
     .required("Required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords must match")
     .required("Required"),
-  //   dateOfBirth: Yup.date()
-  //     .max(
-  //       formatDate(eightennYearsBackFromNow()).toString(),
-  //       "You Must be 18 Years Old"
-  //     )
-  //     .required("Required"),
 });

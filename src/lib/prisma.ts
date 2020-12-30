@@ -1,18 +1,21 @@
 import { PrismaClient } from "@prisma/client";
 
-class DBClient {
-  public prisma: PrismaClient;
-  private static instance: DBClient;
-  private constructor() {
-    this.prisma = new PrismaClient();
+let prisma: PrismaClient;
+
+if (process.env.NODE_ENV === "production") {
+  // @ts-ignore
+  if (!prisma) {
+    prisma = new PrismaClient();
+  }
+} else {
+  // @ts-ignore
+  if (!global.prisma) {
+    // @ts-ignore
+    global.prisma = new PrismaClient();
   }
 
-  public static getInstance = () => {
-    if (!DBClient.instance) {
-      DBClient.instance = new DBClient();
-    }
-    return DBClient.instance;
-  };
+  // @ts-ignore
+  prisma = global.prisma;
 }
 
-export default DBClient;
+export { prisma };

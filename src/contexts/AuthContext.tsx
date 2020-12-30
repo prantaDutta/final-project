@@ -1,13 +1,12 @@
 import fetch from "isomorphic-unfetch";
 import { createContext, useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { authenticatedUserData } from "../states/userStates";
 import { baseURL } from "../utils/constants";
-import { ModifiedUserData } from "../utils/randomTypes";
 
 type authValues = {
   isAuthenticated: boolean;
-  userData: ModifiedUserData | null;
   toggleAuth: (value: boolean) => void;
-  changeUserData: (data: ModifiedUserData) => void;
 };
 
 export const AuthContext = createContext({} as authValues);
@@ -16,14 +15,9 @@ interface authContextProps {}
 
 const AuthContextProvider: React.FC<authContextProps> = (props) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [userData, setUserData] = useState<null | ModifiedUserData>(null);
-
+  const userData = useRecoilValue(authenticatedUserData);
   const toggleAuth = (value: boolean) => {
     setIsAuthenticated(value);
-  };
-
-  const changeUserData = (data: ModifiedUserData) => {
-    setUserData(data);
   };
 
   useEffect(() => {
@@ -40,9 +34,7 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
   }, [userData]);
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthenticated, toggleAuth, userData, changeUserData }}
-    >
+    <AuthContext.Provider value={{ isAuthenticated, toggleAuth }}>
       {props.children}
     </AuthContext.Provider>
   );

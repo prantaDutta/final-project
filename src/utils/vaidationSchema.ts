@@ -1,59 +1,54 @@
 import * as Yup from "yup";
-import { eightennYearsBackFromNow, formatDate } from "./functions";
-import { FILE_SIZE, SUPPORTED_FORMATS } from "./constants";
-import fetch from "isomorphic-unfetch";
+import {
+  SUPPORTED_IMAGE_FILE_SIZE,
+  SUPPORTED_IMAGE_FORMATS,
+} from "./constants";
 
-export const yupValidationSchema = Yup.object({
-  name: Yup.string().required("Required"),
-  role: Yup.mixed()
-    .oneOf(["lender", "borrower"], "Role should be Lender or Borrower")
-    .required("Required"),
-  email: Yup.string()
-    .email("Invalid email")
-    .test("Unique Email", "Email already been taken", function (value) {
-      if (!value) return true;
-      return new Promise((resolve, _) => {
-        fetch("/api/unique-email", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: value }),
-        }).then(async (res) => {
-          const data = await res.json();
-          if (data.msg === "Email already been taken") {
-            resolve(false);
-          }
-          resolve(true);
-        });
-      });
-    })
-    .required("Required"),
-  gender: Yup.mixed()
-    .oneOf(["male", "female"], "Gender should be Male or Female")
-    .required("Required"),
-  password: Yup.string()
-    .min(6, "Password should be atleast six letters")
-    .required("Required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password")], "Passwords must match")
-    .required("Required"),
-  dateOfBirth: Yup.date()
-    .max(
-      formatDate(eightennYearsBackFromNow()).toString(),
-      "You Must be 18 Years Old"
-    )
-    .required("Required"),
-});
-
-export const imageValidation = Yup.mixed()
-  .required("A file is required")
-  .test("fileSize", "File is too large", (value) => {
-    // console.log("value: ", value);
-    return value && value.size <= FILE_SIZE;
-  })
-  .test(
-    "fileFormat",
-    "Unsupported Format",
-    (value) => value && SUPPORTED_FORMATS.includes(value.type)
+export const singleImageValidation = Yup.array()
+  .nullable()
+  .required("Please Upload A File")
+  .test("fileSize", "File should be less than 5MB", (files) =>
+    checkIfFilesAreTooBig(files as [File])
+  )
+  .test("fileFormat", "Unsupported Format", (files) =>
+    checkIfFilesAreCorrectType(files as [File])
   );
+
+export const multipleImageValidation = Yup.array()
+  .nullable()
+  .required("Please Upload A File")
+  .test(
+    "multiple",
+    "Please Upload atleast three image",
+    (files) => files?.length! > 2
+  )
+  .test("fileSize", "File should be less than 5MB", (files) =>
+    checkIfFilesAreTooBig(files as [File])
+  )
+  .test("fileFormat", "Unsupported Format", (files) =>
+    checkIfFilesAreCorrectType(files as [File])
+  );
+
+function checkIfFilesAreTooBig(files?: [File]): boolean {
+  let valid = true;
+  if (files) {
+    files.map((file) => {
+      if (file.size >= SUPPORTED_IMAGE_FILE_SIZE) {
+        valid = false;
+      }
+    });
+  }
+  return valid;
+}
+
+function checkIfFilesAreCorrectType(files?: [File]): boolean {
+  let valid = true;
+  if (files) {
+    files.map((file) => {
+      if (!SUPPORTED_IMAGE_FORMATS.includes(file.type)) {
+        valid = false;
+      }
+    });
+  }
+  return valid;
+}

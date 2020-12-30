@@ -13,6 +13,7 @@ const InputSelectField: React.FC<InputSelectFieldProps> = ({
   error,
   label,
   register,
+  options,
   ...props
 }) => {
   return (
@@ -30,8 +31,11 @@ const InputSelectField: React.FC<InputSelectFieldProps> = ({
         ref={register}
       >
         <option value="Default">Choose One...</option>
-        <option value="lender">Lender</option>
-        <option value="borrower">Borrower</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.title}
+          </option>
+        ))}
       </select>
 
       <p className="text-red pt-2 font-semibold text-sm italic">

@@ -11,7 +11,7 @@ export const links: linkArray[] = [
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
   { href: "/dashboard", label: "Dashboard" },
-  { href: "#", label: "Log Out" },
+  { href: "/#", label: "Log Out" },
   { href: "/login", label: "Log In" },
   { href: "/register", label: "Register" },
 ];

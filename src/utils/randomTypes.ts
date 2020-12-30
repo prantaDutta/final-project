@@ -38,3 +38,53 @@ export type SelectOptionsTypes = {
   value: string;
   title: string;
 };
+
+export type VerificationFormValues = {
+  // Personal
+  id: number;
+  name: string;
+  dateOfBirth: string;
+  gender: string;
+  // contact information
+  address: string;
+  email: string;
+  mobileNo: string;
+  // checking salaried individual or self-employed
+  borrowerType: string;
+  // verificationphotos
+  nidOrPassport: {};
+  addressProof: {};
+  recentPhoto: {};
+  bankAccountStateMents: {};
+  businessProof: {};
+  salarySlip: {};
+  employeeIdCard: {};
+};
+
+// Verification Types
+export type PersonalVerificationFormValues = {
+  id: number;
+  name: string;
+  dateOfBirth: string;
+  gender: string;
+};
+
+export type ContactVerificationFormValues = {
+  address: string;
+  email: string;
+  mobileNo: string;
+};
+
+export type PapersVerificationFormValues = {
+  borrowerType: string;
+};
+
+export type ImagesVerificationFormValues = {
+  nidOrPassport: Array<[File]>;
+  addressProof: Array<[File]>;
+  recentPhoto: Array<[File]>;
+  bankAccountStateMents: Array<[File]>;
+  businessProof: Array<[File]>;
+  salarySlip: Array<[File]>;
+  employeeIdCard: Array<[File]>;
+};

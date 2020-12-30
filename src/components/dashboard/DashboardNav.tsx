@@ -2,18 +2,17 @@ import fetch from "isomorphic-unfetch";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
+import { useRecoilValue } from "recoil";
 import { AuthContext } from "../../contexts/AuthContext";
+import { authenticatedUserData } from "../../states/userStates";
 import { baseURL } from "../../utils/constants";
 
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
-  const { toggleAuth, userData } = useContext(AuthContext);
-  // if (userData === null) {
-  //   router.replace("/login");
-  //   return <div></div>;
-  // }
+  const { toggleAuth } = useContext(AuthContext);
+  const userData = useRecoilValue(authenticatedUserData);
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">
       <div className="flex items-center cursor-pointer p-4">
