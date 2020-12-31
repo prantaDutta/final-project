@@ -5,7 +5,6 @@ import { useContext } from "react";
 import { useRecoilValue } from "recoil";
 import { AuthContext } from "../../contexts/authContext";
 import { authenticatedUserData } from "../../states/userStates";
-import { baseURL } from "../../utils/constants";
 
 interface MainContentNavProps {}
 
@@ -65,7 +64,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
             <a
               onClick={async () => {
                 toggleAuth(false);
-                await axios.get(`${baseURL}/api/logout`);
+                await axios.get(`/api/logout`);
                 router.push("/");
               }}
             >

@@ -1,7 +1,7 @@
 import { NextPageContext } from "next";
 import { useRouter } from "next/router";
 import { prisma } from "../lib/prisma";
-import { AUTH_TOKEN_NAME, baseURL } from "../utils/constants";
+import { AUTH_TOKEN_NAME, BASE_URL } from "../utils/constants";
 import { verifyJWTToken } from "../utils/functions";
 import { ModifiedUserData } from "../utils/randomTypes";
 
@@ -37,7 +37,7 @@ export const redirectToLogin = (context: NextPageContext) => {
   } else if (context.req) {
     // On Server
     context.res?.writeHead(302, {
-      Location: `${baseURL}/login`,
+      Location: `${BASE_URL}/login`,
     });
     return context.res?.end();
   }

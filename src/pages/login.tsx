@@ -11,7 +11,6 @@ import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
 import { AuthContext } from "../contexts/authContext";
 import { authenticatedUserData } from "../states/userStates";
-import { baseURL } from "../utils/constants";
 import { LoginFormValues } from "../utils/randomTypes";
 import { loginValidationSchema } from "../validations/LoginFormValidation";
 
@@ -32,7 +31,7 @@ const login: React.FC<login2Props> = ({}) => {
 
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitting(true);
-    const { data } = await axios.post(`${baseURL}/api/login`, {
+    const { data } = await axios.post(`/api/login`, {
       values,
     });
 

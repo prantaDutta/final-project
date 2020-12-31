@@ -12,7 +12,6 @@ import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
 import { AuthContext } from "../contexts/authContext";
 import { authenticatedUserData } from "../states/userStates";
-import { baseURL } from "../utils/constants";
 import { UserRole } from "../utils/constantsArray";
 import { RegisterFormValues } from "../utils/randomTypes";
 import { registerValitationSchema } from "../validations/RegisterFormValiadtion";
@@ -38,7 +37,7 @@ const register: React.FC<registerProps> = ({}) => {
 
   const onSubmit = async (values: RegisterFormValues) => {
     setSubmitting(true);
-    const { data } = await axios.post(`${baseURL}/api/register`, {
+    const { data } = await axios.post(`/api/register`, {
       values,
     });
     if (data.id) {

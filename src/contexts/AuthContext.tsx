@@ -2,7 +2,6 @@ import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { authenticatedUserData } from "../states/userStates";
-import { baseURL } from "../utils/constants";
 
 type authValues = {
   isAuthenticated: boolean;
@@ -22,8 +21,8 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
 
   useEffect(() => {
     const func = async () => {
-      const { data } = await axios.get(`${baseURL}/api/is-authenticated`);
-      if (data.token) {
+      const { data } = await axios.get(`/api/is-authenticated`);
+      if (data?.token) {
         toggleAuth(true);
       } else {
         toggleAuth(false);

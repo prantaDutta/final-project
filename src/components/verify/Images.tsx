@@ -10,7 +10,7 @@ import {
   verificationFormValues,
   verificationStep,
 } from "../../states/verificationStates";
-import { baseURL, isProduction } from "../../utils/constants";
+import { BASE_URL, isProduction } from "../../utils/constants";
 import {
   appendingFieldsToFormData,
   appendingFileToFormData,
@@ -119,7 +119,7 @@ const Images: React.FC<ImagesProps> = ({}) => {
     setComplete(true);
 
     try {
-      const response = await axios(`${baseURL}/api/verify`, {
+      const response = await axios(`${BASE_URL}/api/verify`, {
         method: "PUT",
         data: formData,
         withCredentials: true,

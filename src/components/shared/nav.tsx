@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/authContext";
-import { baseURL } from "../../utils/constants";
 import { linkArray } from "../../utils/randomTypes";
 
 export const links: linkArray[] = [
@@ -47,7 +46,7 @@ export default function Nav() {
                   key={link.label}
                   onClick={async () => {
                     toggleAuth(false);
-                    await axios.get(`${baseURL}/api/logout`);
+                    await axios.get(`/api/logout`);
                     router.push("/");
                   }}
                   className={`text-gray-600 block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent ${
