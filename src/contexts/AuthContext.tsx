@@ -1,4 +1,4 @@
-import fetch from "isomorphic-unfetch";
+import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { authenticatedUserData } from "../states/userStates";
@@ -22,9 +22,8 @@ const AuthContextProvider: React.FC<authContextProps> = (props) => {
 
   useEffect(() => {
     const func = async () => {
-      const response = await fetch(`${baseURL}/api/is-authenticated`);
-      const res = await response.json();
-      if (res.token) {
+      const { data } = await axios.get(`${baseURL}/api/is-authenticated`);
+      if (data.token) {
         toggleAuth(true);
       } else {
         toggleAuth(false);

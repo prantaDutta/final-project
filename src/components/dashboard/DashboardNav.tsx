@@ -1,9 +1,9 @@
-import fetch from "isomorphic-unfetch";
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { useRecoilValue } from "recoil";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext } from "../../contexts/authContext";
 import { authenticatedUserData } from "../../states/userStates";
 import { baseURL } from "../../utils/constants";
 
@@ -65,7 +65,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
             <a
               onClick={async () => {
                 toggleAuth(false);
-                await fetch(`${baseURL}/api/logout`);
+                await axios.get(`${baseURL}/api/logout`);
                 router.push("/");
               }}
             >

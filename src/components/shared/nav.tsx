@@ -1,8 +1,8 @@
-import fetch from "isomorphic-unfetch";
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AuthContext } from "../../contexts/authContext";
 import { baseURL } from "../../utils/constants";
 import { linkArray } from "../../utils/randomTypes";
 
@@ -24,8 +24,9 @@ export interface NavItemsProps {
 }
 
 export default function Nav() {
-  const { isAuthenticated, toggleAuth } = useContext(AuthContext);
+  // const { isAuthenticated, toggleAuth } = useContext(AuthContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const { toggleAuth, isAuthenticated } = useContext(AuthContext);
 
   const router = useRouter();
 
@@ -46,7 +47,7 @@ export default function Nav() {
                   key={link.label}
                   onClick={async () => {
                     toggleAuth(false);
-                    await fetch(`${baseURL}/api/logout`);
+                    await axios.get(`${baseURL}/api/logout`);
                     router.push("/");
                   }}
                   className={`text-gray-600 block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent ${

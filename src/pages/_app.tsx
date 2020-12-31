@@ -1,29 +1,40 @@
+import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import type { AppProps /*, AppContext */ } from "next/app";
 import NextNprogress from "nextjs-progressbar";
 import React from "react";
 import { RecoilRoot } from "recoil";
-import AuthContextProvider from "../contexts/AuthContext";
+import { SWRConfig } from "swr";
+import AuthContextProvider from "../contexts/authContext";
 import "../styles/index.css";
 
 function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <RecoilRoot>
       <AuthContextProvider>
-        {/*  This component shows the progress bar  */}
-        <NextNprogress
-          color="#29D"
-          startPosition={0.3}
-          stopDelayMs={200}
-          height={3}
-          options={{ easing: "ease", speed: 500, showSpinner: false }}
-        />
-        <AnimatePresence exitBeforeEnter>
-          <motion.div key={router.route} {...pageMotionProps}>
-            <Component {...pageProps} />
-          </motion.div>
-        </AnimatePresence>
-
+        <SWRConfig
+          value={{
+            fetcher: (url: string) =>
+              axios.get(url).then((r) => {
+                console.log("url: ", url);
+                r.data;
+              }),
+          }}
+        >
+          {/*  This component shows the progress bar  */}
+          <NextNprogress
+            color="#29D"
+            startPosition={0.3}
+            stopDelayMs={200}
+            height={3}
+            options={{ easing: "ease", speed: 500, showSpinner: false }}
+          />
+          <AnimatePresence exitBeforeEnter>
+            <motion.div key={router.route} {...pageMotionProps}>
+              <Component {...pageProps} />
+            </motion.div>
+          </AnimatePresence>
+        </SWRConfig>
         <style global jsx>
           {`
             body {

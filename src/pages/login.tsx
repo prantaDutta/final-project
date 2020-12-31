@@ -1,5 +1,6 @@
 import { ThreeDots } from "@agney/react-loading";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
@@ -8,7 +9,7 @@ import { useRecoilState } from "recoil";
 import Layout from "../components/layouts/Layout";
 import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
-import { AuthContext } from "../contexts/AuthContext";
+import { AuthContext } from "../contexts/authContext";
 import { authenticatedUserData } from "../states/userStates";
 import { baseURL } from "../utils/constants";
 import { LoginFormValues } from "../utils/randomTypes";
@@ -31,15 +32,10 @@ const login: React.FC<login2Props> = ({}) => {
 
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitting(true);
-    const response = await fetch(`${baseURL}/api/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ values }),
+    const { data } = await axios.post(`${baseURL}/api/login`, {
+      values,
     });
 
-    const data = await response.json();
     if (data.id) {
       toggleAuth(true);
       setUserData(data);

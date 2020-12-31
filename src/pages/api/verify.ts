@@ -15,7 +15,8 @@ export const config = {
 export default handler.put(async (req, res) => {
   if (req.token) {
     const imagePath = path.join(`./public/uploads/verificationPapers/`);
-    fs.mkdir(imagePath, { recursive: true });
+    // creating the directory
+    await fs.mkdir(imagePath, { recursive: true });
     // parse form with a Promise wrapper
     await new Promise((resolve, reject) => {
       var form = new formidable.IncomingForm();

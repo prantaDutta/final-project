@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -36,14 +37,13 @@ const Contact: React.FC<ContactProps> = ({}) => {
           .test("Unique Email", "Email already been taken", function (value) {
             return new Promise(async (resolve, _) => {
               if (value) {
-                const res = await fetch("/api/unique-email-excluding-id", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ email: value, id }),
-                });
-                const data = await res.json();
+                const { data } = await axios.post(
+                  "/api/unique-email-excluding-id",
+                  {
+                    email: value,
+                    id,
+                  }
+                );
                 if (data.msg === "Email Taken") {
                   return resolve(false);
                 }
@@ -63,7 +63,7 @@ const Contact: React.FC<ContactProps> = ({}) => {
           .required("Required"),
       })
     ),
-    mode: "onTouched",
+    mode: "onSubmit",
     reValidateMode: "onBlur",
   });
   const onSubmit = async (values: ContactVerificationFormValues) => {

@@ -94,7 +94,9 @@ const Personal: React.FC<PersonalProps> = ({}) => {
             error={errors.dateOfBirth?.message}
             control={control}
             defaultValue={
-              verificationValues?.dateOfBirth || isProduction
+              verificationValues?.dateOfBirth
+                ? verificationValues?.dateOfBirth
+                : isProduction
                 ? new Date().toString()
                 : eightennYearsBackFromNow("YYYY-MM-DD").toString()
               // new Date().toString()

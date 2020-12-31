@@ -1,12 +1,16 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
 import { object } from "yup";
 import yup from "../../lib/yup";
-import { verificationFormValues } from "../../states/verificationStates";
-import { baseURL } from "../../utils/constants";
+import {
+  verificationFormValues,
+  verificationStep,
+} from "../../states/verificationStates";
+import { baseURL, isProduction } from "../../utils/constants";
 import {
   appendingFieldsToFormData,
   appendingFileToFormData,
@@ -24,7 +28,7 @@ interface ImagesProps {}
 const Images: React.FC<ImagesProps> = ({}) => {
   const router = useRouter();
   const [complete, setComplete] = useState<boolean>(false);
-
+  const [, setStep] = useRecoilState(verificationStep);
   const [verificationValues, setValues] = useRecoilState(
     verificationFormValues
   );
@@ -115,11 +119,13 @@ const Images: React.FC<ImagesProps> = ({}) => {
     setComplete(true);
 
     try {
-      await fetch(`${baseURL}/api/verify`, {
+      const response = await axios(`${baseURL}/api/verify`, {
         method: "PUT",
-        body: formData,
-        credentials: "include",
+        data: formData,
+        withCredentials: true,
       });
+      if (!isProduction) console.log("Response: ", response);
+      setStep(0);
       router.push("/dashboard");
     } catch (e) {
       console.log(e);

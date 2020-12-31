@@ -1,3 +1,4 @@
+import axios from "axios";
 import Yup from "../lib/yup";
 
 export const registerValitationSchema = Yup.object({
@@ -10,19 +11,16 @@ export const registerValitationSchema = Yup.object({
     .test("Unique Email", "Email already been taken", function (value) {
       if (!value) return true;
       return new Promise((resolve, _) => {
-        fetch("/api/unique-email", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: value }),
-        }).then(async (res) => {
-          const data = await res.json();
-          if (data.msg === "Email already been taken") {
-            resolve(false);
-          }
-          resolve(true);
-        });
+        axios
+          .post("/api/unique-email", {
+            email: value,
+          })
+          .then(async ({ data }) => {
+            if (data.msg === "Email already been taken") {
+              resolve(false);
+            }
+            resolve(true);
+          });
       });
     })
     .required("Required"),
