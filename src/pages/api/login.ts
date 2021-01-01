@@ -10,6 +10,7 @@ import {
 } from "../../utils/constants";
 
 export default handler.post(async (req, res) => {
+  console.log("body: ", req.body);
   const { email, password } = req.body.values;
   if (!email || !password) {
     return res.status(406).json({
@@ -42,9 +43,8 @@ export default handler.post(async (req, res) => {
     return res.status(200).json({
       id: user.id,
       name: user.name,
-      gender: user.gender,
-      dateOfBirth: user.dateOfBirth,
       email: user.email,
+      role: user.role,
     });
   }
   // Password didn't match

@@ -3,14 +3,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { useRecoilValue } from "recoil";
-import { AuthContext } from "../../contexts/authContext";
+import { authContext } from "../../contexts/authContext";
 import { authenticatedUserData } from "../../states/userStates";
 
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
-  const { toggleAuth } = useContext(AuthContext);
+  const { toggleAuth } = useContext(authContext);
   const userData = useRecoilValue(authenticatedUserData);
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">

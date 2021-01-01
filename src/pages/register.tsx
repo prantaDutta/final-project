@@ -10,7 +10,7 @@ import Layout from "../components/layouts/Layout";
 import InputSelectField from "../components/ReactHookForm/InputSelectField";
 import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
-import { AuthContext } from "../contexts/authContext";
+import { authContext } from "../contexts/authContext";
 import { authenticatedUserData } from "../states/userStates";
 import { UserRole } from "../utils/constantsArray";
 import { RegisterFormValues } from "../utils/randomTypes";
@@ -19,7 +19,7 @@ import { registerValitationSchema } from "../validations/RegisterFormValiadtion"
 interface registerProps {}
 
 const register: React.FC<registerProps> = ({}) => {
-  // const { toggleAuth, changeUserData } = useContext(AuthContext);
+  // const { toggleAuth, changeUserData } = useContext(authContext);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const {
     register,
@@ -32,7 +32,7 @@ const register: React.FC<registerProps> = ({}) => {
     reValidateMode: "onBlur",
   });
   const router = useRouter();
-  const { toggleAuth } = useContext(AuthContext);
+  const { toggleAuth } = useContext(authContext);
   const [, setUserData] = useRecoilState(authenticatedUserData);
 
   const onSubmit = async (values: RegisterFormValues) => {

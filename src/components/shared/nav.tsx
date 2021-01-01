@@ -2,7 +2,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { AuthContext } from "../../contexts/authContext";
+import { authContext } from "../../contexts/authContext";
 import { linkArray } from "../../utils/randomTypes";
 
 export const links: linkArray[] = [
@@ -23,9 +23,9 @@ export interface NavItemsProps {
 }
 
 export default function Nav() {
-  // const { isAuthenticated, toggleAuth } = useContext(AuthContext);
+  // const { isAuthenticated, toggleAuth } = useContext(authContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const { toggleAuth, isAuthenticated } = useContext(AuthContext);
+  const { toggleAuth, isAuthenticated } = useContext(authContext);
 
   const router = useRouter();
 

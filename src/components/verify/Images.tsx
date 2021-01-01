@@ -136,7 +136,7 @@ const Images: React.FC<ImagesProps> = ({}) => {
     <div className="pb-3 px-2 md:px-0 mt-10">
       <main className="bg-white max-w-full mx-auto p-4 md:p-8 my-5 rounded-lg shadow-2xl">
         <section>
-          <h3 className="font-bold text-2xl">Personal Information</h3>
+          <h3 className="font-bold text-2xl">Verification Photos</h3>
         </section>
         <form className="mt-10" onSubmit={handleSubmit(onSubmit)}>
           <InputFileField
@@ -153,21 +153,21 @@ const Images: React.FC<ImagesProps> = ({}) => {
           />
           <InputFileField
             name="recentPhoto"
-            label="Recent Photos"
+            label="Recent Photo"
             error={(errors.recentPhoto as any)?.message}
             control={control}
           />
           <InputFileField
             name="bankAccountStateMents"
             multiple={true}
-            label="Bank AccountStateMents"
+            label="Bank AccountStateMents (Atleast 3 Months)"
             error={(errors.bankAccountStateMents as any)?.message}
             control={control}
           />
           {verificationValues?.borrowerType === "self" && (
             <InputFileField
               name="businessProof"
-              label="Business Proof"
+              label="Business Proof (i.e. Trading License)"
               error={(errors.businessProof as any)?.message}
               control={control}
             />

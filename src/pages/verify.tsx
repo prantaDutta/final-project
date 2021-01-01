@@ -14,16 +14,21 @@ import { ModifiedUserData } from "../utils/randomTypes";
 
 interface showVerifyComponentProps {
   step: number;
+  role: string;
 }
 
-const ShowVerifyComponent: React.FC<showVerifyComponentProps> = ({ step }) => {
+const ShowVerifyComponent: React.FC<showVerifyComponentProps> = ({
+  step,
+  role,
+}) => {
   switch (step) {
     case 0:
       return <Personal />;
     case 1:
       return <Contact />;
     case 2:
-      return <Papers />;
+      console.log("role", role);
+      return role === "lender" ? <Images /> : <Papers />;
     case 3:
       return <Images />;
     default:
@@ -39,6 +44,7 @@ const verify: React.FC<verifyProps> = ({ data }) => {
   const [step] = useRecoilState(verificationStep);
   const [, changeUserData] = useRecoilState(authenticatedUserData);
 
+  const { role } = data;
   useEffect(() => changeUserData(data));
   return (
     <DashboardLayout data={data}>
@@ -57,7 +63,7 @@ const verify: React.FC<verifyProps> = ({ data }) => {
           ))}
         </div>
 
-        <ShowVerifyComponent step={step} />
+        <ShowVerifyComponent role={role} step={step} />
       </div>
     </DashboardLayout>
   );

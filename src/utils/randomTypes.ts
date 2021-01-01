@@ -1,8 +1,7 @@
 export type ModifiedUserData = {
   id: number;
   name: string;
-  // gender: string;
-  // dateOfBirth: string;
+  role: string;
   email: string;
 };
 
@@ -30,8 +29,6 @@ export interface RegisterFormValues {
   email: string;
   password: string;
   confirmPassword: string;
-  // gender: string;
-  // dateOfBirth: string;
 }
 
 export type SelectOptionsTypes = {

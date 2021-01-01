@@ -9,7 +9,7 @@ import { useRecoilState } from "recoil";
 import Layout from "../components/layouts/Layout";
 import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
-import { AuthContext } from "../contexts/authContext";
+import { authContext } from "../contexts/authContext";
 import { authenticatedUserData } from "../states/userStates";
 import { LoginFormValues } from "../utils/randomTypes";
 import { loginValidationSchema } from "../validations/LoginFormValidation";
@@ -26,16 +26,16 @@ const login: React.FC<login2Props> = ({}) => {
     }
   );
   const router = useRouter();
-  const { toggleAuth } = useContext(AuthContext);
+  const { toggleAuth } = useContext(authContext);
   const [, setUserData] = useRecoilState(authenticatedUserData);
 
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitting(true);
-    const { data } = await axios.post(`/api/login`, {
+    const { data, status } = await axios.post(`/api/login`, {
       values,
     });
-
-    if (data.id) {
+    console.log("data: ", data);
+    if (status === 200) {
       toggleAuth(true);
       setUserData(data);
       return router.push("/dashboard");

@@ -21,6 +21,7 @@ export const isAuthenticated = async (context: NextPageContext) => {
           id: user.id,
           name: user.name,
           email: user.email,
+          role: user.role,
         };
         return userData;
       }

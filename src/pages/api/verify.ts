@@ -79,8 +79,8 @@ export default handler.put(async (req, res) => {
         }
       });
     });
-    return res.status(200).end();
+    return res.status(200).json("ok");
     // console.log("data: ", data);
   }
-  return res.status(422).end();
+  return res.status(422).json("ok");
 });

@@ -1,41 +1,43 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
-import { authenticatedUserData } from "../states/userStates";
+import { isProduction } from "../utils/constants";
 
 type authValues = {
   isAuthenticated: boolean;
   toggleAuth: (value: boolean) => void;
 };
 
-export const AuthContext = createContext({} as authValues);
+export const authContext = createContext({} as authValues);
 
 interface authContextProps {}
 
-const AuthContextProvider: React.FC<authContextProps> = (props) => {
+const authContextProvider: React.FC<authContextProps> = (props) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const userData = useRecoilValue(authenticatedUserData);
   const toggleAuth = (value: boolean) => {
     setIsAuthenticated(value);
   };
 
-  useEffect(() => {
-    const func = async () => {
+  const checkAuth = async () => {
+    try {
       const { data } = await axios.get(`/api/is-authenticated`);
       if (data?.token) {
-        toggleAuth(true);
-      } else {
-        toggleAuth(false);
+        return toggleAuth(true);
       }
-    };
-    func();
-  }, [userData]);
+    } catch (e) {
+      if (!isProduction) console.log(e);
+    }
+    toggleAuth(false);
+  };
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, toggleAuth }}>
+    <authContext.Provider value={{ isAuthenticated, toggleAuth }}>
       {props.children}
-    </AuthContext.Provider>
+    </authContext.Provider>
   );
 };
 
-export default AuthContextProvider;
+export default authContextProvider;
