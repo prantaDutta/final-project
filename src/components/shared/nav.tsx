@@ -2,9 +2,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { authStatus } from "../../states/authStates";
-import { authenticatedUserData } from "../../states/userStates";
 import { linkArray } from "../../utils/randomTypes";
 
 export const links: linkArray[] = [
@@ -25,14 +24,9 @@ export interface NavItemsProps {
 }
 
 export default function Nav() {
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const userData = useRecoilValue(authenticatedUserData);
-  const [auth, toggleAuth] = useRecoilState(authStatus);
-  if (userData) {
-    toggleAuth(true);
-  }
-
   const router = useRouter();
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [auth, toggleAuth] = useRecoilState(authStatus);
 
   // rendering each nav items
   const NavItems: React.FC<NavItemsProps> = ({ links }) => {

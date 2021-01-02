@@ -21,7 +21,7 @@ const Contact: React.FC<ContactProps> = ({}) => {
     verificationFormValues
   );
   const userData = useRecoilValue(authenticatedUserData);
-  const id = userData ? userData.id : undefined;
+  const userId = userData ? userData.userId : undefined;
   const [step, setStep] = useRecoilState(verificationStep);
   const {
     register,
@@ -41,7 +41,7 @@ const Contact: React.FC<ContactProps> = ({}) => {
                   "/api/unique-email-excluding-id",
                   {
                     email: value,
-                    id,
+                    userId,
                   }
                 );
                 if (data.msg === "Email Taken") {

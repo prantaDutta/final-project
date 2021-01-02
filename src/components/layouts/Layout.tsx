@@ -1,5 +1,5 @@
-import React from "react";
-import { useSetRecoilState } from "recoil";
+import React, { useEffect } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { authStatus } from "../../states/authStates";
 import { authenticatedUserData } from "../../states/userStates";
 import { ModifiedUserData } from "../../utils/randomTypes";
@@ -11,13 +11,15 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, data }) => {
-  const setUserData = useSetRecoilState(authenticatedUserData);
+  const [userData, setUserData] = useRecoilState(authenticatedUserData);
   const setAuth = useSetRecoilState(authStatus);
 
-  if (data) {
-    setAuth(true);
-    setUserData(data);
-  }
+  useEffect(() => {
+    if (data) {
+      setAuth(true);
+      setUserData(data);
+    }
+  }, [userData]);
 
   return (
     <div>

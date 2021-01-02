@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import Layout from "../components/layouts/Layout";
 import InputSelectField from "../components/ReactHookForm/InputSelectField";
 import InputTextField from "../components/ReactHookForm/InputTextField";
@@ -36,7 +36,7 @@ const register: React.FC<registerProps> = ({ user }) => {
     reValidateMode: "onBlur",
   });
   const router = useRouter();
-  const toggleAuth = useSetRecoilState(authStatus);
+  const [, toggleAuth] = useRecoilState(authStatus);
   const [, setUserData] = useRecoilState(authenticatedUserData);
 
   const onSubmit = async (values: RegisterFormValues) => {
@@ -69,7 +69,15 @@ const register: React.FC<registerProps> = ({ user }) => {
             <p className="text-gray-600 pt-2">Create Your Account</p>
           </section>
 
-          <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
+          {/* <form className="mt-4" onSubmit={handleSubmit(onSubmit)}> */}
+          <form
+            className="mt-4"
+            onSubmit={() => {
+              setSubmitting(true);
+              handleSubmit(onSubmit);
+              setSubmitting(false);
+            }}
+          >
             <InputTextField
               name="name"
               label="Full Name"

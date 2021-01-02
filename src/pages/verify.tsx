@@ -1,3 +1,4 @@
+import { NextPageContext } from "next";
 import { withIronSession } from "next-iron-session";
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
@@ -9,7 +10,8 @@ import Personal from "../components/verify/Personal";
 import StepperIcons, { icons } from "../components/verify/StepperIcons";
 import { authenticatedUserData } from "../states/userStates";
 import { verificationStep } from "../states/verificationStates";
-import { BASE_URL, NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
+import { NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
+import { redirectToLogin } from "../utils/functions";
 import { ModifiedUserData } from "../utils/randomTypes";
 
 interface showVerifyComponentProps {
@@ -69,16 +71,19 @@ const verify: React.FC<verifyProps> = ({ data }) => {
   );
 };
 
-export const getServerSideProps = withIronSession(async ({ req, res }) => {
-  const user = req.session.get("user");
-  if (!user) {
-    res.status(302).redirect(BASE_URL + "/login");
-    return { props: {} };
-  }
+export const getServerSideProps = withIronSession(
+  async (context: NextPageContext) => {
+    const user = (context.req as any).session.get("user");
+    if (!user) {
+      redirectToLogin(context);
+      return { props: {} };
+    }
 
-  return {
-    props: { user },
-  };
-}, NEXT_IRON_SESSION_CONFIG);
+    return {
+      props: { user },
+    };
+  },
+  NEXT_IRON_SESSION_CONFIG
+);
 
 export default verify;

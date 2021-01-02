@@ -1,7 +1,7 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { authStatus } from "../../states/authStates";
 import { authenticatedUserData } from "../../states/userStates";
 
@@ -9,9 +9,9 @@ interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
-  // const { toggleAuth } = useContext(authContext);
-  const toggleAuth = useSetRecoilState(authStatus);
+  const [, toggleAuth] = useRecoilState(authStatus);
   const userData = useRecoilValue(authenticatedUserData);
+
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">
       <div className="flex items-center cursor-pointer p-4">
@@ -65,7 +65,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
               onClick={async () => {
                 toggleAuth(false);
                 await axios.get(`/api/logout`);
-                router.push("/");
+                return router.push("/");
               }}
             >
               Log Out

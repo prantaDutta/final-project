@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import Layout from "../components/layouts/Layout";
 import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
@@ -30,7 +30,7 @@ const login: React.FC<login2Props> = ({ user }) => {
     }
   );
   const router = useRouter();
-  const toggleAuth = useSetRecoilState(authStatus);
+  const [, toggleAuth] = useRecoilState(authStatus);
   const [, setUserData] = useRecoilState(authenticatedUserData);
 
   const onSubmit = async (values: LoginFormValues) => {

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { AnimatePresence, motion } from "framer-motion";
 import type { AppProps /*, AppContext */ } from "next/app";
 import NextNprogress from "nextjs-progressbar";
 import React from "react";
@@ -10,7 +9,7 @@ import { BASE_URL } from "../utils/constants";
 
 axios.defaults.baseURL = BASE_URL;
 
-function MyApp({ Component, pageProps, router }: AppProps) {
+function MyApp({ Component, pageProps /* router */ }: AppProps) {
   return (
     <RecoilRoot>
       <SWRConfig
@@ -30,11 +29,11 @@ function MyApp({ Component, pageProps, router }: AppProps) {
           height={3}
           options={{ easing: "ease", speed: 500, showSpinner: false }}
         />
-        <AnimatePresence exitBeforeEnter>
-          <motion.div key={router.route} {...pageMotionProps}>
-            <Component {...pageProps} />
-          </motion.div>
-        </AnimatePresence>
+        {/* <AnimatePresence exitBeforeEnter> */}
+        {/* <motion.div key={router.route} {...pageMotionProps}> */}
+        <Component {...pageProps} />
+        {/* </motion.div> */}
+        {/* </AnimatePresence> */}
       </SWRConfig>
       <style global jsx>
         {`
@@ -68,7 +67,7 @@ const pageVariants = {
   },
 };
 
-const pageMotionProps = {
+export const pageMotionProps = {
   initial: "pageInitial",
   animate: "pageAnimate",
   exit: "pageExit",
