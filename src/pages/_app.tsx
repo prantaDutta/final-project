@@ -5,9 +5,8 @@ import React from "react";
 import { RecoilRoot } from "recoil";
 import { SWRConfig } from "swr";
 import "../styles/index.css";
-import { BASE_URL } from "../utils/constants";
 
-axios.defaults.baseURL = BASE_URL;
+// axios.defaults.baseURL = BASE_URL;
 
 function MyApp({ Component, pageProps /* router */ }: AppProps) {
   return (
