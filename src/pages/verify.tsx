@@ -1,7 +1,6 @@
-import { NextPageContext } from "next";
+import { withIronSession } from "next-iron-session";
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { isAuthenticated } from "../apiHandlers/isAuthenticated";
 import DashboardLayout from "../components/layouts/DashboardLayout";
 import Contact from "../components/verify/Contact";
 import Images from "../components/verify/Images";
@@ -10,6 +9,7 @@ import Personal from "../components/verify/Personal";
 import StepperIcons, { icons } from "../components/verify/StepperIcons";
 import { authenticatedUserData } from "../states/userStates";
 import { verificationStep } from "../states/verificationStates";
+import { BASE_URL, NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
 import { ModifiedUserData } from "../utils/randomTypes";
 
 interface showVerifyComponentProps {
@@ -69,12 +69,16 @@ const verify: React.FC<verifyProps> = ({ data }) => {
   );
 };
 
-export async function getServerSideProps(context: NextPageContext) {
-  // The following function checks whether the user is authenticated and returns the userdata
-  const data = await isAuthenticated(context);
+export const getServerSideProps = withIronSession(async ({ req, res }) => {
+  const user = req.session.get("user");
+  if (!user) {
+    res.status(302).redirect(BASE_URL + "/login");
+    return { props: {} };
+  }
+
   return {
-    props: { data }, // will be passed to the page component as props
+    props: { user },
   };
-}
+}, NEXT_IRON_SESSION_CONFIG);
 
 export default verify;

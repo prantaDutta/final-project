@@ -2,7 +2,7 @@ import { withIronSession } from "next-iron-session";
 import React from "react";
 import DashboardContent from "../components/dashboard/DashboardContent";
 import DashboardLayout from "../components/layouts/DashboardLayout";
-import { NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
+import { BASE_URL, NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
 import { ModifiedUserData } from "../utils/randomTypes";
 
 interface dashboardProps {
@@ -20,9 +20,8 @@ const dashboard: React.FC<dashboardProps> = ({ user }) => {
 export const getServerSideProps = withIronSession(async ({ req, res }) => {
   const user = req.session.get("user");
   if (!user) {
-    res.statusCode = 404;
-    res.end();
-    return { props: user };
+    res.status(302).redirect(BASE_URL + "/login");
+    return { props: {} };
   }
 
   return {

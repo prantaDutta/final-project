@@ -1,22 +1,26 @@
 import { ThreeDots } from "@agney/react-loading";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { withIronSession } from "next-iron-session";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import Layout from "../components/layouts/Layout";
 import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
-import { authContext } from "../contexts/authContext";
+import { authStatus } from "../states/authStates";
 import { authenticatedUserData } from "../states/userStates";
-import { LoginFormValues } from "../utils/randomTypes";
+import { NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
+import { LoginFormValues, ModifiedUserData } from "../utils/randomTypes";
 import { loginValidationSchema } from "../validations/LoginFormValidation";
 
-interface login2Props {}
+interface login2Props {
+  user: ModifiedUserData;
+}
 
-const login: React.FC<login2Props> = ({}) => {
+const login: React.FC<login2Props> = ({ user }) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { register, handleSubmit, errors, setError } = useForm<LoginFormValues>(
     {
@@ -26,7 +30,7 @@ const login: React.FC<login2Props> = ({}) => {
     }
   );
   const router = useRouter();
-  const { toggleAuth } = useContext(authContext);
+  const toggleAuth = useSetRecoilState(authStatus);
   const [, setUserData] = useRecoilState(authenticatedUserData);
 
   const onSubmit = async (values: LoginFormValues) => {
@@ -58,7 +62,7 @@ const login: React.FC<login2Props> = ({}) => {
     setSubmitting(false);
   };
   return (
-    <Layout>
+    <Layout data={user}>
       <div className="pb-3 px-2 md:px-0">
         <main className="bg-white max-w-lg mx-auto p-4 md:p-8 my-5 rounded-lg shadow-2xl">
           <section>
@@ -120,5 +124,16 @@ const login: React.FC<login2Props> = ({}) => {
     </Layout>
   );
 };
+
+export const getServerSideProps = withIronSession(async ({ req }) => {
+  const user = req.session.get("user");
+  if (!user) {
+    return { props: {} };
+  }
+
+  return {
+    props: { user },
+  };
+}, NEXT_IRON_SESSION_CONFIG);
 
 export default login;

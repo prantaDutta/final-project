@@ -1,8 +1,10 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext, useState } from "react";
-import { authContext } from "../../contexts/authContext";
+import { useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { authStatus } from "../../states/authStates";
+import { authenticatedUserData } from "../../states/userStates";
 import { linkArray } from "../../utils/randomTypes";
 
 export const links: linkArray[] = [
@@ -23,9 +25,12 @@ export interface NavItemsProps {
 }
 
 export default function Nav() {
-  // const { isAuthenticated, toggleAuth } = useContext(authContext);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-  const { toggleAuth, isAuthenticated } = useContext(authContext);
+  const userData = useRecoilValue(authenticatedUserData);
+  const [auth, toggleAuth] = useRecoilState(authStatus);
+  if (userData) {
+    toggleAuth(true);
+  }
 
   const router = useRouter();
 
@@ -35,10 +40,9 @@ export default function Nav() {
       <>
         {links.map((link, index) => {
           // not rendering item 5 & 6 when authenticated
-          if (isAuthenticated && (index === 5 || index === 6)) return null;
+          if (auth && (index === 5 || index === 6)) return null;
           // not rendering item 3 & 4 when not authenticated
-          else if (!isAuthenticated && (index === 3 || index === 4))
-            return null;
+          else if (!auth && (index === 3 || index === 4)) return null;
           else if (link.label === "Log Out")
             return (
               <Link href={link.href} key={link.label}>

@@ -1,16 +1,16 @@
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext } from "react";
-import { useRecoilValue } from "recoil";
-import { authContext } from "../../contexts/authContext";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { authStatus } from "../../states/authStates";
 import { authenticatedUserData } from "../../states/userStates";
 
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
   const router = useRouter();
-  const { toggleAuth } = useContext(authContext);
+  // const { toggleAuth } = useContext(authContext);
+  const toggleAuth = useSetRecoilState(authStatus);
   const userData = useRecoilValue(authenticatedUserData);
   return (
     <div className="flex justify-end items-center bg-gray-200 pr-4">

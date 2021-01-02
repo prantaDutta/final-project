@@ -1,24 +1,28 @@
 import { ThreeDots } from "@agney/react-loading";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { withIronSession } from "next-iron-session";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import Layout from "../components/layouts/Layout";
 import InputSelectField from "../components/ReactHookForm/InputSelectField";
 import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
-import { authContext } from "../contexts/authContext";
+import { authStatus } from "../states/authStates";
 import { authenticatedUserData } from "../states/userStates";
+import { NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
 import { UserRole } from "../utils/constantsArray";
-import { RegisterFormValues } from "../utils/randomTypes";
+import { ModifiedUserData, RegisterFormValues } from "../utils/randomTypes";
 import { registerValitationSchema } from "../validations/RegisterFormValiadtion";
 
-interface registerProps {}
+interface registerProps {
+  user: ModifiedUserData;
+}
 
-const register: React.FC<registerProps> = ({}) => {
+const register: React.FC<registerProps> = ({ user }) => {
   // const { toggleAuth, changeUserData } = useContext(authContext);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const {
@@ -32,7 +36,7 @@ const register: React.FC<registerProps> = ({}) => {
     reValidateMode: "onBlur",
   });
   const router = useRouter();
-  const { toggleAuth } = useContext(authContext);
+  const toggleAuth = useSetRecoilState(authStatus);
   const [, setUserData] = useRecoilState(authenticatedUserData);
 
   const onSubmit = async (values: RegisterFormValues) => {
@@ -57,7 +61,7 @@ const register: React.FC<registerProps> = ({}) => {
   };
 
   return (
-    <Layout>
+    <Layout data={user}>
       <div className="pb-3 px-2 md:px-0">
         <main className="bg-white max-w-lg mx-auto p-4 md:p-8 my-5 rounded-lg shadow-2xl">
           <section>
@@ -137,5 +141,16 @@ const register: React.FC<registerProps> = ({}) => {
     </Layout>
   );
 };
+
+export const getServerSideProps = withIronSession(async ({ req }) => {
+  const user = req.session.get("user");
+  if (!user) {
+    return { props: {} };
+  }
+
+  return {
+    props: { user },
+  };
+}, NEXT_IRON_SESSION_CONFIG);
 
 export default register;

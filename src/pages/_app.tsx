@@ -5,7 +5,6 @@ import NextNprogress from "nextjs-progressbar";
 import React from "react";
 import { RecoilRoot } from "recoil";
 import { SWRConfig } from "swr";
-import AuthContextProvider from "../contexts/authContext";
 import "../styles/index.css";
 import { BASE_URL } from "../utils/constants";
 
@@ -14,38 +13,36 @@ axios.defaults.baseURL = BASE_URL;
 function MyApp({ Component, pageProps, router }: AppProps) {
   return (
     <RecoilRoot>
-      <AuthContextProvider>
-        <SWRConfig
-          value={{
-            fetcher: (url: string) =>
-              axios.get(url).then((r) => {
-                console.log("url: ", url);
-                r.data;
-              }),
-          }}
-        >
-          {/*  This component shows the progress bar  */}
-          <NextNprogress
-            color="#29D"
-            startPosition={0.3}
-            stopDelayMs={200}
-            height={3}
-            options={{ easing: "ease", speed: 500, showSpinner: false }}
-          />
-          <AnimatePresence exitBeforeEnter>
-            <motion.div key={router.route} {...pageMotionProps}>
-              <Component {...pageProps} />
-            </motion.div>
-          </AnimatePresence>
-        </SWRConfig>
-        <style global jsx>
-          {`
-            body {
-              background: #eee;
-            }
-          `}
-        </style>
-      </AuthContextProvider>
+      <SWRConfig
+        value={{
+          fetcher: (url: string) =>
+            axios.get(url).then((r) => {
+              console.log("url: ", url);
+              r.data;
+            }),
+        }}
+      >
+        {/*  This component shows the progress bar  */}
+        <NextNprogress
+          color="#29D"
+          startPosition={0.3}
+          stopDelayMs={200}
+          height={3}
+          options={{ easing: "ease", speed: 500, showSpinner: false }}
+        />
+        <AnimatePresence exitBeforeEnter>
+          <motion.div key={router.route} {...pageMotionProps}>
+            <Component {...pageProps} />
+          </motion.div>
+        </AnimatePresence>
+      </SWRConfig>
+      <style global jsx>
+        {`
+          body {
+            background: #eee;
+          }
+        `}
+      </style>
     </RecoilRoot>
   );
 }
