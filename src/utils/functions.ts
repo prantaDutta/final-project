@@ -1,6 +1,10 @@
+import axios from "axios";
+import crypto from "crypto";
 import dayjs from "dayjs";
 import { verify } from "jsonwebtoken";
-import { ACCESS_TOKEN_SECRET } from "./constants";
+import { NextPageContext } from "next";
+import { useRouter } from "next/router";
+import { ACCESS_TOKEN_SECRET, AUTH_TOKEN_NAME, BASE_URL } from "./constants";
 
 export const verifyJWTToken = (accessToken: string) => {
   try {
@@ -8,6 +12,33 @@ export const verifyJWTToken = (accessToken: string) => {
     return decoded;
   } catch (err) {
     return err;
+  }
+};
+
+export function random32BitString() {
+  return crypto.randomFillSync(Buffer.alloc(32)).toString("hex");
+}
+
+export const checkingIfAuthenticated = async (cookie: string) => {
+  let token = cookie.slice(`${AUTH_TOKEN_NAME}`.length + 1);
+  const tokenData = verifyJWTToken(token);
+  const { data } = await axios.post("/api/fetch-user-by-id", {
+    userId: tokenData.userId,
+  });
+  return data;
+};
+
+export const redirectToLogin = (context: NextPageContext) => {
+  if (!context.req) {
+    //  On client
+    const router = useRouter();
+    return router.replace("/login");
+  } else if (context.req) {
+    // On Server
+    context.res?.writeHead(302, {
+      Location: `${BASE_URL}/login`,
+    });
+    return context.res?.end();
   }
 };
 

@@ -1,28 +1,33 @@
-import { NextPageContext } from "next";
+import { withIronSession } from "next-iron-session";
 import React from "react";
-import { isAuthenticated } from "../apiHandlers/isAuthenticated";
 import DashboardContent from "../components/dashboard/DashboardContent";
 import DashboardLayout from "../components/layouts/DashboardLayout";
+import { NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
 import { ModifiedUserData } from "../utils/randomTypes";
 
 interface dashboardProps {
-  data: ModifiedUserData;
+  user: ModifiedUserData;
 }
 
-const dashboard: React.FC<dashboardProps> = ({ data }) => {
+const dashboard: React.FC<dashboardProps> = ({ user }) => {
   return (
-    <DashboardLayout data={data}>
+    <DashboardLayout data={user}>
       <DashboardContent />
     </DashboardLayout>
   );
 };
 
-export async function getServerSideProps(context: NextPageContext) {
-  // The following function checks whether the user is authenticated and returns the userdata
-  const data = await isAuthenticated(context);
+export const getServerSideProps = withIronSession(async ({ req, res }) => {
+  const user = req.session.get("user");
+  if (!user) {
+    res.statusCode = 404;
+    res.end();
+    return { props: user };
+  }
+
   return {
-    props: { data }, // will be passed to the page component as props
+    props: { user },
   };
-}
+}, NEXT_IRON_SESSION_CONFIG);
 
 export default dashboard;

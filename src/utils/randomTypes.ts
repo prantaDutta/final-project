@@ -1,10 +1,23 @@
+import { NextApiRequest } from "next";
+
 export type ModifiedUserData = {
-  id: number;
+  userId: number;
   name: string;
   role: string;
   email: string;
 };
 
+export type UserAuthValues = {
+  userId: string;
+  name: string;
+  email: string;
+  password?: string;
+  role: string;
+};
+
+export interface NextApiRequestExtended extends NextApiRequest {
+  token: string | null;
+}
 export interface linkArray {
   href: string;
   label: string;

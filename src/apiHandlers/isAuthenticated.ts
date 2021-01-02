@@ -1,8 +1,7 @@
 import { NextPageContext } from "next";
-import { useRouter } from "next/router";
 import { prisma } from "../lib/prisma";
-import { AUTH_TOKEN_NAME, BASE_URL } from "../utils/constants";
-import { verifyJWTToken } from "../utils/functions";
+import { AUTH_TOKEN_NAME } from "../utils/constants";
+import { redirectToLogin, verifyJWTToken } from "../utils/functions";
 import { ModifiedUserData } from "../utils/randomTypes";
 
 export const isAuthenticated = async (context: NextPageContext) => {
@@ -30,16 +29,16 @@ export const isAuthenticated = async (context: NextPageContext) => {
   redirectToLogin(context);
 };
 
-export const redirectToLogin = (context: NextPageContext) => {
-  if (!context.req) {
-    //  On client
-    const router = useRouter();
-    return router.replace("/login");
-  } else if (context.req) {
-    // On Server
-    context.res?.writeHead(302, {
-      Location: `${BASE_URL}/login`,
-    });
-    return context.res?.end();
-  }
-};
+// export const redirectToLogin = (context: NextPageContext) => {
+//   if (!context.req) {
+//     //  On client
+//     const router = useRouter();
+//     return router.replace("/login");
+//   } else if (context.req) {
+//     // On Server
+//     context.res?.writeHead(302, {
+//       Location: `${BASE_URL}/login`,
+//     });
+//     return context.res?.end();
+//   }
+// };

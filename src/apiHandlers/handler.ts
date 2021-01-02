@@ -1,11 +1,8 @@
 import { verify } from "jsonwebtoken";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import nextConnect from "next-connect";
 import { AUTH_TOKEN_NAME } from "../utils/constants";
-
-export interface NextApiRequestExtended extends NextApiRequest {
-  token: string | null;
-}
+import { NextApiRequestExtended } from "../utils/randomTypes";
 
 export default nextConnect<NextApiRequestExtended, NextApiResponse>({
   onError(error, _req, res) {
@@ -26,9 +23,7 @@ export default nextConnect<NextApiRequestExtended, NextApiResponse>({
       token,
       process.env.ACCESS_TOKEN_SECRET!,
       (err: any, decoded: any) => {
-        if (!err && decoded) {
-          req.token = decoded;
-        }
+        if (!err && decoded) req.token = decoded.userId;
       }
     );
   }

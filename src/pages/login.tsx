@@ -31,11 +31,11 @@ const login: React.FC<login2Props> = ({}) => {
 
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitting(true);
-    const { data, status } = await axios.post(`/api/login`, {
+    const { data } = await axios.post(`/api/login`, {
       values,
     });
-    console.log("data: ", data);
-    if (status === 200) {
+
+    if (data?.userId) {
       toggleAuth(true);
       setUserData(data);
       return router.push("/dashboard");

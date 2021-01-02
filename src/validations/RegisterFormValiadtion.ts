@@ -10,8 +10,8 @@ export const registerValitationSchema = Yup.object({
     .email("Invalid email")
     .test("Unique Email", "Email already been taken", function (value) {
       if (!value) return true;
-      return new Promise((resolve, _) => {
-        axios
+      return new Promise(async (resolve, _) => {
+        await axios
           .post("/api/unique-email", {
             email: value,
           })

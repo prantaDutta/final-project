@@ -37,19 +37,23 @@ const register: React.FC<registerProps> = ({}) => {
 
   const onSubmit = async (values: RegisterFormValues) => {
     setSubmitting(true);
-    const { data } = await axios.post(`/api/register`, {
-      values,
-    });
-    if (data.id) {
-      toggleAuth(true);
-      setUserData(data);
-      return router.push("/dashboard");
+    try {
+      const { data } = await axios.post(`/api/register`, {
+        values,
+      });
+      if (data?.id) {
+        toggleAuth(true);
+        setUserData(data);
+        return router.push("/dashboard");
+      }
+      setError("name", {
+        type: "manual",
+        message: "Registration Failed, Please Try Again",
+      });
+      setSubmitting(false);
+    } catch (e) {
+      throw new Error("Can't Insert Data. Error From API");
     }
-    setError("name", {
-      type: "manual",
-      message: "Registration Failed, Please Try Again",
-    });
-    setSubmitting(false);
   };
 
   return (
