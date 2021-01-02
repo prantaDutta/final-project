@@ -3,7 +3,7 @@ import formidable from "formidable";
 import { promises as fs } from "fs";
 import path from "path";
 import handler from "../../apiHandlers/handler";
-import { prisma } from "../../lib/prisma";
+import { updateFaunaDataWithIdIndex } from "../../lib/fauna";
 
 // first we need to disable the default body parser
 export const config = {
@@ -13,7 +13,7 @@ export const config = {
 };
 
 export default handler.put(async (req, res) => {
-  if (req.token) {
+  if ((req as any).session.get("user")) {
     const imagePath = path.join(`./public/uploads/verificationPapers/`);
     // creating the directory
     await fs.mkdir(imagePath, { recursive: true });
@@ -45,34 +45,34 @@ export default handler.put(async (req, res) => {
 
         // sending data to the database
         try {
-          await prisma.users.update({
-            where: {
-              id: parseInt((fields as any).id),
+          const updatedData = {
+            // Personal
+            name: (fields as any).name,
+            email: (fields as any).email,
+            dateOfBirth: (fields as any).dateOfBirth,
+            gender: (fields as any).gender,
+            // contact information
+            address: (fields as any).address,
+            mobileNo: (fields as any).mobileNo,
+            // checking salaried individual or self-employed
+            borrowerType: (fields as any).borrowerType,
+            verified: "pending",
+            // verificationphotos
+            verificationPhotos: {
+              nidOrPassport: (fields as any).nidOrPassport,
+              addressProof: (fields as any).addressProof,
+              recentPhoto: (fields as any).recentPhoto,
+              bankAccountStateMents: (fields as any).bankAccountStateMents,
+              businessProof: (fields as any).businessProof,
+              salarySlip: (fields as any).salarySlip,
+              employeeIdCard: (fields as any).employeeIdCard,
             },
-            data: {
-              // Personal
-              name: (fields as any).name,
-              email: (fields as any).email,
-              dateOfBirth: (fields as any).dateOfBirth,
-              gender: (fields as any).gender,
-              // contact information
-              address: (fields as any).address,
-              mobileNo: (fields as any).mobileNo,
-              // checking salaried individual or self-employed
-              borrowerType: (fields as any).borrowerType,
-              verified: "pending",
-              // verificationphotos
-              verificationPhotos: {
-                nidOrPassport: (fields as any).nidOrPassport,
-                addressProof: (fields as any).addressProof,
-                recentPhoto: (fields as any).recentPhoto,
-                bankAccountStateMents: (fields as any).bankAccountStateMents,
-                businessProof: (fields as any).businessProof,
-                salarySlip: (fields as any).salarySlip,
-                employeeIdCard: (fields as any).employeeIdCard,
-              },
-            },
-          });
+          };
+          const { data } = await updateFaunaDataWithIdIndex(
+            updatedData,
+            (fields as any).userId
+          );
+          console.log("data", data);
           resolve({ fields, files });
         } catch (e) {
           console.log(e);

@@ -39,17 +39,16 @@ const ShowVerifyComponent: React.FC<showVerifyComponentProps> = ({
 };
 
 interface verifyProps {
-  data: ModifiedUserData;
+  user: ModifiedUserData;
 }
 
-const verify: React.FC<verifyProps> = ({ data }) => {
+const verify: React.FC<verifyProps> = ({ user }) => {
   const [step] = useRecoilState(verificationStep);
-  const [, changeUserData] = useRecoilState(authenticatedUserData);
-
-  const { role } = data;
-  useEffect(() => changeUserData(data));
+  const [userData, changeUserData] = useRecoilState(authenticatedUserData);
+  const { role } = user;
+  useEffect(() => changeUserData(user), [userData]);
   return (
-    <DashboardLayout data={data}>
+    <DashboardLayout data={user}>
       <div className="p-5">
         <p className=" font-medium md:font-2xl text-xl md:text-4xl text-center">
           Account Verification

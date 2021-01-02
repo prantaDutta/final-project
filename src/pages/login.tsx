@@ -39,7 +39,11 @@ const login: React.FC<login2Props> = ({ user }) => {
       values,
     });
 
-    if (data?.userId) {
+    if (data?.role === "admin") {
+      toggleAuth(true);
+      setUserData(data);
+      return router.push("/admin/dashboard");
+    } else if (data?.userId) {
       toggleAuth(true);
       setUserData(data);
       return router.push("/dashboard");

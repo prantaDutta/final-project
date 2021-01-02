@@ -61,7 +61,7 @@ const Personal: React.FC<PersonalProps> = ({}) => {
       name,
       dateOfBirth,
       gender,
-      id: userData?.userId!,
+      userId: userData?.userId!,
     });
     setStep(step + 1);
   };

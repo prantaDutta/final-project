@@ -13,11 +13,8 @@ function MyApp({ Component, pageProps /* router */ }: AppProps) {
     <RecoilRoot>
       <SWRConfig
         value={{
-          fetcher: (url: string) =>
-            axios.get(url).then((r) => {
-              console.log("url: ", url);
-              r.data;
-            }),
+          dedupingInterval: 1000 * 60 * 5, // 5m
+          fetcher: (url: string) => axios.get(url).then((r) => r.data),
         }}
       >
         {/*  This component shows the progress bar  */}

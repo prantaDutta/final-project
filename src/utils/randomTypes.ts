@@ -1,7 +1,7 @@
 import { NextApiRequest } from "next";
 
 export type ModifiedUserData = {
-  userId: number;
+  userId: string;
   name: string;
   role: string;
   email: string;
@@ -51,7 +51,7 @@ export type SelectOptionsTypes = {
 
 export type VerificationFormValues = {
   // Personal
-  id: number;
+  userId: string;
   name: string;
   dateOfBirth: string;
   gender: string;

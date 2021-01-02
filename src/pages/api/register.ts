@@ -18,6 +18,7 @@ export default handler.post(async (req, res) => {
       role,
       password: hashedPassword,
     });
+    delete data.password;
     await applySession(req, res, NEXT_IRON_SESSION_CONFIG);
     (req as any).session.set("user", data);
     await (req as any).session.save();
