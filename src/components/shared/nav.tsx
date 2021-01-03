@@ -2,8 +2,9 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { authStatus } from "../../states/authStates";
+import { authenticatedUserData } from "../../states/userStates";
 import { linkArray } from "../../utils/randomTypes";
 
 export const links: linkArray[] = [
@@ -27,6 +28,7 @@ export default function Nav() {
   const router = useRouter();
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [auth, toggleAuth] = useRecoilState(authStatus);
+  const userData = useRecoilValue(authenticatedUserData);
 
   // rendering each nav items
   const NavItems: React.FC<NavItemsProps> = ({ links }) => {
@@ -37,7 +39,21 @@ export default function Nav() {
           if (auth && (index === 5 || index === 6)) return null;
           // not rendering item 3 & 4 when not authenticated
           else if (!auth && (index === 3 || index === 4)) return null;
-          else if (link.label === "Log Out")
+          else if (link.label === "Dashboard") {
+            if (userData?.role === "admin") link.href = "/admin/dashboard";
+            return (
+              <Link href={link.href} key={link.label}>
+                <a
+                  key={link.label}
+                  className={`text-gray-600 block font-semibold md:text-lg text-base px-2 py-1 hover:text-primary hover:border-primary border-b-2 border-transparent ${
+                    index === 0 ? "" : "mt-1 md:mt-0 md:ml-2"
+                  } transition-css`}
+                >
+                  {link.label}
+                </a>
+              </Link>
+            );
+          } else if (link.label === "Log Out")
             return (
               <Link href={link.href} key={link.label}>
                 <a

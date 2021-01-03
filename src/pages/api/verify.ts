@@ -3,7 +3,7 @@ import formidable from "formidable";
 import { promises as fs } from "fs";
 import path from "path";
 import handler from "../../apiHandlers/handler";
-import { updateFaunaDataWithIdIndex } from "../../lib/fauna";
+import { client, q } from "../../lib/fauna";
 
 // first we need to disable the default body parser
 export const config = {
@@ -68,11 +68,17 @@ export default handler.put(async (req, res) => {
               employeeIdCard: (fields as any).employeeIdCard,
             },
           };
-          const { data } = await updateFaunaDataWithIdIndex(
-            updatedData,
-            (fields as any).userId
+          await client.query(
+            q.Update(
+              q.Select(
+                ["ref"],
+                q.Get(q.Match(q.Index("search_by_id"), (fields as any).userId))
+              ),
+              {
+                data: updatedData,
+              }
+            )
           );
-          console.log("data", data);
           resolve({ fields, files });
         } catch (e) {
           console.log(e);

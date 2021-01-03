@@ -1,9 +1,8 @@
 import { compare } from "bcrypt";
 import { applySession } from "next-iron-session";
 import handler from "../../apiHandlers/handler";
-import { getUserByIndex } from "../../lib/fauna";
+import { client, q } from "../../lib/fauna";
 import { NEXT_IRON_SESSION_CONFIG } from "../../utils/constants";
-import { UserAuthValues } from "../../utils/randomTypes";
 
 // export default handler.post(async (req, res) => {
 export default handler.post(async (req, res) => {
@@ -15,7 +14,9 @@ export default handler.post(async (req, res) => {
   }
 
   try {
-    const data: UserAuthValues = await getUserByIndex(email, "search_by_email");
+    const { data }: any = await client.query(
+      q.Get(q.Match(q.Index("search_by_email"), email))
+    );
     if (await compare(password, data.password!)) {
       // password matched
       delete data.password;

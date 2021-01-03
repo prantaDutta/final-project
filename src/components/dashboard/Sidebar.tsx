@@ -34,26 +34,24 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
               } transition duration-500 ease-in-out`}
               key={link.label}
             >
-              <Link href={link.href}>
-                <a key={link.label}>
-                  <div className="flex items-center">
-                    <svg
-                      className="w-5 h-5 inline-block mx-3 mt-0.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d={link.svgD}
-                      ></path>
-                    </svg>
-                    <span>{link.label}</span>
-                  </div>
-                </a>
+              <Link href={link.href} key={link.label}>
+                <div className="flex items-center">
+                  <svg
+                    className="w-5 h-5 inline-block mx-3 mt-0.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d={link.svgD}
+                    ></path>
+                  </svg>
+                  <span>{link.label}</span>
+                </div>
               </Link>
             </div>
           );

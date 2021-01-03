@@ -9,6 +9,7 @@ import yup from "../../lib/yup";
 import {
   verificationFormValues,
   verificationStep,
+  verificationSubmitting,
 } from "../../states/verificationStates";
 import { BASE_URL, isProduction } from "../../utils/constants";
 import {
@@ -29,6 +30,7 @@ const Images: React.FC<ImagesProps> = ({}) => {
   const router = useRouter();
   const [complete, setComplete] = useState<boolean>(false);
   const [, setStep] = useRecoilState(verificationStep);
+  const [, setSubmitting] = useRecoilState(verificationSubmitting);
   const [verificationValues, setValues] = useRecoilState(
     verificationFormValues
   );
@@ -77,6 +79,7 @@ const Images: React.FC<ImagesProps> = ({}) => {
   useEffect(() => {}, [complete]);
 
   const onSubmit = async (values: ImagesVerificationFormValues) => {
+    setSubmitting(true);
     let {
       nidOrPassport,
       addressProof,
@@ -87,7 +90,6 @@ const Images: React.FC<ImagesProps> = ({}) => {
       employeeIdCard,
     } = values;
 
-    // nidOrPassport = filesToObject(nidOrPassport as [File]);
     appendingFileToFormData("nidOrPassport", nidOrPassport, formData);
     appendingFileToFormData("addressProof", addressProof, formData);
     appendingFileToFormData("recentPhoto", recentPhoto, formData);
@@ -126,12 +128,12 @@ const Images: React.FC<ImagesProps> = ({}) => {
       });
       if (!isProduction) console.log("Response: ", response);
       setStep(0);
+      setSubmitting(false);
       router.push("/dashboard");
     } catch (e) {
       console.log(e);
     }
   };
-  // console.log("verificationValues: ", verificationValues);
   return (
     <div className="pb-3 px-2 md:px-0 mt-10">
       <main className="bg-white max-w-full mx-auto p-4 md:p-8 my-5 rounded-lg shadow-2xl">

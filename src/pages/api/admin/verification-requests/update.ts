@@ -3,23 +3,26 @@ import handler from "../../../../apiHandlers/handler";
 import { client, q } from "../../../../lib/fauna";
 import { NEXT_IRON_SESSION_CONFIG } from "../../../../utils/constants";
 
-export default handler.get(async (req, res) => {
+export default handler.post(async (req, res) => {
+  const email = req.body.email;
+  if (!email) {
+    return res.status(500).json({ Error: "Error" });
+  }
   await applySession(req, res, NEXT_IRON_SESSION_CONFIG);
   const user = (req as any).session.get("user");
   if (user.role === "admin") {
     try {
-      const { data }: any = await client.query(
-        q.Map(
-          q.Paginate(q.Match(q.Index("search_by_verified"), "pending")),
-          q.Lambda("ref", q.Get(q.Var("ref")))
+      await client.query(
+        q.Update(
+          q.Select(["ref"], q.Get(q.Match(q.Index("search_by_email"), email))),
+          {
+            data: {
+              verified: "verified",
+            },
+          }
         )
       );
-      const dataArray = data.map((data: any) => {
-        data.id = data.ref.id;
-        delete data.ref;
-        return data;
-      });
-      return res.status(200).json(dataArray);
+      return res.status(200).json({ OK: "OK" });
     } catch (e) {
       console.log(e);
       return res.status(422).send("Failed");

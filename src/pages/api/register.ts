@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { applySession } from "next-iron-session";
 import { v4 as uuidv4 } from "uuid";
 import handler from "../../apiHandlers/handler";
-import { sendDataToFauna } from "../../lib/fauna";
+import { client, q } from "../../lib/fauna";
 import { NEXT_IRON_SESSION_CONFIG } from "../../utils/constants";
 
 export default handler.post(async (req, res) => {
@@ -11,13 +11,17 @@ export default handler.post(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const userId = uuidv4();
   try {
-    const { data }: any = await sendDataToFauna({
-      userId,
-      name,
-      email,
-      role,
-      password: hashedPassword,
-    });
+    const { data }: any = await client.query(
+      q.Create(q.Collection("users"), {
+        data: {
+          userId,
+          name,
+          email,
+          role,
+          password: hashedPassword,
+        },
+      })
+    );
     delete data.password;
     await applySession(req, res, NEXT_IRON_SESSION_CONFIG);
     (req as any).session.set("user", data);

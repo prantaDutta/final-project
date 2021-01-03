@@ -1,8 +1,9 @@
 import axios from "axios";
 import crypto from "crypto";
 import dayjs from "dayjs";
+import FileSaver from "file-saver";
+import { IncomingMessage, ServerResponse } from "http";
 import { verify } from "jsonwebtoken";
-import { NextPageContext } from "next";
 import { useRouter } from "next/router";
 import { ACCESS_TOKEN_SECRET, AUTH_TOKEN_NAME, BASE_URL } from "./constants";
 
@@ -28,19 +29,42 @@ export const checkingIfAuthenticated = async (cookie: string) => {
   return data;
 };
 
-export const redirectToLogin = (context: NextPageContext) => {
-  if (!context.req) {
+export const redirectToLogin = (
+  req: IncomingMessage | undefined,
+  res: ServerResponse | undefined
+) => {
+  if (!req) {
     //  On client
     const router = useRouter();
     return router.replace("/login");
-  } else if (context.req) {
+  } else if (req) {
     // On Server
-    context.res?.writeHead(302, {
+    res?.writeHead(302, {
       Location: `${BASE_URL}/login`,
     });
-    return context.res?.end();
+    return res?.end();
   }
 };
+
+export const redirectToErrorPage = (
+  req: IncomingMessage | undefined,
+  res: ServerResponse | undefined
+) => {
+  if (!req) {
+    //  On client
+    const router = useRouter();
+    return router.replace("/404");
+  } else if (req) {
+    // On Server
+    res?.writeHead(302, {
+      Location: `${BASE_URL}/404`,
+    });
+    return res?.end();
+  }
+};
+
+export const downloadImage = (url: string, name: string) =>
+  FileSaver.saveAs(url, name);
 
 export const formatDate = (date: Date, formatter: string) =>
   dayjs(date).format(formatter);

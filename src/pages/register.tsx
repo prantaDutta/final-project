@@ -69,15 +69,7 @@ const register: React.FC<registerProps> = ({ user }) => {
             <p className="text-gray-600 pt-2">Create Your Account</p>
           </section>
 
-          {/* <form className="mt-4" onSubmit={handleSubmit(onSubmit)}> */}
-          <form
-            className="mt-4"
-            onSubmit={() => {
-              setSubmitting(true);
-              handleSubmit(onSubmit);
-              setSubmitting(false);
-            }}
-          >
+          <form className="mt-4" onSubmit={handleSubmit(onSubmit)}>
             <InputTextField
               name="name"
               label="Full Name"

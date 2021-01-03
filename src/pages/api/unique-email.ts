@@ -1,5 +1,5 @@
 import handler from "../../apiHandlers/handler";
-import { getUserByIndex } from "../../lib/fauna";
+import { client, q } from "../../lib/fauna";
 
 export default handler.post(async (req, res) => {
   const { email } = req.body;
@@ -7,7 +7,8 @@ export default handler.post(async (req, res) => {
     return res.status(422).end();
   }
   try {
-    await getUserByIndex(email, "search_by_email");
+    // await getUserByIndex(email, "search_by_email");
+    await client.query(q.Get(q.Match(q.Index("search_by_email"), email)));
     // Email Found
     return res.status(200).json({
       msg: "Email already been taken",

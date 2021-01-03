@@ -1,8 +1,6 @@
 export const isProduction = process.env.NODE_ENV === "production";
 
-export const BASE_URL = isProduction
-  ? "https://grayscale-final.vercel.app"
-  : "http://localhost:3000";
+export const BASE_URL = "http://localhost:3000";
 
 export const BASE_URL_API = "";
 
@@ -15,6 +13,8 @@ export const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET!;
 export const AUTH_TOKEN_NAME = process.env.AUTH_TOKEN_NAME!;
 
 export const FAUNA_ADMIN_KEY = process.env.FUANA_ADMIN_KEY!;
+
+export const uuidFormatRegex = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
 
 export const NEXT_IRON_SESSION_CONFIG = {
   cookieName: "grayscale",

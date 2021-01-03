@@ -1,14 +1,14 @@
 import handler from "../../apiHandlers/handler";
-import { getUserByIndex } from "../../lib/fauna";
+import { client, q } from "../../lib/fauna";
 import { UserAuthValues } from "../../utils/randomTypes";
 
 export default handler.post(async (req, res) => {
   // if (req.token) {
   const { userId } = req.body;
-  const { email, name, role }: UserAuthValues = await getUserByIndex(
-    userId,
-    "search_by_id"
+  const { data }: any = await client.query(
+    q.Get(q.Match(q.Index("search_by_id"), userId))
   );
+  const { email, name, role }: UserAuthValues = data;
 
   return res.status(200).json({
     userId,
