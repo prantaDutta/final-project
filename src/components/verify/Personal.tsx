@@ -1,5 +1,4 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import dayjs from "dayjs";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -54,7 +53,7 @@ const Personal: React.FC<PersonalProps> = ({}) => {
     reValidateMode: "onBlur",
   });
   const onSubmit = async (values: PersonalVerificationFormValues) => {
-    values.dateOfBirth = dayjs(values.dateOfBirth).format("DD/MM/YYYY");
+    // values.dateOfBirth = dayjs(values.dateOfBirth).format("DD/MM/YYYY");
     const { name, dateOfBirth, gender } = values;
     setValues({
       ...verificationValues!,

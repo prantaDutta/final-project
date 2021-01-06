@@ -5,6 +5,7 @@ export type ModifiedUserData = {
   name: string;
   role: string;
   email: string;
+  verified: string;
 };
 
 export type UserAuthValues = {

@@ -3,7 +3,7 @@ interface DashboardContentProps {}
 const DashboardContent: React.FC<DashboardContentProps> = ({}) => {
   return (
     <div className="">
-      <h4 className="font-bold text-2xl">Recent Loans</h4>
+      <h4 className="font-bold text-3xl">Recent Loans</h4>
       <table className="table-fixed">
         <thead>
           <tr>

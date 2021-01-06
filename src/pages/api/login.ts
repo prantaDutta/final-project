@@ -20,7 +20,7 @@ export default handler.post(async (req, res) => {
     if (await compare(password, data.password!)) {
       // password matched
       delete data.password;
-      const { userId, name, email, role } = data;
+      const { userId, name, email, role, verified } = data;
       await applySession(req, res, NEXT_IRON_SESSION_CONFIG);
       (req as any).session.set("user", data);
       await (req as any).session.save();
@@ -29,6 +29,7 @@ export default handler.post(async (req, res) => {
         name,
         email,
         role,
+        verified,
       });
     }
     // Invalid Credentials

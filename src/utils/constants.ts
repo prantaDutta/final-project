@@ -2,6 +2,8 @@ export const isProduction = process.env.NODE_ENV === "production";
 
 export const BASE_URL = "http://localhost:3000";
 
+export const isServer = !process.browser;
+
 export const BASE_URL_API = "";
 
 export const SUPPORTED_IMAGE_FILE_SIZE = 5 * 1024 * 1024; // 5MB

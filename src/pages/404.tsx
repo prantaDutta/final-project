@@ -1,6 +1,10 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
+
 interface Props {}
 
 const ErrorPage: React.FC<Props> = ({}) => {
+  const router = useRouter();
   return (
     <>
       <div className="bg-gray-100 h-screen w-screen flex flex-wrap justify-center content-center items-center absolute z-0">
@@ -16,7 +20,7 @@ const ErrorPage: React.FC<Props> = ({}) => {
         </svg>
       </div>
       <div className="h-screen w-screen flex flex-wrap justify-center content-end md:content-center items-end md:items-center relative z-10">
-        <div className="p-6 text-center ">
+        <div className="p-6 text-center">
           <h2 className="uppercase text-xl lg:text-5xl font-black">
             We are sorry, Page not found!
           </h2>
@@ -24,15 +28,28 @@ const ErrorPage: React.FC<Props> = ({}) => {
             The page you are looking for might have been removed had its name
             changed or is temporarily unavailable.
           </p>
-          <a
-            href="/"
-            // className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-light py-4 px-6 rounded-full inline-block uppercase shadow-2xl"
-            className="mt-6 bg-primary text-white py-4 px-6 w-1/3 inline-block rounded-full tracking-wide
+          <div className="text-center">
+            <Link href="/">
+              <a
+                // className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-light py-4 px-6 rounded-full inline-block uppercase shadow-2xl"
+                className="mt-6 m-auto bg-primary text-white py-4 px-6 w-1/3 block rounded-full tracking-wide
+                font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-primaryAccent
+                shadow-lg transition-css"
+              >
+                Back To Homepage
+              </a>
+            </Link>
+
+            <button
+              onClick={() => router.back()}
+              // className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-light py-4 px-6 rounded-full inline-block uppercase shadow-2xl"
+              className="mt-6 m-auto bg-primary text-white py-4 px-6 w-1/4 block rounded-full tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-primaryAccent
                   shadow-lg transition-css"
-          >
-            Back To Homepage
-          </a>
+            >
+              Go Back
+            </button>
+          </div>
         </div>
       </div>
     </>

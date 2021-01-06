@@ -17,7 +17,7 @@ export default handler.post(async (req, res) => {
           q.Select(["ref"], q.Get(q.Match(q.Index("search_by_email"), email))),
           {
             data: {
-              verified: "verified",
+              verified: "true",
             },
           }
         )

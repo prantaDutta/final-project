@@ -1,5 +1,6 @@
 import { NextPageContext } from "next";
 import { withIronSession } from "next-iron-session";
+import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import DashboardLayout from "../components/layouts/DashboardLayout";
@@ -43,9 +44,10 @@ interface verifyProps {
 }
 
 const verify: React.FC<verifyProps> = ({ user }) => {
+  const router = useRouter();
   const [step] = useRecoilState(verificationStep);
   const [userData, changeUserData] = useRecoilState(authenticatedUserData);
-  const { role } = user;
+  const { role, verified } = user;
   useEffect(() => changeUserData(user), [userData]);
   return (
     <DashboardLayout data={user}>
@@ -53,18 +55,41 @@ const verify: React.FC<verifyProps> = ({ user }) => {
         <p className=" font-medium md:font-2xl text-xl md:text-4xl text-center">
           Account Verification
         </p>
-        <div className="flex items-center mb-4 p-4">
-          {icons.map((item, index) => (
-            <StepperIcons
-              key={index}
-              index={index}
-              item={item}
-              isDone={step > index}
-            />
-          ))}
-        </div>
-
-        <ShowVerifyComponent role={role} step={step} />
+        {verified === "true" ? (
+          <div className="mt-6">
+            <p className="text-xl font-semibold">
+              Your Account is already Verified
+            </p>
+            <div className="flex">
+              <button
+                className="my-6 mr-6 btn bg-primary text-white p-3 w-1/4 block"
+                onClick={() => router.push("/dashboard")}
+              >
+                Go to Dashboard
+              </button>
+              <button
+                className="m-6 btn bg-primary text-white p-3 w-1/4 block"
+                onClick={() => router.back()}
+              >
+                Go Back
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center mb-4 p-4">
+              {icons.map((item, index) => (
+                <StepperIcons
+                  key={index}
+                  index={index}
+                  item={item}
+                  isDone={step > index}
+                />
+              ))}
+            </div>
+            <ShowVerifyComponent role={role} step={step} />
+          </>
+        )}
       </div>
     </DashboardLayout>
   );

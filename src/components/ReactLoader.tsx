@@ -1,4 +1,4 @@
-import { LoaderProvider, useLoading } from "@agney/react-loading";
+import { LoaderProvider, ThreeDots, useLoading } from "@agney/react-loading";
 import React, { ReactElement } from "react";
 
 function App() {
@@ -13,12 +13,14 @@ function App() {
 }
 
 interface ReactLoaderProps {
-  component: ReactElement;
+  component?: ReactElement;
 }
 
 const ReactLoader: React.FC<ReactLoaderProps> = ({ component }) => {
   return (
-    <LoaderProvider indicator={component}>
+    <LoaderProvider
+      indicator={component ? component : <ThreeDots width="50" />}
+    >
       <App />
     </LoaderProvider>
   );

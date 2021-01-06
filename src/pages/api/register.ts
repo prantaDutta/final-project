@@ -19,6 +19,7 @@ export default handler.post(async (req, res) => {
           email,
           role,
           password: hashedPassword,
+          verified: "false",
         },
       })
     );
@@ -31,6 +32,7 @@ export default handler.post(async (req, res) => {
       name,
       email,
       role,
+      verified: "false",
     });
   } catch (e) {
     throw new Error("Can't Insert Data");

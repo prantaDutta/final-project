@@ -1,4 +1,3 @@
-import { ThreeDots } from "@agney/react-loading";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import { withIronSession } from "next-iron-session";
@@ -107,11 +106,7 @@ const login: React.FC<login2Props> = ({ user }) => {
                                 font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-primaryAccent
                                 shadow-lg transition-css"
               >
-                {submitting ? (
-                  <ReactLoader component={<ThreeDots width="50" />} />
-                ) : (
-                  "Log In"
-                )}
+                {submitting ? <ReactLoader /> : "Log In"}
               </button>
             </div>
           </form>

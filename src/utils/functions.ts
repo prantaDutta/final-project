@@ -128,3 +128,12 @@ export const appendingFieldsToFormData = (
   formData.append(key, value);
   return formData;
 };
+
+export const calculateMonthlyInstallment = (
+  amount: number,
+  interestRate: number,
+  loanDuration: number
+) => (+amount + +(amount * (interestRate / 100) * loanDuration)) / loanDuration;
+
+export const formatTwoDecimalPlaces = (num: number) =>
+  +(Math.round(num * 100) / 100).toFixed(2);

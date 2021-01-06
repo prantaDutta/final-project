@@ -25,7 +25,7 @@ const InputDateField: React.FC<InputDateFieldProps> = ({
   defaultValue,
 }) => {
   return (
-    <div className="mt-6">
+    <div className="mt-6 px-4">
       <label className="text-md font-bold text-gray-700 tracking-wide">
         {label}
       </label>
