@@ -1,5 +1,6 @@
 import { ThreeDots } from "@agney/react-loading";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
 import { NextPageContext } from "next";
 import { withIronSession } from "next-iron-session";
 import { useRouter } from "next/router";
@@ -11,7 +12,7 @@ import InputTextField from "../../components/ReactHookForm/InputTextField";
 import ReactLoader from "../../components/ReactLoader";
 import Yup from "../../lib/yup";
 import { newLoanFormValues } from "../../states/newLoanState";
-import { NEXT_IRON_SESSION_CONFIG } from "../../utils/constants";
+import { isProduction, NEXT_IRON_SESSION_CONFIG } from "../../utils/constants";
 import {
   calculateMonthlyInstallment,
   formatTwoDecimalPlaces,
@@ -33,7 +34,6 @@ export interface NewLoanFormValues {
 const newLoan: React.FC<newLoanProps> = ({ user }) => {
   const router = useRouter();
   const [submitting, setSubmitting] = useState<boolean>(false);
-  // const [formValues, setFormValues] = useState<NewLoanFormValues | null>(null);
   const [complete, setComplete] = useState<boolean>(false);
   const [newFormState, setFormState] = useRecoilState(newLoanFormValues);
   const { register, handleSubmit, errors, watch } = useForm<NewLoanFormValues>({
@@ -103,17 +103,17 @@ const newLoan: React.FC<newLoanProps> = ({ user }) => {
           </p>
           <div className="p-5">
             <p className="text-xl font-bold mt-5">
-              Loan Amount: {newFormState?.amount}
+              Loan Amount: {newFormState?.amount} Tk.
             </p>
             <p className="text-xl font-bold mt-5">
-              Interest Rate: {newFormState?.interestRate}
+              Interest Rate: {newFormState?.interestRate}%
             </p>
             <p className="text-xl font-bold mt-5">
-              Loan Duration: {newFormState?.loanDuration}
+              Loan Duration: {newFormState?.loanDuration} Months
             </p>
             <p className="text-xl font-bold mt-5">
               Company Fees (2%){": "}
-              {newFormState?.amount! * (newFormState?.interestRate! / 100)}
+              {newFormState?.amount! * (newFormState?.interestRate! / 100)} Tk
             </p>
 
             <p className="text-xl font-bold mt-5">
@@ -124,7 +124,8 @@ const newLoan: React.FC<newLoanProps> = ({ user }) => {
                   +newFormState?.interestRate! + 2,
                   +newFormState?.loanDuration!
                 )
-              )}
+              )}{" "}
+              Tk.
             </p>
             <div className="mt-5">
               <button
@@ -136,9 +137,16 @@ const newLoan: React.FC<newLoanProps> = ({ user }) => {
                 Take Me Back
               </button>
               <button
-                onClick={() => {
-                  console.log(newFormState);
-                  // router.push("/current-loans")
+                onClick={async () => {
+                  // console.log(newFormState);
+                  setSubmitting(true);
+                  const data = await axios.post("/api/user/new-loan", {
+                    values: newFormState,
+                    userId: user.userId,
+                  });
+                  if (!isProduction) console.log("data :>> ", data);
+                  if (data) setFormState(null);
+                  router.push("/current-loans");
                 }}
                 className="bg-primary text-white p-3 w-1/4 rounded-full tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-primaryAccent

@@ -18,7 +18,7 @@ export default handler.get(async (req, res) => {
         const { data }: any = await client.query(
           q.Get(q.Match(q.Index("search_by_id"), request as any))
         );
-        // console.log("requests", requests);
+        delete data.password;
         return res.status(200).json(data);
       } catch (e) {
         console.log(e);

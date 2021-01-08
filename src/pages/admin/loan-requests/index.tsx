@@ -1,9 +1,7 @@
 import { ThreeDots } from "@agney/react-loading";
 import { NextPageContext } from "next";
 import { withIronSession } from "next-iron-session";
-import Link from "next/link";
 import React, { useMemo } from "react";
-import { Cell } from "react-table";
 import useSWR from "swr";
 import DashboardLayout from "../../../components/layouts/DashboardLayout";
 import ReactLoader from "../../../components/ReactLoader";
@@ -16,18 +14,14 @@ interface VerificationRequestsProps {
   user: ModifiedUserData;
 }
 
-const VerificationRequests: React.FC<VerificationRequestsProps> = ({
-  user,
-}) => {
-  const { data, isValidating } = useSWR(
-    BASE_URL + "/api/admin/verification-requests"
-  );
-  const columns = useMemo(() => verificationRequestsTableHeader, [data]);
+const LoanRequests: React.FC<VerificationRequestsProps> = ({ user }) => {
+  const { data, isValidating } = useSWR(BASE_URL + "/api/admin/loan-requests");
+  const columns = useMemo(() => loanRequestsTableHeader, [data]);
   const tableData = useMemo(() => data, [data]);
   return (
     <DashboardLayout data={user}>
       <div className="p-4">
-        <h1 className="text-3xl">Verification Requests</h1>
+        <h1 className="text-3xl">Loan Requests</h1>
       </div>
       {!isValidating ? (
         data && data.length > 0 ? (
@@ -71,24 +65,27 @@ export const getServerSideProps = withIronSession(
   NEXT_IRON_SESSION_CONFIG
 );
 
-export default VerificationRequests;
+export default LoanRequests;
 
-export const verificationRequestsTableHeader = [
+export const loanRequestsTableHeader = [
   {
-    Header: "Name",
-    accessor: "name",
+    Header: "Amount",
+    accessor: "amount",
   },
   {
-    Header: "Role",
-    accessor: "role",
+    Header: "Monthly Installment",
+    accessor: "monthlyInstallment",
   },
   {
-    Header: "Action",
-    accessor: "userId",
-    Cell: ({ value }: Cell) => (
-      <Link href={`/admin/verification-requests/${value}`}>
-        <span className="btn bg-primary text-white px-3 py-2">Check</span>
-      </Link>
-    ),
+    Header: "Interest Rate",
+    accessor: "interestRate",
+  },
+  {
+    Header: "Loan Duration",
+    accessor: "loanDuration",
+  },
+  {
+    Header: "ModifiedMonthly Installment",
+    accessor: "modifiedMonthlyInstallment",
   },
 ];

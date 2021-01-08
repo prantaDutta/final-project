@@ -6,7 +6,7 @@ import { NEXT_IRON_SESSION_CONFIG } from "../../../../utils/constants";
 export default handler.get(async (req, res) => {
   await applySession(req, res, NEXT_IRON_SESSION_CONFIG);
   const user = (req as any).session.get("user");
-  if (user.role === "admin") {
+  if (user?.role === "admin") {
     try {
       const { data }: any = await client.query(
         q.Map(
@@ -14,12 +14,16 @@ export default handler.get(async (req, res) => {
           q.Lambda("ref", q.Get(q.Var("ref")))
         )
       );
-      const dataArray = data.map((data: any) => {
-        data.id = data.ref.id;
-        delete data.ref;
-        return data;
+      let modifiedData: Array<ModifiedVerificationRequest> = [];
+      data.map((data: any) => {
+        const { name, role, userId } = data.data;
+        modifiedData.push({
+          name: name,
+          role: role,
+          userId: userId,
+        });
       });
-      return res.status(200).json(dataArray);
+      return res.status(200).json(modifiedData);
     } catch (e) {
       console.log(e);
       return res.status(422).send("Failed");
@@ -27,3 +31,9 @@ export default handler.get(async (req, res) => {
   }
   return res.status(403).end("Lol, You are not admin 😇 😈 😏 ");
 });
+
+export type ModifiedVerificationRequest = {
+  name: string;
+  role: string;
+  userId: string;
+};

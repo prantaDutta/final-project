@@ -14,8 +14,11 @@ import {
   NEXT_IRON_SESSION_CONFIG,
   uuidFormatRegex,
 } from "../../../utils/constants";
+import { verificationRequestTableHeader } from "../../../utils/constantsArray";
 import {
   downloadImage,
+  isObject,
+  objectToArray,
   redirectToErrorPage,
   redirectToLogin,
 } from "../../../utils/functions";
@@ -133,62 +136,44 @@ const request: React.FC<requestProps> = ({ user, request }) => {
 
       {isValidating && !data ? (
         <button
-          className="bg-transparent text-primary p-3 w-full tracking-wide
+          className="bg-transparent text-primary p-3 mt-5 w-full tracking-wide
                     font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-primaryAccent
                     shadow-lg transition-css"
         >
           <ReactLoader component={<ThreeDots width="50" />} />
         </button>
       ) : (
-        <table className="w-full shadow-lg bg-white text-center">
+        <table className="w-full shadow-lg bg-white text-center mt-5">
           <thead>
             <tr>
-              <th className="bg-primary font-semibold border px-8 py-4 text-white">
-                Field Name
-              </th>
-              <th className="bg-primary font-semibold border px-8 py-4 text-white">
-                Data
-              </th>
+              {verificationRequestTableHeader.map((header: string) => (
+                <th
+                  key={header}
+                  className="bg-primary font-semibold border px-8 py-4 text-white capitalize"
+                >
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
 
           <tbody>
-            <tr>
-              <td className="font-semibold border px-8 py-4">Name</td>
-              <td className="font-semibold border px-8 py-4">{data?.name}</td>
-            </tr>
-            <tr>
-              <td className="font-semibold border px-8 py-4">Email</td>
-              <td className="font-semibold border px-8 py-4">{data?.email}</td>
-            </tr>
-            <tr>
-              <td className="font-semibold border px-8 py-4">Date Of Birth</td>
-              <td className="font-semibold border px-8 py-4">
-                {data?.dateOfBirth}
-              </td>
-            </tr>
-            <tr>
-              <td className="font-semibold border px-8 py-4">Mobile No.</td>
-              <td className="font-semibold border px-8 py-4">
-                0{data?.mobileNo}
-              </td>
-            </tr>
-            <tr>
-              <td className="font-semibold border px-8 py-4">Role</td>
-              <td className="font-semibold border px-8 py-4">{data?.role}</td>
-            </tr>
-            <tr>
-              <td className="font-semibold border px-8 py-4">Address</td>
-              <td className="font-semibold border px-8 py-4">
-                {data?.address}
-              </td>
-            </tr>
-            <tr>
-              <td className="font-semibold border px-8 py-4">Borrower Type</td>
-              <td className="font-semibold border px-8 py-4">
-                {data?.borrowerType ? data.borrowerType : "N/A"}
-              </td>
-            </tr>
+            {data &&
+              objectToArray(data).map((d) => {
+                if (isObject(d[1])) {
+                  return null;
+                }
+                return (
+                  <tr key={d[0]}>
+                    <td className="font-semibold border px-8 py-4 capitalize">
+                      {d[0]}
+                    </td>
+                    <td className="font-semibold border px-8 py-4 capitalize">
+                      {d[1]}
+                    </td>
+                  </tr>
+                );
+              })}
             {photos &&
               photos.map((photo) => {
                 if (photo[0] === "bankAccountStateMents") {
