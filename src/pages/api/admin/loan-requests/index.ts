@@ -8,52 +8,64 @@ export default handler.get(async (req, res) => {
   const user = (req as any).session.get("user");
   if (user?.role === "admin") {
     try {
-      const { data }: any = await client.query(
-        q.Let(
-          {
-            // Get the Lead document
-            lead: q.Get(q.Ref(q.Collection("Leads"), "269038063157510661")),
-            // Get the source key out of the lead document
-            sourceKey: q.Select(["data", "source"], q.Var("lead")),
-            // use the index to get the values via match
-            sourceValues: q.Paginate(
-              q.Match(q.Index("LeadSourceValuesByKey"), q.Var("sourceKey"))
-            ),
-          },
-          {
-            lead: q.Var("lead"),
-            sourceValues: q.Var("sourceValues"),
-          }
-        )
-      );
-      res.json(data);
       // const { data }: any = await client.query(
       //   q.Map(
-      //     q.Paginate(q.Match(q.Index("search_by_mode"), "processing")),
-      //     q.Lambda("ref", q.Get(q.Var("ref")))
+      //     // get loan references
+      //     q.Paginate(q.Documents(q.Collection("loans"))),
+      //     // map over pages of loan references
+      //     q.Lambda(
+      //       "loanRef",
+      //       q.Let(
+      //         {
+      //           loan: q.Get(q.Var("loanRef")),
+      //           userId: q.Select(["data", "userId"], q.Var("loan")),
+      //           // get on a match assumes the userId exists
+      //           // and that there is only one result (in your case, many-to-one..
+      //           // that's fine). It also assumes you have defined that index.
+      //           user: q.Get(q.Match(q.Index("search_by_id"), q.Var("userId"))),
+      //         },
+      //         // And now we can then return whtatever we want (or could have
+      //         // omitted the let and directly return an object)
+      //         {
+      //           loan: q.Var("loan"),
+      //           user: q.Var("user"),
+      //         }
+      //       )
+      //     )
       //   )
       // );
-      // let modifiedData: Array<ModifiedLoanRequest> = [];
-      // data.map((data: any) => {
-      //   const {
-      //     monthlyInstallment,
-      //     loanDuration,
-      //     interestRate,
-      //     amount,
-      //     modifiedMonthlyInstallment,
-      //     userId,
-      //   } = data.data;
-      //   modifiedData.push({
-      //     amount,
-      //     interestRate,
-      //     loanDuration,
-      //     monthlyInstallment,
-      //     modifiedMonthlyInstallment,
-      //     userId,
-      //     id: data.ref.id,
-      //   });
+      // data.map((d: any) => {
+      //   console.log(d.loan);
+      //   console.log(d.user);
       // });
-      // return res.status(200).json(modifiedData);
+      // res.json(data);
+      const { data }: any = await client.query(
+        q.Map(
+          q.Paginate(q.Match(q.Index("search_by_mode"), "processing")),
+          q.Lambda("ref", q.Get(q.Var("ref")))
+        )
+      );
+      let modifiedData: Array<ModifiedLoanRequest> = [];
+      data.map((data: any) => {
+        const {
+          monthlyInstallment,
+          loanDuration,
+          interestRate,
+          amount,
+          modifiedMonthlyInstallment,
+          userId,
+        } = data.data;
+        modifiedData.push({
+          amount,
+          interestRate,
+          loanDuration,
+          monthlyInstallment,
+          modifiedMonthlyInstallment,
+          userId,
+          id: data.ref.id,
+        });
+      });
+      return res.status(200).json(modifiedData);
     } catch (e) {
       console.log(e);
       return res.status(422).send("Failed");

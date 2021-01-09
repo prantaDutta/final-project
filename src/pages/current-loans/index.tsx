@@ -29,14 +29,16 @@ const currentLoans: React.FC<currentLoansProps> = ({ user }) => {
     <DashboardLayout data={user}>
       <div className="flex justify-between">
         <h1 className="text-3xl font-semibold">Current Loans</h1>
-        <button
-          onClick={() => router.push("/current-loans/new-loan")}
-          className="bg-primary text-white p-3 w-1/3 rounded-full tracking-wide
+        {user.role === "borrower" && (
+          <button
+            onClick={() => router.push("/current-loans/new-loan")}
+            className="bg-primary text-white p-3 w-1/3 rounded-full tracking-wide
                   font-semibold font-display focus:outline-none focus:shadow-outline hover:bg-primaryAccent
                   shadow-lg transition-css"
-        >
-          New Loan
-        </button>
+          >
+            New Loan
+          </button>
+        )}
       </div>
       <div className="mt-5">
         <p className="text-xl font-semibold my-5">Your Loans</p>
@@ -49,53 +51,56 @@ const currentLoans: React.FC<currentLoansProps> = ({ user }) => {
             >
               <ReactLoader component={<Grid width="50" />} />
             </button>
-          ) : (
-            <table className="w-full shadow-lg bg-white text-center">
-              <thead>
-                <tr>
-                  {CurrentLoanTableHeader.map((header: string) => (
-                    <th
-                      key={header}
-                      className="bg-primary font-semibold border px-8 py-4 text-white"
-                    >
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
+          ) : data && data.length > 0 ? (
+            data.map((loanData: any) => {
+              const {
+                amount,
+                interestRate,
+                loanDuration,
+                monthlyInstallment,
+              }: NewLoanFormValues = loanData.data;
+              return (
+                <table className="w-full shadow-lg bg-white text-center">
+                  <thead>
+                    <tr>
+                      {CurrentLoanTableHeader.map((header: string) => (
+                        <th
+                          key={header}
+                          className="bg-primary font-semibold border px-8 py-4 text-white"
+                        >
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
 
-              <tbody>
-                {data &&
-                  data.map((loanData: any) => {
-                    const {
-                      amount,
-                      interestRate,
-                      loanDuration,
-                      monthlyInstallment,
-                    }: NewLoanFormValues = loanData.data;
-                    return (
-                      <tr key={loanData}>
-                        <td className="font-semibold border px-8 py-4">
-                          {amount}
-                        </td>
-                        <td className="font-semibold border px-8 py-4">
-                          {interestRate}
-                        </td>
-                        <td className="font-semibold border px-8 py-4">
-                          {loanDuration}
-                        </td>
-                        <td className="font-semibold border px-8 py-4">
-                          {monthlyInstallment}
-                        </td>
-                        <td className="font-semibold border px-8 py-4">
-                          {loanData.data.mode}
-                        </td>
-                        <td className="font-semibold border px-8 py-4">N/A</td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
+                  <tbody>
+                    <tr key={loanData}>
+                      <td className="font-semibold border px-8 py-4">
+                        {amount}
+                      </td>
+                      <td className="font-semibold border px-8 py-4">
+                        {interestRate}
+                      </td>
+                      <td className="font-semibold border px-8 py-4">
+                        {loanDuration}
+                      </td>
+                      <td className="font-semibold border px-8 py-4">
+                        {monthlyInstallment}
+                      </td>
+                      <td className="font-semibold border px-8 py-4">
+                        {loanData.data.mode}
+                      </td>
+                      <td className="font-semibold border px-8 py-4">N/A</td>
+                    </tr>
+                  </tbody>
+                </table>
+              );
+            })
+          ) : (
+            <p className="font-semibold font-xl">
+              You Don't Have Any Current Loans.
+            </p>
           )}
         </div>
       </div>
