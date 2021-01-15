@@ -1,9 +1,7 @@
 import { ThreeDots } from "@agney/react-loading";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { withIronSession } from "next-iron-session";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilState } from "recoil";
@@ -12,8 +10,13 @@ import InputSelectField from "../components/ReactHookForm/InputSelectField";
 import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
 import { authStatus } from "../states/authStates";
-import { authenticatedUserData } from "../states/userStates";
-import { NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
+import api from "../utils/api";
+import { logIn } from "../utils/auth";
+import {
+  BASE_API_URL,
+  isProduction,
+  NEXT_IRON_SESSION_CONFIG,
+} from "../utils/constants";
 import { UserRole } from "../utils/constantsArray";
 import { ModifiedUserData, RegisterFormValues } from "../utils/randomTypes";
 import { registerValitationSchema } from "../validations/RegisterFormValiadtion";
@@ -25,39 +28,50 @@ interface registerProps {
 const register: React.FC<registerProps> = ({ user }) => {
   // const { toggleAuth, changeUserData } = useContext(authContext);
   const [submitting, setSubmitting] = useState<boolean>(false);
-  const {
-    register,
-    handleSubmit,
-    errors,
-    setError,
-  } = useForm<RegisterFormValues>({
+  const { register, handleSubmit, errors } = useForm<RegisterFormValues>({
     resolver: yupResolver(registerValitationSchema),
     mode: "onTouched",
     reValidateMode: "onBlur",
   });
-  const router = useRouter();
   const [, toggleAuth] = useRecoilState(authStatus);
-  const [, setUserData] = useRecoilState(authenticatedUserData);
 
   const onSubmit = async (values: RegisterFormValues) => {
     setSubmitting(true);
+    const { name, email, role, password, confirmPassword } = values;
     try {
-      const { data } = await axios.post(`/api/register`, {
-        values,
+      await api().get(`${BASE_API_URL}/sanctum/csrf-cookie`);
+      await api().post("/register", {
+        name,
+        email,
+        role,
+        password,
+        password_confirmation: confirmPassword,
       });
-      if (data?.id) {
-        toggleAuth(true);
-        setUserData(data);
-        return router.push("/dashboard");
-      }
-      setError("name", {
-        type: "manual",
-        message: "Registration Failed, Please Try Again",
-      });
-      setSubmitting(false);
+      const { data } = await api().get("/user");
+      if (!isProduction) console.log(data);
+      toggleAuth(true);
+      logIn();
     } catch (e) {
-      throw new Error("Can't Insert Data. Error From API");
+      console.log(e);
     }
+    setSubmitting(false);
+    // try {
+    //   const { data } = await axios.post(`/api/register`, {
+    //     values,
+    //   });
+    //   if (data?.id) {
+    //     toggleAuth(true);
+    //     setUserData(data);
+    //     return router.push("/dashboard");
+    //   }
+    //   setError("name", {
+    //     type: "manual",
+    //     message: "Registration Failed, Please Try Again",
+    //   });
+    //   setSubmitting(false);
+    // } catch (e) {
+    //   throw new Error("Can't Insert Data. Error From API");
+    // }
   };
 
   return (
@@ -107,7 +121,7 @@ const register: React.FC<registerProps> = ({ user }) => {
             <InputTextField
               type="password"
               name="confirmPassword"
-              label="Password"
+              label="Confirm Password"
               error={errors.confirmPassword?.message}
               placeholder="Confirm Your Password"
               register={register}

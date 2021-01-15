@@ -1,5 +1,4 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { withIronSession } from "next-iron-session";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -11,7 +10,13 @@ import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
 import { authStatus } from "../states/authStates";
 import { authenticatedUserData } from "../states/userStates";
-import { NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
+import api from "../utils/api";
+import { logIn } from "../utils/auth";
+import {
+  BASE_API_URL,
+  isProduction,
+  NEXT_IRON_SESSION_CONFIG,
+} from "../utils/constants";
 import { LoginFormValues, ModifiedUserData } from "../utils/randomTypes";
 import { loginValidationSchema } from "../validations/LoginFormValidation";
 
@@ -25,7 +30,7 @@ const login: React.FC<login2Props> = ({ user }) => {
     {
       resolver: yupResolver(loginValidationSchema),
       mode: "onTouched",
-      reValidateMode: "onBlur",
+      reValidateMode: "onChange",
     }
   );
   const router = useRouter();
@@ -34,34 +39,46 @@ const login: React.FC<login2Props> = ({ user }) => {
 
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitting(true);
-    const { data } = await axios.post(`/api/login`, {
-      values,
-    });
 
-    if (data?.role === "admin") {
-      toggleAuth(true);
-      setUserData(data);
-      return router.push("/admin/dashboard");
-    } else if (data?.userId) {
-      toggleAuth(true);
-      setUserData(data);
-      return router.push("/dashboard");
-    } else if (data.email) {
-      setError("email", {
-        type: "manual",
-        message: data.email,
+    await api().get(BASE_API_URL + "/sanctum/csrf-cookie");
+    try {
+      await api().post("/login", {
+        email: values.email,
+        password: values.password,
       });
-    } else if (data.password) {
-      setError("password", {
-        type: "manual",
-        message: data.password,
-      });
-    } else {
-      setError("email", {
-        type: "manual",
-        message: "Login Failed, Please Try Again",
-      });
+      const { data } = await api().get("/user");
+      if (!isProduction) console.log(data);
+      logIn();
+    } catch (e) {
+      console.log(e);
     }
+
+    setSubmitting(false);
+
+    // if (data?.role === "admin") {
+    //   toggleAuth(true);
+    //   setUserData(data);
+    //   return router.push("/admin/dashboard");
+    // } else if (data?.userId) {
+    //   toggleAuth(true);
+    //   setUserData(data);
+    //   return router.push("/dashboard");
+    // } else if (data.email) {
+    //   setError("email", {
+    //     type: "manual",
+    //     message: data.email,
+    //   });
+    // } else if (data.password) {
+    //   setError("password", {
+    //     type: "manual",
+    //     message: data.password,
+    //   });
+    // } else {
+    //   setError("email", {
+    //     type: "manual",
+    //     message: "Login Failed, Please Try Again",
+    //   });
+    // }
     setSubmitting(false);
   };
   return (

@@ -1,5 +1,7 @@
-import axios from "axios";
 import Yup from "../lib/yup";
+import api from "../utils/api";
+
+let newValue: any;
 
 export const registerValitationSchema = Yup.object({
   name: Yup.string().required("Required"),
@@ -8,20 +10,18 @@ export const registerValitationSchema = Yup.object({
     .required("Required"),
   email: Yup.string()
     .email("Invalid email")
-    .test("Unique Email", "Email already been taken", function (value) {
+    .test("Unique Email", "Email already been taken", async function (value) {
       if (!value) return true;
-      return new Promise(async (resolve, _) => {
-        await axios
-          .post("/api/unique-email", {
-            email: value,
-          })
-          .then(async ({ data }) => {
-            if (data.msg === "Email already been taken") {
-              resolve(false);
-            }
-            resolve(true);
-          });
-      });
+      if (value === newValue) return true;
+      try {
+        newValue = value;
+        await api().post("/unique-email", {
+          email: value,
+        });
+        return false;
+      } catch (e) {
+        return true;
+      }
     })
     .required("Required"),
   password: Yup.string()

@@ -40,7 +40,7 @@ export default handler.put(async (req, res) => {
               temp = temp + v.path.replace(/^.*[\\\/]/, "") + "#";
             });
             fields[key] = temp;
-          } else fields[key] = value.path.replace(/^.*[\\\/]/, ""); // returns the filename and extenstion from the path
+          } else fields[key] = (value as any).path.replace(/^.*[\\\/]/, ""); // returns the filename and extenstion from the path
         }
 
         // sending data to the database

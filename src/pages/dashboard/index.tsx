@@ -1,10 +1,7 @@
-import { NextPageContext } from "next";
-import { withIronSession } from "next-iron-session";
 import React from "react";
+import withAuth from "../../components/auth/withAuth";
 import DashboardContent from "../../components/dashboard/DashboardContent";
 import DashboardLayout from "../../components/layouts/DashboardLayout";
-import { NEXT_IRON_SESSION_CONFIG } from "../../utils/constants";
-import { redirectToLogin } from "../../utils/functions";
 import { ModifiedUserData } from "../../utils/randomTypes";
 
 interface dashboardProps {
@@ -19,19 +16,19 @@ const dashboard: React.FC<dashboardProps> = ({ user }) => {
   );
 };
 
-export const getServerSideProps = withIronSession(
-  async (context: NextPageContext) => {
-    const user = (context.req as any).session.get("user");
-    if (!user) {
-      redirectToLogin(context?.req, context?.res);
-      return { props: {} };
-    }
+// export const getServerSideProps = withIronSession(
+//   async (context: NextPageContext) => {
+//     const user = (context.req as any).session.get("user");
+//     if (!user) {
+//       redirectToLogin(context?.req, context?.res);
+//       return { props: {} };
+//     }
 
-    return {
-      props: { user },
-    };
-  },
-  NEXT_IRON_SESSION_CONFIG
-);
+//     return {
+//       props: { user },
+//     };
+//   },
+//   NEXT_IRON_SESSION_CONFIG
+// );
 
-export default dashboard;
+export default withAuth(dashboard);
