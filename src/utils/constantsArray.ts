@@ -1,4 +1,6 @@
 import { linkArray, SelectOptionsTypes } from "./randomTypes";
+import zilas from "../../jsons/zilas.json";
+import divisions from "../../jsons/divisions.json";
 
 export const sideBarLinks: linkArray[] = [
   {
@@ -113,5 +115,27 @@ export const BorrowerTypes: SelectOptionsTypes[] = [
     title: "Self Employed",
   },
 ];
+
+export const createZilaTypes = () => {
+  let allZilas: SelectOptionsTypes[] = [];
+  zilas.map((singleZila: { name: string }) => {
+    allZilas.push({
+      value: singleZila.name.toLowerCase(),
+      title: singleZila.name,
+    });
+  });
+  return allZilas;
+};
+
+export const createDivisionsTypes = () => {
+  let allDivisions: SelectOptionsTypes[] = [];
+  divisions.map((singleDivision: { name: string }) => {
+    allDivisions.push({
+      value: singleDivision.name.toLowerCase(),
+      title: singleDivision.name,
+    });
+  });
+  return allDivisions;
+};
 
 export const verificationRequestTableHeader = ["Field Name", "Data"];

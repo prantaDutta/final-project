@@ -24,7 +24,7 @@ export const NEXT_IRON_SESSION_CONFIG = {
     httpOnly: true,
     secure: isProduction,
     sameSite: "strict" as "strict",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: 60 * 60, // 2 hours
     path: "/",
     // secure: process.env.NODE_ENV === "production" ? true : false,
   },

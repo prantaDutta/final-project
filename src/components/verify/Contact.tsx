@@ -1,5 +1,4 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -13,6 +12,12 @@ import {
 import { ContactVerificationFormValues } from "../../utils/randomTypes";
 import InputTextField from "../ReactHookForm/InputTextField";
 import NextPreviousButton from "./NextPreviousButton";
+import { laravelApi } from "../../utils/api";
+import InputSelectField from "../ReactHookForm/InputSelectField";
+import {
+  createDivisionsTypes,
+  createZilaTypes,
+} from "../../utils/constantsArray";
 
 interface ContactProps {}
 
@@ -21,7 +26,6 @@ const Contact: React.FC<ContactProps> = ({}) => {
     verificationFormValues
   );
   const userData = useRecoilValue(authenticatedUserData);
-  const userId = userData ? userData.userId : undefined;
   const [step, setStep] = useRecoilState(verificationStep);
   const {
     register,
@@ -36,19 +40,15 @@ const Contact: React.FC<ContactProps> = ({}) => {
           .email("Invalid email")
           .test("Unique Email", "Email already been taken", function (value) {
             return new Promise(async (resolve, _) => {
-              if (value) {
-                const { data } = await axios.post(
-                  "/api/unique-email-excluding-id",
-                  {
-                    email: value,
-                    userId,
-                  }
-                );
-                if (data.msg === "Email Taken") {
-                  return resolve(false);
-                }
+              try {
+                await laravelApi().post("/unique-email-excluding-id", {
+                  email: value,
+                  id: userData?.id,
+                });
+                resolve(false);
+              } catch (e) {
+                resolve(true);
               }
-              resolve(true);
             });
           })
           .required("Required"),
@@ -61,6 +61,17 @@ const Contact: React.FC<ContactProps> = ({}) => {
             (val) => val?.toString().length === 10
           )
           .required("Required"),
+        division: yup.string().required("Required"),
+        zila: yup.string().required("Required"),
+        zip_code: yup
+          .number()
+          .typeError("Mobile No. must be a number")
+          .test(
+            "len",
+            "Mobile No must be 11 characters",
+            (val) => val?.toString().length === 4
+          )
+          .required("Required"),
       })
     ),
     mode: "onSubmit",
@@ -68,9 +79,17 @@ const Contact: React.FC<ContactProps> = ({}) => {
   });
   const onSubmit = async (values: ContactVerificationFormValues) => {
     // values.dateOfBirth = format(parseJSON(values.dateOfBirth), "MM/dd/yyyy");
-    const { email, address, mobileNo } = values;
+    const { email, address, mobileNo, division, zila, zip_code } = values;
     // setValues({ ...verificationValues ? , email, address, mobileNo });
-    setValues({ ...verificationValues!, email, address, mobileNo });
+    setValues({
+      ...verificationValues!,
+      email,
+      address,
+      mobileNo,
+      division,
+      zila,
+      zip_code,
+    });
     setStep(step + 1);
   };
   return (
@@ -110,7 +129,31 @@ const Contact: React.FC<ContactProps> = ({}) => {
             register={register}
             placeholder="i.e. 017XXXXXXXX"
           />
-          <NextPreviousButton nextDisabled={errors ? false : true} />
+          <InputSelectField
+            defaultValue={verificationValues?.division}
+            name="division"
+            label="Select Division"
+            error={errors.division?.message}
+            register={register}
+            options={createDivisionsTypes()}
+          />
+          <InputSelectField
+            defaultValue={verificationValues?.zila}
+            name="zila"
+            label="Select Zila"
+            error={errors.zila?.message}
+            register={register}
+            options={createZilaTypes()}
+          />
+          <InputTextField
+            defaultValue={verificationValues?.zip_code}
+            name="zip_code"
+            label="Zip Code"
+            error={errors.zip_code?.message}
+            register={register}
+            placeholder="i.e. 4000"
+          />
+          <NextPreviousButton nextDisabled={!errors} />
         </form>
       </main>
     </div>

@@ -30,7 +30,6 @@ const ShowVerifyComponent: React.FC<showVerifyComponentProps> = ({
     case 1:
       return <Contact />;
     case 2:
-      console.log("role", role);
       return role === "lender" ? <Images /> : <Papers />;
     case 3:
       return <Images />;
@@ -43,7 +42,7 @@ interface verifyProps {
   user: ModifiedUserData;
 }
 
-const verify: React.FC<verifyProps> = ({ user }) => {
+const Verify: React.FC<verifyProps> = ({ user }) => {
   const router = useRouter();
   const [step] = useRecoilState(verificationStep);
   const [userData, changeUserData] = useRecoilState(authenticatedUserData);
@@ -110,4 +109,4 @@ export const getServerSideProps = withIronSession(
   NEXT_IRON_SESSION_CONFIG
 );
 
-export default verify;
+export default Verify;

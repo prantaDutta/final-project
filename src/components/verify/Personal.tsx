@@ -11,7 +11,7 @@ import {
 } from "../../states/verificationStates";
 import { isProduction } from "../../utils/constants";
 import { Gender } from "../../utils/constantsArray";
-import { eightennYearsBackFromNow } from "../../utils/functions";
+import { eighteenYearsBackFromNow } from "../../utils/functions";
 import { PersonalVerificationFormValues } from "../../utils/randomTypes";
 import InputDateField from "../ReactHookForm/InputDateField";
 import InputSelectField from "../ReactHookForm/InputSelectField";
@@ -35,6 +35,7 @@ const Personal: React.FC<PersonalProps> = ({}) => {
   } = useForm<PersonalVerificationFormValues>({
     resolver: yupResolver(
       object({
+        id: yup.mixed().notRequired(),
         name: yup.string().required("Required"),
         gender: yup
           .mixed()
@@ -43,7 +44,7 @@ const Personal: React.FC<PersonalProps> = ({}) => {
         dateOfBirth: yup
           .date()
           .max(
-            eightennYearsBackFromNow("YYYY-MM-DD").toString(),
+            eighteenYearsBackFromNow("YYYY-MM-DD").toString(),
             "You Must be 18 Years Old"
           )
           .required("Invalid Date"),
@@ -60,7 +61,7 @@ const Personal: React.FC<PersonalProps> = ({}) => {
       name,
       dateOfBirth,
       gender,
-      userId: userData?.userId!,
+      id: userData?.id!,
     });
     setStep(step + 1);
   };
@@ -96,8 +97,8 @@ const Personal: React.FC<PersonalProps> = ({}) => {
               verificationValues?.dateOfBirth
                 ? verificationValues?.dateOfBirth
                 : isProduction
-                ? new Date().toString()
-                : eightennYearsBackFromNow("YYYY-MM-DD").toString()
+                ? (new Date().toString() as any)
+                : eighteenYearsBackFromNow("YYYY-MM-DD").toString()
               // new Date().toString()
             }
           />

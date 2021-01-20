@@ -1,13 +1,15 @@
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { authStatus } from "../../states/authStates";
 import { authenticatedUserData } from "../../states/userStates";
+import { logout } from "../../utils/auth";
+import React, { useState } from "react";
 
 interface MainContentNavProps {}
 
 const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
+  const [startLoggingOut, setLoggingOut] = useState<boolean>(false);
   const router = useRouter();
   const [, toggleAuth] = useRecoilState(authStatus);
   const userData = useRecoilValue(authenticatedUserData);
@@ -28,7 +30,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
               strokeLinejoin="round"
               strokeWidth="2"
               d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-            ></path>
+            />
           </svg>
         </div>
         <div>
@@ -50,7 +52,7 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
               strokeLinejoin="round"
               strokeWidth="2"
               d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-            ></path>
+            />
           </svg>
         </div>
         <div>
@@ -61,15 +63,17 @@ const MainContentNav: React.FC<MainContentNavProps> = ({}) => {
       <div className="p-4">
         <h4 className="p-2 cursor-pointer rounded border-solid border-2 border-primary hover:bg-primaryAccent hover:text-white hover:border-0">
           <Link href={router.pathname + "#"}>
-            <a
+            <button
+              disabled={startLoggingOut}
               onClick={async () => {
+                setLoggingOut(true);
                 toggleAuth(false);
-                await axios.get(`/api/logout`);
+                await logout();
                 return router.push("/");
               }}
             >
               Log Out
-            </a>
+            </button>
           </Link>
         </h4>
       </div>

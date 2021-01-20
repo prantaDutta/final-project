@@ -1,5 +1,4 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { withIronSession } from "next-iron-session";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -11,15 +10,17 @@ import InputTextField from "../components/ReactHookForm/InputTextField";
 import ReactLoader from "../components/ReactLoader";
 import { authStatus } from "../states/authStates";
 import { authenticatedUserData } from "../states/userStates";
-import { NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
+import { isProduction, NEXT_IRON_SESSION_CONFIG } from "../utils/constants";
 import { LoginFormValues, ModifiedUserData } from "../utils/randomTypes";
 import { loginValidationSchema } from "../validations/LoginFormValidation";
+import { laravelApi } from "../utils/api";
+import axios from "axios";
 
 interface login2Props {
   user: ModifiedUserData;
 }
 
-const login: React.FC<login2Props> = ({ user }) => {
+const Login: React.FC<login2Props> = ({ user }) => {
   const [submitting, setSubmitting] = useState<boolean>(false);
   const { register, handleSubmit, errors, setError } = useForm<LoginFormValues>(
     {
@@ -34,32 +35,22 @@ const login: React.FC<login2Props> = ({ user }) => {
 
   const onSubmit = async (values: LoginFormValues) => {
     setSubmitting(true);
-    const { data } = await axios.post(`/api/login`, {
-      values,
-    });
 
-    if (data?.role === "admin") {
+    await laravelApi(true).get("/sanctum/csrf-cookie");
+    try {
+      const {
+        data: { data },
+      } = await laravelApi().post("/login", values);
+      if (!isProduction) console.log(data);
       toggleAuth(true);
       setUserData(data);
-      return router.push("/admin/dashboard");
-    } else if (data?.userId) {
-      toggleAuth(true);
-      setUserData(data);
-      return router.push("/dashboard");
-    } else if (data.email) {
+      await axios.post("/api/set-user-cookie", { data: data });
+      await router.push("/dashboard");
+    } catch (e) {
+      if (!isProduction) console.log(e.response);
       setError("email", {
         type: "manual",
-        message: data.email,
-      });
-    } else if (data.password) {
-      setError("password", {
-        type: "manual",
-        message: data.password,
-      });
-    } else {
-      setError("email", {
-        type: "manual",
-        message: "Login Failed, Please Try Again",
+        message: "Invalid Credentials",
       });
     }
     setSubmitting(false);
@@ -135,4 +126,4 @@ export const getServerSideProps = withIronSession(async ({ req }) => {
   };
 }, NEXT_IRON_SESSION_CONFIG);
 
-export default login;
+export default Login;

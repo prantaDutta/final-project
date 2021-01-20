@@ -69,7 +69,7 @@ export const downloadImage = (url: string, name: string) =>
 export const formatDate = (date: Date, formatter: string) =>
   dayjs(date).format(formatter);
 
-export const eightennYearsBackFromNow = (formatter: string) =>
+export const eighteenYearsBackFromNow = (formatter: string) =>
   dayjs().subtract(18, "year").format(formatter);
 
 export const objectToArray = (obj: Record<any, any>) =>
